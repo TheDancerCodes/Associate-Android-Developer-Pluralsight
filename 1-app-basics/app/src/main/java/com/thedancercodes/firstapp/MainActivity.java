@@ -8,13 +8,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main); // How this activity loads the layout UI.
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -22,7 +23,23 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+
+                // Get a reference to the TextView we just created.
+                TextView textValue = findViewById(R.id.text_value);
+
+                // Get the current value
+                String stringValue = textValue.getText().toString();
+
+                // Convert string to int
+                final int originalValue = Integer.parseInt(stringValue);
+
+                // Get the value from the Worker Class
+                final int newValue = MyWorker.doubleTheValue(originalValue);
+
+                // Set the newValue to the value of the TextView
+                textValue.setText(Integer.toString(newValue));
+
+                Snackbar.make(view, "Changed Value " + originalValue + " to " + newValue, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
