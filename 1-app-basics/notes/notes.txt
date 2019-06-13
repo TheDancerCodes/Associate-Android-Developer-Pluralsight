@@ -1,0 +1,7 @@
+[1] Building a Simple App:
+
+(a)Adding Some Java Code:
+
+-> When a user taps on the FAB, we want to double the value displayed in the TextView.
+
+-> Create a helper class/ worker class that handles receiving a number and giving us back double.
