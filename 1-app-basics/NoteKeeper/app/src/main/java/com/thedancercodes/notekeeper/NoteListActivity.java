@@ -38,7 +38,7 @@ public class NoteListActivity extends AppCompatActivity {
     private void initializeDisplayContent() {
 
         // Reference to ListView
-        ListView listNotes = findViewById(R.id.list_notes);
+        final ListView listNotes = findViewById(R.id.list_notes);
 
         // Get list of notes to add into the ListView
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
@@ -67,8 +67,16 @@ public class NoteListActivity extends AppCompatActivity {
                 // Create an intent that identifies the activity we want to start.
                 Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
 
+                // Get NoteInfo that corresponds to user selection
+                NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
+
+                // Put NoteInfo as an Extra in the Intent
+                intent.putExtra(NoteActivity.NOTE_INFO, note);
+
+
                 // Launch the Activity
                 startActivity(intent);
+
             }
         });
 

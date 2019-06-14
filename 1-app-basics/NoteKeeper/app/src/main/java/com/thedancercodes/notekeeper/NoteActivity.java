@@ -12,6 +12,16 @@ import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
 
+    /**
+     * Constant to be used in Extras by Intents.
+     *
+     * This Activity is the destination of that Extra.
+     *
+     * Remember to qualify the constant with your package name to ensure it is unique.
+     *
+     */
+    public static final String NOTE_INFO = "com.thedancercodes.notekeeper.NOTE_INFO";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
