@@ -1,5 +1,9 @@
 package com.thedancercodes.notekeeper;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +13,7 @@ import java.util.List;
  * mTitle -> title of the course
  * mModules -> list of modules
  */
-public final class CourseInfo {
+public final class CourseInfo implements Parcelable {
     private final String mCourseId;
     private final String mTitle;
     private final List<ModuleInfo> mModules;
@@ -18,6 +22,14 @@ public final class CourseInfo {
         mCourseId = courseId;
         mTitle = title;
         mModules = modules;
+    }
+
+    // Private constructor that sets the values
+    private CourseInfo(Parcel source) {
+        mCourseId = source.readString();
+        mTitle = source.readString();
+        mModules = new ArrayList<>();
+        source.readTypedList(mModules, ModuleInfo.CREATOR);
     }
 
     public String getCourseId() {
@@ -83,4 +95,46 @@ public final class CourseInfo {
         return mCourseId.hashCode();
     }
 
+    /**
+     * Describe the kinds of special objects contained in this Parcelable
+     * instance's marshaled representation. For example, if the object will
+     * include a file descriptor in the output of {@link #writeToParcel(Parcel, int)},
+     * the return value of this method must include the
+     * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
+     *
+     * @return a bitmask indicating the set of special object types marshaled
+     * by this Parcelable object instance.
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /**
+     * Flatten this object in to a Parcel.
+     *
+     * @param dest  The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mCourseId);
+        dest.writeString(mTitle);
+        dest.writeTypedList(mModules);
+    }
+
+    public static final Parcelable.Creator<CourseInfo> CREATOR =
+            new Parcelable.Creator<CourseInfo>() {
+
+                @Override
+                public CourseInfo createFromParcel(Parcel source) {
+                    return new CourseInfo(source);
+                }
+
+                @Override
+                public CourseInfo[] newArray(int size) {
+                    return new CourseInfo[size];
+                }
+            };
 }
