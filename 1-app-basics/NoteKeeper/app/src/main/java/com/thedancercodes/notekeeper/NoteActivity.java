@@ -16,15 +16,15 @@ public class NoteActivity extends AppCompatActivity {
 
     /**
      * Constant to be used in Extras by Intents.
-     *
+     * <p>
      * This Activity is the destination of that Extra.
-     *
+     * <p>
      * Remember to qualify the constant with your package name to ensure it is unique.
-     *
      */
     public static final String NOTE_INFO = "com.thedancercodes.notekeeper.NOTE_INFO";
 
     private NoteInfo mNote;
+    private boolean isNewNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +58,10 @@ public class NoteActivity extends AppCompatActivity {
         EditText textNoteTitle = findViewById(R.id.text_note_title);
         EditText textNoteText = findViewById(R.id.text_note_text);
 
-        //
-        displayNote(spinnerCourses, textNoteTitle, textNoteText);
+        // If we select a note, we display that note BUT if it is a new note, (no note passed),
+        // we don't display the note.
+        if (!isNewNote)
+            displayNote(spinnerCourses, textNoteTitle, textNoteText);
 
     }
 
@@ -86,6 +88,9 @@ public class NoteActivity extends AppCompatActivity {
         // Get the Extra containing the note from it.
         mNote = intent.getParcelableExtra(NOTE_INFO);
 
+        // Add a boolean to determine whether we are creating a new note
+        // or passing in an existing note
+        isNewNote = mNote == null;
     }
 
     @Override

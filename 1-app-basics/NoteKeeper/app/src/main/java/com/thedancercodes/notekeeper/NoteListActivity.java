@@ -22,12 +22,14 @@ public class NoteListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Use this FAB to create a new note
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                // Create an intent and start activity
+                startActivity(new Intent(NoteListActivity.this, NoteActivity.class));
             }
         });
 
