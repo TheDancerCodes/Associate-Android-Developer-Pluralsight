@@ -54,6 +54,11 @@ public final class NoteInfo {
         return getCompareKey().hashCode();
     }
 
+    /**
+     * Use this to populate the list items for each note.
+     *
+     * @return concatenated string of mCourse, mTitle & mText
+     */
     @Override
     public String toString() {
         return getCompareKey();
