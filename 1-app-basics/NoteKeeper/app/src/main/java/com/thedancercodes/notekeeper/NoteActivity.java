@@ -1,11 +1,13 @@
 package com.thedancercodes.notekeeper;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.List;
@@ -21,6 +23,8 @@ public class NoteActivity extends AppCompatActivity {
      *
      */
     public static final String NOTE_INFO = "com.thedancercodes.notekeeper.NOTE_INFO";
+
+    private NoteInfo mNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,40 @@ public class NoteActivity extends AppCompatActivity {
         // Associate the Adapter with the Spinner.
         spinnerCourses.setAdapter(adapterCourses);
 
+        // Read contents of the Intent
+        readDisplayStateValues();
+
+        // Reference to the Edit Texts in the Activity
+        EditText textNoteTitle = findViewById(R.id.text_note_title);
+        EditText textNoteText = findViewById(R.id.text_note_text);
+
+        //
+        displayNote(spinnerCourses, textNoteTitle, textNoteText);
+
+    }
+
+    private void displayNote(Spinner spinnerCourses, EditText textNoteTitle, EditText textNoteText) {
+
+        // Get list of courses from DataManager
+        List<CourseInfo> courses = DataManager.getInstance().getCourses();
+
+        // Get index of selected note course from the list
+        int courseIndex = courses.indexOf(mNote.getCourse());
+
+        // Pass in index to spinner to set the selection.
+        spinnerCourses.setSelection(courseIndex);
+
+        // Take the Note member variable, mNote, and set each of the values.
+        textNoteTitle.setText(mNote.getTitle());
+        textNoteText.setText(mNote.getText());
+    }
+
+    // Method that reads the contents of the Intent
+    private void readDisplayStateValues() {
+        Intent intent = getIntent(); // Reference to intent used to start this activity
+
+        // Get the Extra containing the note from it.
+        mNote = intent.getParcelableExtra(NOTE_INFO);
 
     }
 
