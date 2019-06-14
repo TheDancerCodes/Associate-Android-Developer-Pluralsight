@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -47,6 +48,23 @@ public class NoteListActivity extends AppCompatActivity {
 
         // Associate our Adapter with the ListView
         listNotes.setAdapter(adapterNotes);
+
+        // Handle ListView Selection
+        listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            /**
+             * This method is called each time a user makes a selection from the ListView
+             *
+             * @param parent
+             * @param view
+             * @param position
+             * @param id
+             */
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
 
     }
 
