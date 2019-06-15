@@ -28,6 +28,9 @@ public class NoteActivity extends AppCompatActivity {
 
     private NoteInfo mNote;
     private boolean isNewNote;
+    private Spinner spinnerCourses;
+    private EditText textNoteTitle;
+    private EditText textNoteText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,7 @@ public class NoteActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Reference to our spinner
-        Spinner spinnerCourses = findViewById(R.id.spinner_courses);
+        spinnerCourses = findViewById(R.id.spinner_courses);
 
         // Get the list of courses
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
@@ -58,8 +61,8 @@ public class NoteActivity extends AppCompatActivity {
         readDisplayStateValues();
 
         // Reference to the Edit Texts in the Activity
-        EditText textNoteTitle = findViewById(R.id.text_note_title);
-        EditText textNoteText = findViewById(R.id.text_note_text);
+        textNoteTitle = findViewById(R.id.text_note_title);
+        textNoteText = findViewById(R.id.text_note_text);
 
         // If we select a note, we display that note BUT if it is a new note, (no note passed),
         // we don't display the note.
@@ -115,10 +118,37 @@ public class NoteActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_send_mail) {
+            sendEmail();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Method to send an email using an implicit intent
+    private void sendEmail() {
+
+        // Get the course information
+        CourseInfo course = (CourseInfo) spinnerCourses.getSelectedItem();
+
+        // Local variable for subject of email
+        String subject = textNoteTitle.getText().toString();
+
+        // Local variable for body of email
+        String text = "Check out what I learned in the PluralSight course \"" +
+                course.getTitle() + "\"n" + textNoteText.getText().toString();
+
+        // Implicit Intent with Action & Mime Type to send an email
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("message/rfc2822");
+
+        // Put the title and body of our email in the intent extra
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, text);
+
+        // Sending the implicit Intent
+        startActivity(intent);
+
     }
 }
