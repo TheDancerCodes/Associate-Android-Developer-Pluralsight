@@ -31,6 +31,7 @@ public class NoteActivity extends AppCompatActivity {
     private Spinner spinnerCourses;
     private EditText textNoteTitle;
     private EditText textNoteText;
+    private int notePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,28 @@ public class NoteActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method is triggered when the user moves away from this screen.
+     * <p>
+     * Calls saveNote() and takes all the values available on screen and puts them into our Note
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        saveNote();
+    }
+
+    private void saveNote() {
+
+        // Set each of the values of the note currently selected in the spinner.
+        mNote.setCourse((CourseInfo) spinnerCourses.getSelectedItem());
+
+        // Get values of text fields
+        mNote.setTitle(textNoteTitle.getText().toString());
+        mNote.setText(textNoteText.getText().toString());
+    }
+
     private void displayNote(Spinner spinnerCourses, EditText textNoteTitle, EditText textNoteText) {
 
         // Get list of courses from DataManager
@@ -98,9 +121,26 @@ public class NoteActivity extends AppCompatActivity {
         // or passing in an existing note based on the existence or absence of a position.
         isNewNote = position == POSITION_NOT_SET;
 
-        // Get a note with the position if it is not a new note
-        if (!isNewNote)
+        // Create a new note
+        if (isNewNote) {
+            createNewNote();
+        } else {
+            // Get a note with the position if it is not a new note
             mNote = DataManager.getInstance().getNotes().get(position);
+        }
+    }
+
+    private void createNewNote() {
+
+        // Reference to the DataManager
+        DataManager dm = DataManager.getInstance();
+
+        // Give the position of newly created note
+        notePosition = dm.createNewNote();
+
+        // Get note at that position and assign it to the field mNote.
+        mNote = dm.getNotes().get(notePosition);
+
     }
 
     @Override
