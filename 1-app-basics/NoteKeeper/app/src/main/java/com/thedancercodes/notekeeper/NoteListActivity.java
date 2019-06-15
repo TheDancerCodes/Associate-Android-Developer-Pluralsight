@@ -3,7 +3,6 @@ package com.thedancercodes.notekeeper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -70,10 +69,10 @@ public class NoteListActivity extends AppCompatActivity {
                 Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
 
                 // Get NoteInfo that corresponds to user selection
-                NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
+                // NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
 
-                // Put NoteInfo as an Extra in the Intent
-                intent.putExtra(NoteActivity.NOTE_INFO, note);
+                // Put Note Position as an Extra in the Intent
+                intent.putExtra(NoteActivity.NOTE_POSITION, position);
 
 
                 // Launch the Activity

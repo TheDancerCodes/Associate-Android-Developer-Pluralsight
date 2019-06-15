@@ -21,7 +21,10 @@ public class NoteActivity extends AppCompatActivity {
      * <p>
      * Remember to qualify the constant with your package name to ensure it is unique.
      */
-    public static final String NOTE_INFO = "com.thedancercodes.notekeeper.NOTE_INFO";
+    public static final String NOTE_POSITION = "com.thedancercodes.notekeeper.NOTE_POSITION";
+
+    // Value the position will have if the intent Extra is not set
+    public static final int POSITION_NOT_SET = -1;
 
     private NoteInfo mNote;
     private boolean isNewNote;
@@ -85,12 +88,16 @@ public class NoteActivity extends AppCompatActivity {
     private void readDisplayStateValues() {
         Intent intent = getIntent(); // Reference to intent used to start this activity
 
-        // Get the Extra containing the note from it.
-        mNote = intent.getParcelableExtra(NOTE_INFO);
+        // Get the Extra containing the position from it.
+        int position = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
 
         // Add a boolean to determine whether we are creating a new note
-        // or passing in an existing note
-        isNewNote = mNote == null;
+        // or passing in an existing note based on the existence or absence of a position.
+        isNewNote = position == POSITION_NOT_SET;
+
+        // Get a note with the position if it is not a new note
+        if (!isNewNote)
+            mNote = DataManager.getInstance().getNotes().get(position);
     }
 
     @Override
