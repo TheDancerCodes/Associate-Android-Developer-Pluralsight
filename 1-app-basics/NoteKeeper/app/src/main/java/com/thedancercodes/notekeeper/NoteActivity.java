@@ -33,6 +33,9 @@ public class NoteActivity extends AppCompatActivity {
     private EditText textNoteText;
     private int notePosition;
     private boolean isCancelling;
+    private String originalNoteCourseId;
+    private String originalNoteTitle;
+    private String originalNoteText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,10 @@ public class NoteActivity extends AppCompatActivity {
         // Read contents of the Intent
         readDisplayStateValues();
 
+        // After we call, readDisplayStateValues(),
+        // that’s a good time for us to preserve the original values of the note.
+        saveOriginalNoteValues();
+
         // Reference to the Edit Texts in the Activity
         textNoteTitle = findViewById(R.id.text_note_title);
         textNoteText = findViewById(R.id.text_note_text);
@@ -71,6 +78,18 @@ public class NoteActivity extends AppCompatActivity {
         if (!isNewNote)
             displayNote(spinnerCourses, textNoteTitle, textNoteText);
 
+    }
+
+    private void saveOriginalNoteValues() {
+
+        // Check whether it is anew note and do nothing
+        if (isNewNote)
+            return;
+
+        // Save each of the values of the course
+        originalNoteCourseId = mNote.getCourse().getCourseId();
+        originalNoteTitle = mNote.getTitle();
+        originalNoteText = mNote.getText();
     }
 
     /**
@@ -89,11 +108,24 @@ public class NoteActivity extends AppCompatActivity {
                 // Remove note from backing store if user is cancelling out.
                 DataManager.getInstance().removeNote(notePosition);
             }
+            // If a user cancels, explicitly store original values back
+            else {
+                storePreviousNoteValues();
+            }
 
         } else {
             saveNote();
         }
 
+    }
+
+    private void storePreviousNoteValues() {
+
+        // Set the original values back into the note.
+        CourseInfo course = DataManager.getInstance().getCourse(originalNoteCourseId);
+        mNote.setCourse(course);
+        mNote.setTitle(originalNoteTitle);
+        mNote.setText(originalNoteText);
     }
 
     private void saveNote() {
