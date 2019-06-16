@@ -14,6 +14,8 @@ import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity {
 
+    private ArrayAdapter<NoteInfo> adapterNotes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,20 @@ public class NoteListActivity extends AppCompatActivity {
         initializeDisplayContent();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        /*
+         *  Let the ArrayAdapter know that the data has changed.
+         *
+         *  Each time our NoteListActivity moves into the foreground, we're telling it to go ahead
+         *
+         *  & get prepared for the latest list of notes that we have.
+         */
+        adapterNotes.notifyDataSetChanged();
+    }
+
     private void initializeDisplayContent() {
 
         // Reference to ListView
@@ -45,8 +61,7 @@ public class NoteListActivity extends AppCompatActivity {
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
         // Add the notes into ListView using an ArrayAdapter
-        ArrayAdapter<NoteInfo> adapterNotes =
-                new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
+        adapterNotes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
 
         // Associate our Adapter with the ListView
         listNotes.setAdapter(adapterNotes);
