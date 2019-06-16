@@ -32,6 +32,7 @@ public class NoteActivity extends AppCompatActivity {
     private EditText textNoteTitle;
     private EditText textNoteText;
     private int notePosition;
+    private boolean isCancelling;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,18 @@ public class NoteActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        saveNote();
+        // Conditional to check whether or not a user is cancelling out of an activity &
+        // whether it is a new note.
+        if (isCancelling) {
+            if (isNewNote) {
+                // Remove note from backing store if user is cancelling out.
+                DataManager.getInstance().removeNote(notePosition);
+            }
+
+        } else {
+            saveNote();
+        }
+
     }
 
     private void saveNote() {
@@ -161,6 +173,11 @@ public class NoteActivity extends AppCompatActivity {
         if (id == R.id.action_send_mail) {
             sendEmail();
             return true;
+        }
+        // When a user exits activity, don't save changes.
+        else if (id == R.id.action_cancel) {
+            isCancelling = true;
+            finish(); // Closes current Activity & returns to previous Activity.
         }
 
         return super.onOptionsItemSelected(item);
