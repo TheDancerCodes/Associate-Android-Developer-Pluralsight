@@ -23,6 +23,13 @@ public class NoteActivity extends AppCompatActivity {
      */
     public static final String NOTE_POSITION = "com.thedancercodes.notekeeper.NOTE_POSITION";
 
+    /**
+     * Declare constants for the Activity instance state items we want to preserve.
+     */
+    public static final String ORIGINAL_NOTE_COURSE_ID = "com.thedancercodes.notekeeper.ORIGINAL_NOTE_COURSE_ID";
+    public static final String ORIGINAL_NOTE_TITLE = "com.thedancercodes.notekeeper.ORIGINAL_NOTE_TITLE";
+    public static final String ORIGINAL_NOTE_TEXT = "com.thedancercodes.notekeeper.ORIGINAL_NOTE_TEXT";
+
     // Value the position will have if the intent Extra is not set
     public static final int POSITION_NOT_SET = -1;
 
@@ -65,9 +72,19 @@ public class NoteActivity extends AppCompatActivity {
         // Read contents of the Intent
         readDisplayStateValues();
 
-        // After we call, readDisplayStateValues(),
-        // that’s a good time for us to preserve the original values of the note.
-        saveOriginalNoteValues();
+        /*
+            After we call, readDisplayStateValues(),
+            that’s a good time for us to preserve the original values of the note.
+
+            Conditional: if savedInstanceState is null, we save the original note values,
+             else we restore the original note values.
+
+         */
+        if (savedInstanceState == null) {
+            saveOriginalNoteValues();
+        } else {
+            restoreOriginalNoteValues(savedInstanceState);
+        }
 
         // Reference to the Edit Texts in the Activity
         textNoteTitle = findViewById(R.id.text_note_title);
@@ -77,6 +94,15 @@ public class NoteActivity extends AppCompatActivity {
         // we don't display the note.
         if (!isNewNote)
             displayNote(spinnerCourses, textNoteTitle, textNoteText);
+
+    }
+
+    private void restoreOriginalNoteValues(Bundle savedInstanceState) {
+
+        // Get values that we put into the instance state back out.
+        originalNoteCourseId = savedInstanceState.getString(ORIGINAL_NOTE_COURSE_ID);
+        originalNoteTitle = savedInstanceState.getString(ORIGINAL_NOTE_TITLE);
+        originalNoteText = savedInstanceState.getString(ORIGINAL_NOTE_TEXT);
 
     }
 
@@ -117,6 +143,16 @@ public class NoteActivity extends AppCompatActivity {
             saveNote();
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Put values we want to store
+        outState.putString(ORIGINAL_NOTE_COURSE_ID, originalNoteCourseId);
+        outState.putString(ORIGINAL_NOTE_TITLE, originalNoteTitle);
+        outState.putString(ORIGINAL_NOTE_TEXT, originalNoteText);
     }
 
     private void storePreviousNoteValues() {
