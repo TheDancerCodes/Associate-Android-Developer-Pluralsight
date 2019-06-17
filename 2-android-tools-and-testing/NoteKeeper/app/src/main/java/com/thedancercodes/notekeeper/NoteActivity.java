@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -13,6 +14,8 @@ import android.widget.Spinner;
 import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
+
+    public final String TAG = getClass().getSimpleName(); // Ensures we always have correct class name.
 
     /**
      * Constant to be used in Extras by Intents.
@@ -95,6 +98,8 @@ public class NoteActivity extends AppCompatActivity {
         if (!isNewNote)
             displayNote(spinnerCourses, textNoteTitle, textNoteText);
 
+        // Debug Message
+        Log.d(TAG, "onCreate");
     }
 
     private void restoreOriginalNoteValues(Bundle savedInstanceState) {
@@ -130,6 +135,10 @@ public class NoteActivity extends AppCompatActivity {
         // Conditional to check whether or not a user is cancelling out of an activity &
         // whether it is a new note.
         if (isCancelling) {
+
+            // Keep track of when a user cancels
+            Log.i(TAG, "Cancelling note at position: " + notePosition);
+
             if (isNewNote) {
                 // Remove note from backing store if user is cancelling out.
                 DataManager.getInstance().removeNote(notePosition);
@@ -142,6 +151,9 @@ public class NoteActivity extends AppCompatActivity {
         } else {
             saveNote();
         }
+
+        // Debug Message
+        Log.d(TAG, "onPause");
 
     }
 
@@ -205,8 +217,13 @@ public class NoteActivity extends AppCompatActivity {
         if (isNewNote) {
             createNewNote();
         }
-            // Get a note with the position whether its a new note or not.
-            mNote = DataManager.getInstance().getNotes().get(notePosition);
+
+        // Write informational message each time the NoteActivity is started,
+        // with the position being started for.
+        Log.i(TAG, "notePosition: " + notePosition);
+
+        // Get a note with the position whether its a new note or not.
+        mNote = DataManager.getInstance().getNotes().get(notePosition);
     }
 
     private void createNewNote() {
