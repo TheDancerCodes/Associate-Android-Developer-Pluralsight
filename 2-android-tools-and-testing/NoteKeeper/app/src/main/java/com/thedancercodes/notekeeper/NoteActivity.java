@@ -195,19 +195,18 @@ public class NoteActivity extends AppCompatActivity {
         Intent intent = getIntent(); // Reference to intent used to start this activity
 
         // Get the Extra containing the position from it.
-        int position = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
+        notePosition = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
 
         // Add a boolean to determine whether we are creating a new note
         // or passing in an existing note based on the existence or absence of a position.
-        isNewNote = position == POSITION_NOT_SET;
+        isNewNote = notePosition == POSITION_NOT_SET;
 
         // Create a new note
         if (isNewNote) {
             createNewNote();
-        } else {
-            // Get a note with the position if it is not a new note
-            mNote = DataManager.getInstance().getNotes().get(position);
         }
+            // Get a note with the position whether its a new note or not.
+            mNote = DataManager.getInstance().getNotes().get(notePosition);
     }
 
     private void createNewNote() {
@@ -219,7 +218,7 @@ public class NoteActivity extends AppCompatActivity {
         notePosition = dm.createNewNote();
 
         // Get note at that position and assign it to the field mNote.
-        mNote = dm.getNotes().get(notePosition);
+        // mNote = dm.getNotes().get(notePosition);
 
     }
 
