@@ -33,9 +33,9 @@ public class DataManagerTest {
 
         // GOAL: Make sure compareNote contains the things that we have put into the note
         // at that spot.
-        assertEquals(compareNote.getCourse(), course);
-        assertEquals(compareNote.getTitle(), noteTitle);
-        assertEquals(compareNote.getText(), noteText);
+        assertEquals(course, compareNote.getCourse());
+        assertEquals(noteTitle, compareNote.getTitle());
+        assertEquals(noteText, compareNote.getText());
 
     }
 }
