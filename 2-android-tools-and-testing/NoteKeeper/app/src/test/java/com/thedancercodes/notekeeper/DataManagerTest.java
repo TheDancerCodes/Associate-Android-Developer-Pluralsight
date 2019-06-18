@@ -18,11 +18,11 @@ public class DataManagerTest {
 
     /**
      * This method runs before each test in this class
-     *
+     * <p>
      * Makes sure list of notes always starts in a consistent state
      */
     @Before
-    public void setUp() { ;
+    public void setUp() {
         dataManager.getNotes().clear();
         dataManager.initializeExampleNotes();
     }
@@ -90,5 +90,26 @@ public class DataManagerTest {
         // Find 2nd note & confirm we get back the index of where we put the 2nd note
         int foundIndex2 = dataManager.findNote(newNote2);
         assertEquals(noteIndex2, foundIndex2);
+    }
+
+    @Test
+    public void createNewNoteOneStepCreation() {
+
+        // Values to create the note
+        final CourseInfo course = dataManager.getCourse("android_async");
+        final String noteTitle = "Test note title";
+        final String noteText = "This is the body text of my test note";
+
+        // Get index when note is created.
+        int noteIndex = dataManager.createNewNote(course, noteTitle, noteText);
+
+        // Get back note at the index we just created
+        NoteInfo compareNote = dataManager.getNotes().get(noteIndex);
+
+        // Assert and make sure the note at that position has all the right values
+        assertEquals(course, compareNote.getCourse());
+        assertEquals(noteTitle, compareNote.getTitle());
+        assertEquals(noteText, compareNote.getText());
+
     }
 }
