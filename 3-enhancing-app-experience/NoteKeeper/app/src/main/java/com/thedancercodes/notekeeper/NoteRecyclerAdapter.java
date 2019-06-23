@@ -8,14 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapter.ViewHolder> {
 
     private final Context mContext;
+    private final List<NoteInfo> notes; // Field to hold a list of notes
     private final LayoutInflater layoutInflater;
 
-    // Constructor that accepts context as a parameter & assigns it to mContext field.
-    public NoteRecyclerAdapter(Context context) {
+    // Constructor that accepts context & list of notes as a parameter
+    // & assigns the context to mContext field.
+    public NoteRecyclerAdapter(Context context, List<NoteInfo> notes) {
         this.mContext = context;
+        this.notes = notes;
 
         // To create views from a layout resource, use LayoutInflater class using the context.
         layoutInflater = LayoutInflater.from(mContext);
@@ -33,16 +38,23 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         return new ViewHolder(itemView);
     }
 
-    // Associates data with our views
+    // Associates data for a desired position within a ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+
+        // Get note that corresponds to a particular position
+        NoteInfo note = notes.get(position);
+
+        // Get each of our TextViews from the ViewHolder
+        viewHolder.textCourse.setText(note.getCourse().getTitle());
+        viewHolder.textTitle.setText(note.getTitle());
 
     }
 
     // Indicate number of data items we have
     @Override
     public int getItemCount() {
-        return 0;
+        return notes.size(); // return the size of the notes
     }
 
     // Holds information for individual views.
