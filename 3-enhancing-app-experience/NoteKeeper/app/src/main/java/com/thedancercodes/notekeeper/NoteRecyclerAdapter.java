@@ -1,6 +1,7 @@
 package com.thedancercodes.notekeeper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -48,6 +49,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         // Get each of our TextViews from the ViewHolder
         viewHolder.textCourse.setText(note.getCourse().getTitle());
         viewHolder.textTitle.setText(note.getTitle());
+        viewHolder.currentPosition = position;
 
     }
 
@@ -67,12 +69,31 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         public final TextView textCourse;
         public final TextView textTitle;
 
+        // Get ViewHolder current position each time its associated with a different set of data
+        public int currentPosition;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             // Get references to each of the TextViews within our layout
             textCourse = itemView.findViewById(R.id.text_course);
             textTitle = itemView.findViewById(R.id.text_title);
+
+            // Associate a click event handler with the itemView
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    // Show NoteActivity for whatever the current position is.
+                    Intent intent = new Intent(mContext, NoteActivity.class);
+
+                    // Set the Extra for the NotePosition
+                    intent.putExtra(NoteActivity.NOTE_POSITION, currentPosition);
+
+                    // Take context, call startActivity & pass in intent
+                    mContext.startActivity(intent);
+                }
+            });
         }
     }
 

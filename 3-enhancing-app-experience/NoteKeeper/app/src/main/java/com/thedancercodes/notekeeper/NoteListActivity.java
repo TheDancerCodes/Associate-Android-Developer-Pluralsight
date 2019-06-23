@@ -15,6 +15,7 @@ import android.widget.ListView;
 import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity {
+    private NoteRecyclerAdapter noteRecyclerAdapter;
 
     // Comment out the ListView Adapter
     // private ArrayAdapter<NoteInfo> adapterNotes;
@@ -51,8 +52,11 @@ public class NoteListActivity extends AppCompatActivity {
          *  Each time our NoteListActivity moves into the foreground, we're telling it to go ahead
          *
          *  & get prepared for the latest list of notes that we have.
+         *
+         *  This refreshes our data set.
          */
         // adapterNotes.notifyDataSetChanged();
+        noteRecyclerAdapter.notifyDataSetChanged();
     }
 
     private void initializeDisplayContent() {
@@ -112,7 +116,7 @@ public class NoteListActivity extends AppCompatActivity {
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
         // Create instance of NoteRecyclerAdapter
-        final NoteRecyclerAdapter noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
+        noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
 
         // Associate NoteRecyclerAdapter with the RecyclerView
         recyclerNotes.setAdapter(noteRecyclerAdapter);
