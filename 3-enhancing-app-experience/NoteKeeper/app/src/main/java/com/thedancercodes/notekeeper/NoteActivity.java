@@ -271,8 +271,24 @@ public class NoteActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Method called when the user selects the menu option Next.
+    // The user moves from the current note they are viewing to the next note that comes after it.
     private void moveNext() {
 
+        // Save any changes made in current note before moving to the next note
+        saveNote();
+
+        // Increment the note position
+        ++notePosition;
+
+        // Get note that corresponds to that position
+        mNote = DataManager.getInstance().getNotes().get(notePosition);
+
+        // Save original values of the note we navigated to
+        saveOriginalNoteValues();
+
+        // Display note into the Views currently displayed by the NoteActivity
+        displayNote(spinnerCourses, textNoteTitle, textNoteText);
     }
 
     // Method to send an email using an implicit intent
