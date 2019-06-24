@@ -263,8 +263,16 @@ public class NoteActivity extends AppCompatActivity {
             isCancelling = true;
             finish(); // Closes current Activity & returns to previous Activity.
         }
+        // Move to the next note selection within the NoteActivity
+        else if (id == R.id.action_next) {
+            moveNext();
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void moveNext() {
+
     }
 
     // Method to send an email using an implicit intent
