@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity
     private NoteRecyclerAdapter noteRecyclerAdapter;
     private RecyclerView recyclerItems;
     private LinearLayoutManager notesLayoutManager;
+    private CourseRecyclerAdapter courseRecyclerAdapter;
+    private GridLayoutManager coursesLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,14 +79,23 @@ public class MainActivity extends AppCompatActivity
         // Reference to RecyclerView
         recyclerItems = findViewById(R.id.list_items);
 
-        // Create instance of LayoutManager
+        // Instance of NotesLayoutManager
         notesLayoutManager = new LinearLayoutManager(this);
+
+        // Instance of CoursesLayoutManager
+        coursesLayoutManager = new GridLayoutManager(this, 2);
 
         // Get notes to display within RecyclerView
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
         // Create instance of NoteRecyclerAdapter
         noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
+
+        // Get courses to display within RecyclerView
+        List<CourseInfo> courses = DataManager.getInstance().getCourses();
+
+        // Create instance of CourseRecyclerAdapter
+        courseRecyclerAdapter = new CourseRecyclerAdapter(this, courses);
 
         displayNotes();
 
@@ -97,8 +109,12 @@ public class MainActivity extends AppCompatActivity
         // Associate NoteRecyclerAdapter with the RecyclerView
         recyclerItems.setAdapter(noteRecyclerAdapter);
 
-        /* Set notes option as checked, in the navigation drawer. */
+        /* Set selected menu item as checked, in the navigation drawer. */
+        selectNavigationMenuItem(R.id.nav_notes);
 
+    }
+
+    private void selectNavigationMenuItem(int id) {
         // Reference to NavigationView
         NavigationView navigationView = findViewById(R.id.nav_view);
 
@@ -106,7 +122,19 @@ public class MainActivity extends AppCompatActivity
         Menu menu = navigationView.getMenu();
 
         // Use menu to find the menu item we want to select and check
-        menu.findItem(R.id.nav_notes).setChecked(true);
+        menu.findItem(id).setChecked(true);
+    }
+
+    private void displayCourses() {
+
+        // Set the LayoutManager to RecyclerView
+        recyclerItems.setLayoutManager(coursesLayoutManager);
+
+        // Associate CourseRecyclerAdapter with the RecyclerView
+        recyclerItems.setAdapter(courseRecyclerAdapter);
+
+        /* Set selected menu item as checked, in the navigation drawer. */
+        selectNavigationMenuItem(R.id.nav_courses);
     }
 
     @Override
@@ -150,7 +178,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_notes) {
             displayNotes();
         } else if (id == R.id.nav_courses) {
-            handleSelection("Courses");
+            displayCourses();
         } else if (id == R.id.nav_share) {
             handleSelection("Share");
         } else if (id == R.id.nav_send) {
