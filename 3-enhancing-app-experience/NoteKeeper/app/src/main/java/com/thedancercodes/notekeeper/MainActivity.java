@@ -22,8 +22,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    // RecyclerView Adapter
+    // Fields
     private NoteRecyclerAdapter noteRecyclerAdapter;
+    private RecyclerView recyclerItems;
+    private LinearLayoutManager notesLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +74,10 @@ public class MainActivity extends AppCompatActivity
     private void initializeDisplayContent() {
 
         // Reference to RecyclerView
-        final RecyclerView recyclerNotes = findViewById(R.id.list_items);
+        recyclerItems = findViewById(R.id.list_items);
 
         // Create instance of LayoutManager
-        final LinearLayoutManager notesLayoutManager = new LinearLayoutManager(this);
-
-        // Set the LayoutManager to RecyclerView
-        recyclerNotes.setLayoutManager(notesLayoutManager);
+        notesLayoutManager = new LinearLayoutManager(this);
 
         // Get notes to display within RecyclerView
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
@@ -86,9 +85,28 @@ public class MainActivity extends AppCompatActivity
         // Create instance of NoteRecyclerAdapter
         noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
 
-        // Associate NoteRecyclerAdapter with the RecyclerView
-        recyclerNotes.setAdapter(noteRecyclerAdapter);
+        displayNotes();
 
+    }
+
+    private void displayNotes() {
+
+        // Set the LayoutManager to RecyclerView
+        recyclerItems.setLayoutManager(notesLayoutManager);
+
+        // Associate NoteRecyclerAdapter with the RecyclerView
+        recyclerItems.setAdapter(noteRecyclerAdapter);
+
+        /* Set notes option as checked, in the navigation drawer. */
+
+        // Reference to NavigationView
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        // Reference to Menu within the NavigationView
+        Menu menu = navigationView.getMenu();
+
+        // Use menu to find the menu item we want to select and check
+        menu.findItem(R.id.nav_notes).setChecked(true);
     }
 
     @Override
@@ -130,7 +148,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_notes) {
-            handleSelection("Notes");
+            displayNotes();
         } else if (id == R.id.nav_courses) {
             handleSelection("Courses");
         } else if (id == R.id.nav_share) {
