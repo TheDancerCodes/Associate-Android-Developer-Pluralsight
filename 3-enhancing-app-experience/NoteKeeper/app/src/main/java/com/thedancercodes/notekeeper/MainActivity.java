@@ -83,7 +83,8 @@ public class MainActivity extends AppCompatActivity
         notesLayoutManager = new LinearLayoutManager(this);
 
         // Instance of CoursesLayoutManager
-        coursesLayoutManager = new GridLayoutManager(this, 2);
+        coursesLayoutManager = new GridLayoutManager(this,
+                getResources().getInteger(R.integer.course_grid_span)); // Get column number from a resource file
 
         // Get notes to display within RecyclerView
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
