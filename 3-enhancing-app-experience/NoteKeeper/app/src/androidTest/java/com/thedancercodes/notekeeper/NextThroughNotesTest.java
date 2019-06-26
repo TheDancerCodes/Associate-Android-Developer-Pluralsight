@@ -46,19 +46,35 @@ public class NextThroughNotesTest {
 
         // Reference to NotesList from our Manager
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
-        int index = 0;
 
-        // Get first note from the Note List
-        NoteInfo note = notes.get(index);
+        // for loop: walks through the full ranges of indexes for the note list
+        for(int index = 0; index < notes.size(); index++) {
 
-        /* Walk through each of the UI fields on the NoteActivity & verify that the Spinner
-           and TextViews have the right text for this note in them. */
-        onView(withId(R.id.spinner_courses)).check(
-                matches(withSpinnerText(note.getCourse().getTitle())));
+            // Get first note from the Note List
+            NoteInfo note = notes.get(index);
 
-        onView(withId(R.id.text_note_title)).check(matches(withText(note.getTitle())));
+            /* Walk through each of the UI fields on the NoteActivity & verify that the Spinner
+               and TextViews have the right text for this note in them. */
+            onView(withId(R.id.spinner_courses)).check(
+                    matches(withSpinnerText(note.getCourse().getTitle())));
 
-        onView(withId(R.id.text_note_text)).check(matches(withText(note.getText())));
+            onView(withId(R.id.text_note_title)).check(matches(withText(note.getTitle())));
+
+            onView(withId(R.id.text_note_text)).check(matches(withText(note.getText())));
+
+            // Reference to Next menu item
+            // NOTE: This test fails on devices that don't contain the next button on the app bar.
+
+            // Verify that button is enabled as lona as we are not at the last index
+            if (index < notes.size() -1)
+                onView(allOf(withId(R.id.action_next), isEnabled())).perform(click());
+        }
+
+        // Verify button is disabled when we get to the last item in the loop
+        onView(withId(R.id.action_next)).check(matches(not(isEnabled())));
+
+        // Return back to MainActivity
+        pressBack();
     }
 
 }
