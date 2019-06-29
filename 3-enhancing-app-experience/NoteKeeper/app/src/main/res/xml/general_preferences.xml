@@ -28,7 +28,14 @@
         android:inputType="textEmailAddress"
         app:key="user_email_address"
         app:title="@string/pref_title_email_address"
+        app:useSimpleSummaryProvider="true" />
 
+    <ListPreference
+        app:defaultValue="@string/pref_default_favorite_social"
+        app:entries="@array/pref_entries_favorite_social"
+        app:entryValues="@array/pref_values_favorite_social"
+        app:key="user_favorite_social"
+        app:title="@string/reply_title"
         app:useSimpleSummaryProvider="true" />
 
 </androidx.preference.PreferenceScreen>
