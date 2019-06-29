@@ -17,6 +17,12 @@
 <androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Preference
+        app:fragment="com.thedancercodes.notekeeper.SettingsActivity$GeneralPreferenceFragment"
+        app:icon="@drawable/info"
+        app:key="general_header"
+        app:title="@string/general_header" />
+
+    <Preference
         app:fragment="com.thedancercodes.notekeeper.SettingsActivity$MessagesFragment"
         app:icon="@drawable/messages"
         app:key="messages_header"

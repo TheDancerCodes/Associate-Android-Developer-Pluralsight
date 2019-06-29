@@ -82,6 +82,14 @@ public class SettingsActivity extends AppCompatActivity implements
         }
     }
 
+    public static class GeneralPreferenceFragment extends PreferenceFragmentCompat {
+
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.general_preferences, rootKey);
+        }
+    }
+
     public static class MessagesFragment extends PreferenceFragmentCompat {
 
         @Override
