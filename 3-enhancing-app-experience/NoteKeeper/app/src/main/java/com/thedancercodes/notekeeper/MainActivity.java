@@ -1,9 +1,12 @@
 package com.thedancercodes.notekeeper;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -72,6 +76,39 @@ public class MainActivity extends AppCompatActivity
          *  This refreshes our data set.
          */
         noteRecyclerAdapter.notifyDataSetChanged();
+
+        /*
+           Update values in Nav Drawer every time onResume gets called.
+         */
+        updateNavHeader();
+    }
+
+    private void updateNavHeader() {
+
+        // Reference to our Navigation View
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        // Reference to the Navigation View Header
+        View headerView = navigationView.getHeaderView(0);
+
+        // Reference to TextViews
+        TextView textUserName = headerView.findViewById(R.id.text_user_name);
+        TextView textEmailAddress = headerView.findViewById(R.id.text_email_address);
+
+        /*
+           Interact with Preference System to get the values
+         */
+
+        // Reference to SharedPreferences
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // Get the values
+        String userName = preferences.getString("user_display_name", "");
+        String emailAddress = preferences.getString("user_email_address", "");
+
+        // Set values to the TextViews
+        textUserName.setText(userName);
+        textEmailAddress.setText(emailAddress);
     }
 
     private void initializeDisplayContent() {
