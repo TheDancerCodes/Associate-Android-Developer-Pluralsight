@@ -3,6 +3,7 @@ package com.thedancercodes.notekeeper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -10,15 +11,21 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
+
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+
 import android.view.MenuItem;
+
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.Menu;
 import android.widget.TextView;
 
@@ -60,6 +67,8 @@ public class MainActivity extends AppCompatActivity
 
         // Populate the RecyclerView
         initializeDisplayContent();
+
+        updateNavHeader();
     }
 
     @Override
@@ -220,7 +229,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_courses) {
             displayCourses();
         } else if (id == R.id.nav_share) {
-            handleSelection(R.string.nav_share_message);
+            // handleSelection(R.string.nav_share_message);
+            handleShare();
         } else if (id == R.id.nav_send) {
             handleSelection(R.string.nav_send_message);
         }
@@ -228,6 +238,18 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    //
+    private void handleShare() {
+
+        // Get reference to RecyclerView to display the SnackBar
+        View view = findViewById(R.id.list_items);
+        Snackbar.make(view, "Share to - " +
+                PreferenceManager.getDefaultSharedPreferences(this)
+                        .getString("user_favorite_social", ""),
+                Snackbar.LENGTH_LONG).show();
+
     }
 
     // Helper Function
