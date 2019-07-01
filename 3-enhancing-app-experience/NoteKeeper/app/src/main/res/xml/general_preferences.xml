@@ -35,7 +35,7 @@
         app:entries="@array/pref_entries_favorite_social"
         app:entryValues="@array/pref_values_favorite_social"
         app:key="user_favorite_social"
-        app:title="@string/reply_title"
+        app:title="@string/pref_title_favorite_social"
         app:useSimpleSummaryProvider="true" />
 
 </androidx.preference.PreferenceScreen>
