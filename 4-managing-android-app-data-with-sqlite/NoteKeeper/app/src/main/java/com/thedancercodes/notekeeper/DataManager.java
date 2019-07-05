@@ -46,12 +46,48 @@ public class DataManager {
         loadCoursesFromDatabase(courseCursor);
 
         // Array of Note table columns
-        String[] noteColumns = {NoteInfoEntry.COLUMN_NOTE_TITLE,
-                NoteInfoEntry.COLUMN_NOTE_TEXT, NoteInfoEntry.COLUMN_COURSE_ID};
+        String[] noteColumns = {
+                NoteInfoEntry.COLUMN_NOTE_TITLE,
+                NoteInfoEntry.COLUMN_NOTE_TEXT,
+                NoteInfoEntry.COLUMN_COURSE_ID};
 
         // Querying NoteInfo Table
         Cursor noteCursor = db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
                 null, null, null, null, null);
+
+        loadNotesFromDatabase(noteCursor);
+    }
+
+    // Get values of the columns within the notes_info table
+    private static void loadNotesFromDatabase(Cursor cursor) {
+
+        // Get column positions
+        int noteTitlePos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+        int noteTextPos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
+        int courseIdPos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+
+        // Get reference to Data Manager singleton & clearing out the notes list
+        DataManager dm = getInstance();
+        dm.mNotes.clear();
+
+        // Use while loop to move through results row by row by calling moveToNext()
+        while (cursor.moveToNext()) {
+
+            // Get values for each of the columns
+            String noteTitle  =cursor.getString(noteTitlePos);
+            String noteText  =cursor.getString(noteTextPos);
+            String courseId  =cursor.getString(courseIdPos);
+
+            // Get Course the corresponds to a particular Note
+            CourseInfo noteCourse = dm.getCourse(courseId);
+
+            // Instance of NoteInfo class & add it to Notes List
+            NoteInfo note = new NoteInfo(noteCourse, noteTitle, noteText);
+            dm.mNotes.add(note);
+        }
+
+        // Close cursor when done
+        cursor.close();
     }
 
     // Get values of the columns within the course_info table
