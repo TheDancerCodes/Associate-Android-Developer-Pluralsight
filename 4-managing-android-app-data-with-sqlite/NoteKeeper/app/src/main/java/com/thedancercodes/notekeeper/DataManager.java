@@ -43,6 +43,8 @@ public class DataManager {
         // Querying CourseInfo Table
         Cursor courseCursor = db.query(CourseInfoEntry.TABLE_NAME, courseColumns, null, null, null, null, null);
 
+        loadCoursesFromDatabase(courseCursor);
+
         // Array of Note table columns
         String[] noteColumns = {NoteInfoEntry.COLUMN_NOTE_TITLE,
                 NoteInfoEntry.COLUMN_NOTE_TEXT, NoteInfoEntry.COLUMN_COURSE_ID};
@@ -50,6 +52,39 @@ public class DataManager {
         // Querying NoteInfo Table
         Cursor noteCursor = db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
                 null, null, null, null, null);
+    }
+
+    // Get values of the columns within the course_info table
+    private static void loadCoursesFromDatabase(Cursor cursor) {
+
+        /* Get column values based on column position. */
+
+        // Get position of course_id & course_title columns
+        int courseIdPos = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_ID);
+        int courseTitlePos = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_TITLE);
+
+        // Load courses into the lists contained in the DataManager Singleton
+        DataManager dm = getInstance(); // Reference to the Singleton
+
+        // Clear out any courses that might have been loaded
+        dm.mCourses.clear();
+
+        // Use while loop, to loop though the rows to access the column values.
+        while (cursor.moveToNext()) {
+
+            // Get values for course_id & course_title columns
+            String courseId = cursor.getString(courseIdPos);
+            String courseTitle = cursor.getString(courseTitlePos);
+
+            // new CourseInfo instance containing id & title form current row
+            CourseInfo course = new CourseInfo(courseId, courseTitle, null);
+
+            // Add to Courses list
+            dm.mCourses.add(course);
+        }
+
+        // Close the Cursor when done
+        cursor.close();
     }
 
     public String getCurrentUserName() {
