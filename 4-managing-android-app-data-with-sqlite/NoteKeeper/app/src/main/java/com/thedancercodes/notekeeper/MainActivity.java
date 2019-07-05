@@ -2,6 +2,7 @@ package com.thedancercodes.notekeeper;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager notesLayoutManager;
     private CourseRecyclerAdapter courseRecyclerAdapter;
     private GridLayoutManager coursesLayoutManager;
+    private NoteKeeperOpenHelper dbOpenHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Create instance of NoteKeeperOpenHelper & assign it to member field
+        dbOpenHelper = new NoteKeeperOpenHelper(this);
 
         // Use this FAB to create a new note
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -69,6 +74,15 @@ public class MainActivity extends AppCompatActivity
         initializeDisplayContent();
 
         updateNavHeader();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+
+        // Close NoteKeeperOpenHelper when activity is destroyed
+        dbOpenHelper.close();
+        super.onDestroy();
     }
 
     @Override
@@ -155,6 +169,10 @@ public class MainActivity extends AppCompatActivity
 
         // Associate NoteRecyclerAdapter with the RecyclerView
         recyclerItems.setAdapter(noteRecyclerAdapter);
+
+        // Connect to the DB, get the rows out of notes_info table & display them to the user\
+        SQLiteDatabase db = dbOpenHelper.getReadableDatabase(); // Returns SQLiteDatabase reference
+
 
         /* Set selected menu item as checked, in the navigation drawer. */
         selectNavigationMenuItem(R.id.nav_notes);
