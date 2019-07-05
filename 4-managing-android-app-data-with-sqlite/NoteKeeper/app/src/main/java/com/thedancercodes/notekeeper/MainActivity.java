@@ -136,6 +136,9 @@ public class MainActivity extends AppCompatActivity
 
     private void initializeDisplayContent() {
 
+        // Call loadFromDatabase method
+        DataManager.loadFromDatabase(dbOpenHelper);
+
         // Reference to RecyclerView
         recyclerItems = findViewById(R.id.list_items);
 
@@ -169,10 +172,6 @@ public class MainActivity extends AppCompatActivity
 
         // Associate NoteRecyclerAdapter with the RecyclerView
         recyclerItems.setAdapter(noteRecyclerAdapter);
-
-        // Connect to the DB, get the rows out of notes_info table & display them to the user\
-        SQLiteDatabase db = dbOpenHelper.getReadableDatabase(); // Returns SQLiteDatabase reference
-
 
         /* Set selected menu item as checked, in the navigation drawer. */
         selectNavigationMenuItem(R.id.nav_notes);

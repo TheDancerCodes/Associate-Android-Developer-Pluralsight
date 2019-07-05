@@ -1,8 +1,10 @@
 package com.thedancercodes.notekeeper;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
+import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +35,21 @@ public class DataManager {
         // Read DB and assign to a local variable
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        // Array of table columns
+        // Array of Course table columns
         String[] courseColumns = {
                 CourseInfoEntry.COLUMN_COURSE_ID,
                 CourseInfoEntry.COLUMN_COURSE_TITLE};
 
-        // Call query method
-        db.query(CourseInfoEntry.TABLE_NAME, courseColumns, null, null, null, null, null);
+        // Querying CourseInfo Table
+        Cursor courseCursor = db.query(CourseInfoEntry.TABLE_NAME, courseColumns, null, null, null, null, null);
+
+        // Array of Note table columns
+        String[] noteColumns = {NoteInfoEntry.COLUMN_NOTE_TITLE,
+                NoteInfoEntry.COLUMN_NOTE_TEXT, NoteInfoEntry.COLUMN_COURSE_ID};
+
+        // Querying NoteInfo Table
+        Cursor noteCursor = db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
+                null, null, null, null, null);
     }
 
     public String getCurrentUserName() {
