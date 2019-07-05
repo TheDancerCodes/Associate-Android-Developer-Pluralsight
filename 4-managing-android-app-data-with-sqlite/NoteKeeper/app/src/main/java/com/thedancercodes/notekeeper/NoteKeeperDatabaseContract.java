@@ -2,6 +2,9 @@ package com.thedancercodes.notekeeper;
 
 import android.provider.BaseColumns;
 
+/**
+ * Holds information about our Database
+ */
 public final class NoteKeeperDatabaseContract {
 
     private NoteKeeperDatabaseContract() {
