@@ -41,7 +41,8 @@ public class DataManager {
                 CourseInfoEntry.COLUMN_COURSE_TITLE};
 
         // Querying CourseInfo Table
-        Cursor courseCursor = db.query(CourseInfoEntry.TABLE_NAME, courseColumns, null, null, null, null, null);
+        Cursor courseCursor = db.query(CourseInfoEntry.TABLE_NAME, courseColumns,
+                null, null, null, null, CourseInfoEntry.COLUMN_COURSE_TITLE + " DESC");
 
         loadCoursesFromDatabase(courseCursor);
 
@@ -51,9 +52,12 @@ public class DataManager {
                 NoteInfoEntry.COLUMN_NOTE_TEXT,
                 NoteInfoEntry.COLUMN_COURSE_ID};
 
+        // Local string variable to enable sorting by 2 columns
+        String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID + "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
+
         // Querying NoteInfo Table
         Cursor noteCursor = db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
-                null, null, null, null, null);
+                null, null, null, null, noteOrderBy);
 
         loadNotesFromDatabase(noteCursor);
     }
