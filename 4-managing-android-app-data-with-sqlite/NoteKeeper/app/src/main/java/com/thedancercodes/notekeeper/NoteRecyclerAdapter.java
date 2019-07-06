@@ -49,7 +49,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         // Get each of our TextViews from the ViewHolder
         viewHolder.textCourse.setText(note.getCourse().getTitle());
         viewHolder.textTitle.setText(note.getTitle());
-        viewHolder.currentPosition = position;
+        viewHolder.mId = note.getId(); // ID of note currently being displayed
 
     }
 
@@ -59,7 +59,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         return notes.size(); // return the size of the notes
     }
 
-    // Holds information for individual views.
+    // Holds information for individual views currently displayed in the RecyclerView.
     // This ViewHolder is supposed to keep references to any views we are going to set at runtime
     // for each item.
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -70,7 +70,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         public final TextView textTitle;
 
         // Get ViewHolder current position each time its associated with a different set of data
-        public int currentPosition;
+        public int mId;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -88,7 +88,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
                     Intent intent = new Intent(mContext, NoteActivity.class);
 
                     // Set the Extra for the NotePosition
-                    intent.putExtra(NoteActivity.NOTE_POSITION, currentPosition);
+                    intent.putExtra(NoteActivity.NOTE_POSITION, mId);
 
                     // Take context, call startActivity & pass in intent
                     mContext.startActivity(intent);

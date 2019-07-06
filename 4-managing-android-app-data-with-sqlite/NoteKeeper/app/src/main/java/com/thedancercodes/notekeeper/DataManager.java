@@ -50,7 +50,8 @@ public class DataManager {
         String[] noteColumns = {
                 NoteInfoEntry.COLUMN_NOTE_TITLE,
                 NoteInfoEntry.COLUMN_NOTE_TEXT,
-                NoteInfoEntry.COLUMN_COURSE_ID};
+                NoteInfoEntry.COLUMN_COURSE_ID,
+                NoteInfoEntry._ID};
 
         // Local string variable to enable sorting by 2 columns
         String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID + "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
@@ -69,6 +70,7 @@ public class DataManager {
         int noteTitlePos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
         int noteTextPos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
         int courseIdPos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        int idPos = cursor.getColumnIndex(NoteInfoEntry._ID);
 
         // Get reference to Data Manager singleton & clearing out the notes list
         DataManager dm = getInstance();
@@ -78,15 +80,16 @@ public class DataManager {
         while (cursor.moveToNext()) {
 
             // Get values for each of the columns
-            String noteTitle  =cursor.getString(noteTitlePos);
-            String noteText  =cursor.getString(noteTextPos);
-            String courseId  =cursor.getString(courseIdPos);
+            String noteTitle = cursor.getString(noteTitlePos);
+            String noteText = cursor.getString(noteTextPos);
+            String courseId = cursor.getString(courseIdPos);
+            int id = cursor.getInt(idPos);
 
             // Get Course the corresponds to a particular Note
             CourseInfo noteCourse = dm.getCourse(courseId);
 
             // Instance of NoteInfo class & add it to Notes List
-            NoteInfo note = new NoteInfo(noteCourse, noteTitle, noteText);
+            NoteInfo note = new NoteInfo(id, noteCourse, noteTitle, noteText);
             dm.mNotes.add(note);
         }
 
