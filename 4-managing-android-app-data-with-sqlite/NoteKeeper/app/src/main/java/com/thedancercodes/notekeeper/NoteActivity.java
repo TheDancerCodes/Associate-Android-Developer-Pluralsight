@@ -1,6 +1,7 @@
 package com.thedancercodes.notekeeper;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,6 +51,10 @@ public class NoteActivity extends AppCompatActivity {
     private String originalNoteTitle;
     private String originalNoteText;
     private NoteKeeperOpenHelper dbOpenHelper;
+    private Cursor noteCursor;
+    private int courseIdPos;
+    private int noteTextPos;
+    private int noteTitlePos;
 
     @Override
     protected void onDestroy() {
@@ -136,6 +141,28 @@ public class NoteActivity extends AppCompatActivity {
 
         // Selection Values
         String[] selectionArgs = {courseId, titleStart + "%"};
+
+        // Array of the tables' columns
+        String [] noteColumns = {
+                NoteInfoEntry.COLUMN_COURSE_ID,
+                NoteInfoEntry.COLUMN_NOTE_TITLE,
+                NoteInfoEntry.COLUMN_NOTE_TEXT
+        };
+
+        // Perform the DB Query
+        noteCursor = db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
+                selection, selectionArgs, null, null, null);
+
+        // To access the column values in the Cursor, we need the position of each of columns.
+        courseIdPos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        noteTitlePos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+        noteTextPos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
+
+        // Position Cursor to first row in the result
+        noteCursor.moveToNext();
+
+        // Display the Note
+        displayNote();
 
     }
 
@@ -225,18 +252,28 @@ public class NoteActivity extends AppCompatActivity {
 
     private void displayNote() {
 
+        // Get column values from the Cursor
+        String courseId = noteCursor.getString(courseIdPos);
+        String noteTitle = noteCursor.getString(noteTitlePos);
+        String noteText = noteCursor.getString(noteTextPos);
+
+
         // Get list of courses from DataManager
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
 
+        // Use the DataManager & ask it for the course that corresponds to the courseId value
+        // we read from the DB
+        CourseInfo course = DataManager.getInstance().getCourse(courseId);
+
         // Get index of selected note course from the list
-        int courseIndex = courses.indexOf(mNote.getCourse());
+        int courseIndex = courses.indexOf(course);
 
         // Pass in index to spinner to set the selection.
         spinnerCourses.setSelection(courseIndex);
 
         // Take the Note member variable, mNote, and set each of the values.
-        textNoteTitle.setText(mNote.getTitle());
-        textNoteText.setText(mNote.getText());
+        textNoteTitle.setText(noteTitle);
+        textNoteText.setText(noteText);
     }
 
     // Method that reads the contents of the Intent
