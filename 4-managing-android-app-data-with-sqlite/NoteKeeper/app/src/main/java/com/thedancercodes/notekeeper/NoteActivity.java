@@ -1,6 +1,7 @@
 package com.thedancercodes.notekeeper;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -10,6 +11,8 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 import java.util.List;
 
@@ -46,6 +49,16 @@ public class NoteActivity extends AppCompatActivity {
     private String originalNoteCourseId;
     private String originalNoteTitle;
     private String originalNoteText;
+    private NoteKeeperOpenHelper dbOpenHelper;
+
+    @Override
+    protected void onDestroy() {
+
+        // Close OpenHelper
+        dbOpenHelper.close();
+
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +66,9 @@ public class NoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Instance of OpenHelper class
+        dbOpenHelper = new NoteKeeperOpenHelper(this);
 
         // Reference to our spinner
         spinnerCourses = findViewById(R.id.spinner_courses);
@@ -96,10 +112,31 @@ public class NoteActivity extends AppCompatActivity {
         // If we select a note, we display that note BUT if it is a new note, (no note passed),
         // we don't display the note.
         if (!isNewNote)
-            displayNote(spinnerCourses, textNoteTitle, textNoteText);
+
+            loadNoteData();
 
         // Debug Message
         Log.d(TAG, "onCreate");
+    }
+
+    // Call to load a note from the DB
+    private void loadNoteData() {
+
+        // Reference to SQLite DB
+        SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+
+        // Selection Criteria: Assume we want to always find the exact same note
+        // that start with the name "dynamic"
+        String courseId = "android_intents";
+        String titleStart = "dynamic";
+
+        // Selection Clause that uses the above values
+        String selection = NoteInfoEntry.COLUMN_COURSE_ID + " = ? AND "
+                + NoteInfoEntry.COLUMN_NOTE_TITLE + " LIKE ?";
+
+        // Selection Values
+        String[] selectionArgs = {courseId, titleStart + "%"};
+
     }
 
     private void restoreOriginalNoteValues(Bundle savedInstanceState) {
@@ -186,7 +223,7 @@ public class NoteActivity extends AppCompatActivity {
         mNote.setText(textNoteText.getText().toString());
     }
 
-    private void displayNote(Spinner spinnerCourses, EditText textNoteTitle, EditText textNoteText) {
+    private void displayNote() {
 
         // Get list of courses from DataManager
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
@@ -319,7 +356,7 @@ public class NoteActivity extends AppCompatActivity {
         saveOriginalNoteValues();
 
         // Display note into the Views currently displayed by the NoteActivity
-        displayNote(spinnerCourses, textNoteTitle, textNoteText);
+        displayNote();
 
         // We use this method to access the onPrepareOptionsMenu at runtime.
         invalidateOptionsMenu();
