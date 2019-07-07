@@ -98,6 +98,9 @@ public class NoteActivity extends AppCompatActivity {
         // Associate the Adapter with the Spinner.
         spinnerCourses.setAdapter(adapterCourses);
 
+        // Get Cursor & load it with Courses from our DB.
+        loadCourseData();
+
         // Read contents of the Intent & does associated initialization
         readDisplayStateValues();
 
@@ -127,6 +130,27 @@ public class NoteActivity extends AppCompatActivity {
 
         // Debug Message
         Log.d(TAG, "onCreate");
+    }
+
+    // Call to load courses from the DB.
+    private void loadCourseData() {
+
+        // Reference to SQLite DB
+        SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+
+        // Array of the tables' columns
+        String[] courseColumns = {
+                CourseInfoEntry.COLUMN_COURSE_TITLE,
+                CourseInfoEntry.COLUMN_COURSE_ID,
+                CourseInfoEntry._ID
+        };
+
+        // Perform DB Query to return all rows back from the table
+        Cursor cursor = db.query(CourseInfoEntry.TABLE_NAME, courseColumns,
+                null, null, null, null, CourseInfoEntry.COLUMN_COURSE_TITLE);
+
+        // Associate Cursor with Adapter.
+        adapterCourses.changeCursor(cursor);
     }
 
     // Call to load a note from the DB.
