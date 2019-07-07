@@ -28,7 +28,7 @@ public class NoteActivity extends AppCompatActivity {
      * <p>
      * Remember to qualify the constant with your package name to ensure it is unique.
      */
-    public static final String NOTE_POSITION = "com.thedancercodes.notekeeper.NOTE_POSITION";
+    public static final String NOTE_ID = "com.thedancercodes.notekeeper.NOTE_ID";
 
     /**
      * Declare constants for the Activity instance state items we want to preserve.
@@ -38,14 +38,14 @@ public class NoteActivity extends AppCompatActivity {
     public static final String ORIGINAL_NOTE_TEXT = "com.thedancercodes.notekeeper.ORIGINAL_NOTE_TEXT";
 
     // Value the position will have if the intent Extra is not set
-    public static final int POSITION_NOT_SET = -1;
+    public static final int ID_NOT_SET = -1;
 
-    private NoteInfo mNote;
+    private NoteInfo mNote = new NoteInfo(DataManager.getInstance().getCourses().get(0), "", "");
     private boolean isNewNote;
     private Spinner spinnerCourses;
     private EditText textNoteTitle;
     private EditText textNoteText;
-    private int notePosition;
+    private int noteId;
     private boolean isCancelling;
     private String originalNoteCourseId;
     private String originalNoteTitle;
@@ -93,7 +93,7 @@ public class NoteActivity extends AppCompatActivity {
         // Associate the Adapter with the Spinner.
         spinnerCourses.setAdapter(adapterCourses);
 
-        // Read contents of the Intent
+        // Read contents of the Intent & does associated initialization
         readDisplayStateValues();
 
         /*
@@ -124,7 +124,8 @@ public class NoteActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate");
     }
 
-    // Call to load a note from the DB
+    // Call to load a note from the DB.
+    // Handles all the details of locating a note that matches the specified selection criteria.
     private void loadNoteData() {
 
         // Reference to SQLite DB
@@ -135,12 +136,11 @@ public class NoteActivity extends AppCompatActivity {
         String courseId = "android_intents";
         String titleStart = "dynamic";
 
-        // Selection Clause that uses the above values
-        String selection = NoteInfoEntry.COLUMN_COURSE_ID + " = ? AND "
-                + NoteInfoEntry.COLUMN_NOTE_TITLE + " LIKE ?";
+        // Selection Clause that uses _ID column
+        String selection = NoteInfoEntry._ID + " = ? ";
 
         // Selection Values
-        String[] selectionArgs = {courseId, titleStart + "%"};
+        String[] selectionArgs = {Integer.toString(noteId)};
 
         // Array of the tables' columns
         String [] noteColumns = {
@@ -201,11 +201,11 @@ public class NoteActivity extends AppCompatActivity {
         if (isCancelling) {
 
             // Keep track of when a user cancels
-            Log.i(TAG, "Cancelling note at position: " + notePosition);
+            Log.i(TAG, "Cancelling note at position: " + noteId);
 
             if (isNewNote) {
                 // Remove note from backing store if user is cancelling out.
-                DataManager.getInstance().removeNote(notePosition);
+                DataManager.getInstance().removeNote(noteId);
             }
             // If a user cancels, explicitly store original values back
             else {
@@ -280,12 +280,12 @@ public class NoteActivity extends AppCompatActivity {
     private void readDisplayStateValues() {
         Intent intent = getIntent(); // Reference to intent used to start this activity
 
-        // Get the Extra containing the position from it.
-        notePosition = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
+        // Get the Extra containing the id from it.
+        noteId = intent.getIntExtra(NOTE_ID, ID_NOT_SET);
 
         // Add a boolean to determine whether we are creating a new note
-        // or passing in an existing note based on the existence or absence of a position.
-        isNewNote = notePosition == POSITION_NOT_SET;
+        // or passing in an existing note based on the existence or absence of an id.
+        isNewNote = noteId == ID_NOT_SET;
 
         // Create a new note
         if (isNewNote) {
@@ -293,11 +293,12 @@ public class NoteActivity extends AppCompatActivity {
         }
 
         // Write informational message each time the NoteActivity is started,
-        // with the position being started for.
-        Log.i(TAG, "notePosition: " + notePosition);
+        // with the id being started for.
+        Log.i(TAG, "noteId: " + noteId);
 
-        // Get a note with the position whether its a new note or not.
-        mNote = DataManager.getInstance().getNotes().get(notePosition);
+        // Get a note with the id whether its a new note or not.
+        // *** NOTE: Don't need this anymore as we are reading the note from the DB. ***
+        // mNote = DataManager.getInstance().getNotes().get(noteId);
     }
 
     private void createNewNote() {
@@ -306,10 +307,10 @@ public class NoteActivity extends AppCompatActivity {
         DataManager dm = DataManager.getInstance();
 
         // Give the position of newly created note
-        notePosition = dm.createNewNote();
+        noteId = dm.createNewNote();
 
         // Get note at that position and assign it to the field mNote.
-        // mNote = dm.getNotes().get(notePosition);
+        // mNote = dm.getNotes().get(noteId);
 
     }
 
@@ -371,7 +372,7 @@ public class NoteActivity extends AppCompatActivity {
         int lastNoteIndex = DataManager.getInstance().getNotes().size() - 1;
 
         // Use last note index information to enable/ disable the next menu item
-        item.setEnabled(notePosition < lastNoteIndex);
+        item.setEnabled(noteId < lastNoteIndex);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -384,10 +385,10 @@ public class NoteActivity extends AppCompatActivity {
         saveNote();
 
         // Increment the note position
-        ++notePosition;
+        ++noteId;
 
         // Get note that corresponds to that position
-        mNote = DataManager.getInstance().getNotes().get(notePosition);
+        mNote = DataManager.getInstance().getNotes().get(noteId);
 
         // Save original values of the note we navigated to
         saveOriginalNoteValues();

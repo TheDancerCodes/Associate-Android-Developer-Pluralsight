@@ -69,7 +69,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         public final TextView textCourse;
         public final TextView textTitle;
 
-        // Get ViewHolder current position each time its associated with a different set of data
+        // Get ViewHolder current id each time its associated with a different set of data
         public int mId;
 
         public ViewHolder(@NonNull View itemView) {
@@ -88,7 +88,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
                     Intent intent = new Intent(mContext, NoteActivity.class);
 
                     // Set the Extra for the NotePosition
-                    intent.putExtra(NoteActivity.NOTE_POSITION, mId);
+                    intent.putExtra(NoteActivity.NOTE_ID, mId);
 
                     // Take context, call startActivity & pass in intent
                     mContext.startActivity(intent);

@@ -91,7 +91,7 @@ public class NoteListActivity extends AppCompatActivity {
 //                // NoteInfo note = (NoteInfo) listNotes.getItemAtPosition(position);
 //
 //                // Put Note Position as an Extra in the Intent
-//                intent.putExtra(NoteActivity.NOTE_POSITION, position);
+//                intent.putExtra(NoteActivity.NOTE_ID, position);
 //
 //
 //                // Launch the Activity
