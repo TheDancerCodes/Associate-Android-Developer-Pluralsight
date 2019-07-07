@@ -279,6 +279,7 @@ public class NoteActivity extends AppCompatActivity {
         mNote.setText(textNoteText.getText().toString());
     }
 
+    // Displays values for the currently selected note.
     private void displayNote() {
 
         // Get column values from the Cursor
@@ -287,15 +288,9 @@ public class NoteActivity extends AppCompatActivity {
         String noteText = noteCursor.getString(noteTextPos);
 
 
-        // Get list of courses from DataManager
-        List<CourseInfo> courses = DataManager.getInstance().getCourses();
-
-        // Use the DataManager & ask it for the course that corresponds to the courseId value
-        // we read from the DB
-        CourseInfo course = DataManager.getInstance().getCourse(courseId);
-
-        // Get index of selected note course from the list
-        int courseIndex = courses.indexOf(course);
+        // Get index of selected note course from our Cursor.
+        // Pass in ID of the course that was read from the DB.
+        int courseIndex = getIndexOfCourseId(courseId);
 
         // Pass in index to spinner to set the selection.
         spinnerCourses.setSelection(courseIndex);
@@ -303,6 +298,43 @@ public class NoteActivity extends AppCompatActivity {
         // Take the Note member variable, mNote, and set each of the values.
         textNoteTitle.setText(noteTitle);
         textNoteText.setText(noteText);
+    }
+
+    private int getIndexOfCourseId(String courseId) {
+
+        // Reference of Cursor being used to populate the Spinner.
+        Cursor cursor = adapterCourses.getCursor();
+
+        // Use Cursor to figure out correct row for the current course.
+        // courseIdPos - index of the column that holds the value of the courseId
+        int courseIdPos = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_ID);
+
+        // Initialize courseRowIndex
+        int courseRowIndex = 0;
+
+        // Walk through cursor row by row, finding the row index of thw course that corresponds to
+        // the course in the note.
+        boolean more = cursor.moveToFirst();
+
+        while(more) {
+
+            // Get courseId value for the current row.
+            String cursorCourseId = cursor.getString(courseIdPos);
+
+            // Condition that checks whether the cursorCourseId value is equal to our courseId parameter.
+            if (courseId.equals(cursorCourseId))
+                break;
+
+            // Increase courseRowIndex value by 1
+            courseRowIndex++;
+
+            // Move to the next row
+            more = cursor.moveToNext();
+        }
+
+        // Return the index value of the row in the course Cursor that corresponds to the course
+        // for the current note.
+        return courseRowIndex;
     }
 
     // Method that reads the contents of the Intent
