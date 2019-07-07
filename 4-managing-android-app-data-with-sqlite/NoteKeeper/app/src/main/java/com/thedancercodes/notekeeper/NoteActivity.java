@@ -11,8 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
+import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 import java.util.List;
@@ -55,6 +57,7 @@ public class NoteActivity extends AppCompatActivity {
     private int courseIdPos;
     private int noteTextPos;
     private int noteTitlePos;
+    private SimpleCursorAdapter adapterCourses;
 
     @Override
     protected void onDestroy() {
@@ -78,14 +81,16 @@ public class NoteActivity extends AppCompatActivity {
         // Reference to our spinner
         spinnerCourses = findViewById(R.id.spinner_courses);
 
-        // Get the list of courses
-        List<CourseInfo> courses = DataManager.getInstance().getCourses();
 
-        // Adapter that associates the list of courses with the Spinner
-        ArrayAdapter<CourseInfo> adapterCourses =
-                new ArrayAdapter<>(this,
-                        android.R.layout.simple_spinner_item,
-                        courses); // formats selected item in the spinner.
+        // SimpleCursorAdapter that displays the current item using the Android layout resources
+        // (simple_spinner_item).
+        // Take the values from Cursor's course_title column & display them in the view who's id
+        // is android.R.id.text1
+        adapterCourses = new SimpleCursorAdapter(this,
+                android.R.layout.simple_spinner_item,
+                null,
+                new String[] {CourseInfoEntry.COLUMN_COURSE_TITLE},
+                new int[] {android.R.id.text1}, 0); // formats selected item in the spinner.
 
         // Resource to format dropdown list of courses.
         adapterCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
