@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +16,47 @@ import java.util.List;
 public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapter.ViewHolder> {
 
     private final Context mContext;
-    private final List<NoteInfo> notes; // Field to hold a list of notes
+    private Cursor mCursor;
     private final LayoutInflater layoutInflater;
 
-    // Constructor that accepts context & list of notes as a parameter
+    // Constructor that accepts context & cursor as a parameter
     // & assigns the context to mContext field.
-    public NoteRecyclerAdapter(Context context, List<NoteInfo> notes) {
-        this.mContext = context;
-        this.notes = notes;
+    public NoteRecyclerAdapter(Context context, Cursor cursor) {
+        mContext = context;
+        mCursor = cursor;
 
         // To create views from a layout resource, use LayoutInflater class using the context.
         layoutInflater = LayoutInflater.from(mContext);
+
+        // To get the values from a Cursor, we need the positions of the columns of interest.
+        populateColumnPositions();
+    }
+
+    private void populateColumnPositions() {
+
+        // Check whether Cursor is null
+        if (mCursor == null)
+            return;
+
+        // Else; Get column indexes from mCursor
+
+    }
+
+    // Change over to a new Cursor & close any existing Cursor associated with the Adapter
+    public void changeCursor(Cursor cursor) {
+
+        // Check for existing Cursor & close it
+        if (mCursor != null)
+            mCursor.close();
+
+        // Assign received Cursor to mCursor field
+        mCursor = cursor;
+
+        // Order Columns by index
+        populateColumnPositions();
+
+        // Notify RecyclerView of data change using the Base Class Method
+        notifyDataSetChanged();
     }
 
     // Creates our ViewHolder instances. It also creates the views themselves
