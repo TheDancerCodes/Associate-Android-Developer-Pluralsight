@@ -2,6 +2,7 @@ package com.thedancercodes.notekeeper;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -21,6 +22,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
+    // Called each time we return to an Activity
     @Override
     protected void onResume() {
         super.onResume();
@@ -94,16 +97,40 @@ public class MainActivity extends AppCompatActivity
          *
          *  Each time our NoteListActivity moves into the foreground, we're telling it to go ahead
          *
-         *  & get prepared for the latest list of notes that we have.
-         *
-         *  This refreshes our data set.
+         *  & get prepared for the latest set of notes from the DB.
          */
-        noteRecyclerAdapter.notifyDataSetChanged();
+        loadNotes();
 
         /*
            Update values in Nav Drawer every time onResume gets called.
          */
         updateNavHeader();
+    }
+
+    private void loadNotes() {
+
+        /* Query the note_info table in the DB to get back a list of notes. */
+
+        // Read DB and assign to a local variable
+        SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+
+        // Array of Note table columns
+        String[] noteColumns = {
+                NoteInfoEntry.COLUMN_NOTE_TITLE,
+                NoteInfoEntry.COLUMN_COURSE_ID,
+                NoteInfoEntry._ID};
+
+        // Local string variable to enable sorting by 2 columns
+        String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID + "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
+
+        // Querying NoteInfo Table
+        Cursor noteCursor = db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
+                null, null, null, null, noteOrderBy);
+
+        // Associate the Cursor with our NoteRecyclerAdapter
+        noteRecyclerAdapter.changeCursor(noteCursor);
+
+
     }
 
     private void updateNavHeader() {
@@ -149,11 +176,8 @@ public class MainActivity extends AppCompatActivity
         coursesLayoutManager = new GridLayoutManager(this,
                 getResources().getInteger(R.integer.course_grid_span)); // Get column number from a resource file
 
-        // Get notes to display within RecyclerView
-        List<NoteInfo> notes = DataManager.getInstance().getNotes();
-
         // Create instance of NoteRecyclerAdapter
-        noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
+        noteRecyclerAdapter = new NoteRecyclerAdapter(this, null);
 
         // Get courses to display within RecyclerView
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
