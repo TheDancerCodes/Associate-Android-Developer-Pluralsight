@@ -512,7 +512,52 @@ public class NoteActivity extends AppCompatActivity
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return null;
+
+        // Initialize Cursor Loader
+        CursorLoader loader = null;
+
+        // Check whether ID value passed as a parameter to onCreateLoader has the value LOADER_NOTES
+        if (id == LOADER_NOTES)
+
+            loader = createLoaderNotes();
+
+
+        return loader;
+    }
+
+    // Return a CursorLoader instance that knows how to load up our note data.
+    private CursorLoader createLoaderNotes() {
+        return new CursorLoader(this) {
+
+            @Override
+            public Cursor loadInBackground() {
+
+                // Reference to SQLite DB
+                SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+
+                // Selection Criteria: Assume we want to always find the exact same note
+                // that start with the name "dynamic"
+                String courseId = "android_intents";
+                String titleStart = "dynamic";
+
+                // Selection Clause that uses _ID column
+                String selection = NoteInfoEntry._ID + " = ? ";
+
+                // Selection Values
+                String[] selectionArgs = {Integer.toString(noteId)};
+
+                // Array of the tables' columns
+                String [] noteColumns = {
+                        NoteInfoEntry.COLUMN_COURSE_ID,
+                        NoteInfoEntry.COLUMN_NOTE_TITLE,
+                        NoteInfoEntry.COLUMN_NOTE_TEXT
+                };
+
+                // Perform the DB Query & return the query result
+                return db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
+                        selection, selectionArgs, null, null, null);
+            }
+        };
     }
 
     /**
