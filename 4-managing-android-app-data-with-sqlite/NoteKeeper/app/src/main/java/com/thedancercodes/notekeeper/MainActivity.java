@@ -26,6 +26,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
+import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -326,7 +327,18 @@ public class MainActivity extends AppCompatActivity
                             NoteInfoEntry.COLUMN_COURSE_ID};
                     final String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID +
                             "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
-                    return db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
+
+                    /*
+                      JOIN Clause:
+
+                      note_info JOIN course_info ON note_info.course_id = course_info.course_id
+                    */
+                    String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN " +
+                            CourseInfoEntry.TABLE_NAME + " ON " +
+                            NoteInfoEntry.TABLE_NAME + "." + NoteInfoEntry.COLUMN_COURSE_ID + " = " +
+                            CourseInfoEntry.TABLE_NAME + "." + CourseInfoEntry.COLUMN_COURSE_ID;
+
+                    return db.query(tablesWithJoin, noteColumns,
                             null, null, null, null, noteOrderBy);
                 }
             };
