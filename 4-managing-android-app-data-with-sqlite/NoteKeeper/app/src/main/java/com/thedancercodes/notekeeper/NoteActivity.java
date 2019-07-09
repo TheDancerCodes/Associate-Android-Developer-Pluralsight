@@ -33,6 +33,7 @@ public class NoteActivity extends AppCompatActivity
     implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final int LOADER_NOTES = 0;
+    public static final int LOADER_COURSES = 1;
     public final String TAG = getClass().getSimpleName(); // Ensures we always have correct class name.
 
     /**
@@ -110,8 +111,8 @@ public class NoteActivity extends AppCompatActivity
         // Associate the Adapter with the Spinner.
         spinnerCourses.setAdapter(adapterCourses);
 
-        // Get Cursor & load it with Courses from our DB.
-        loadCourseData();
+        // Use LoadManager to start process of loading Course data from DB
+        getLoaderManager().initLoader(LOADER_COURSES, null, this);
 
         // Read contents of the Intent & does associated initialization
         readDisplayStateValues();
@@ -519,7 +520,31 @@ public class NoteActivity extends AppCompatActivity
         // Check whether ID value passed as a parameter to onCreateLoader has the value LOADER_NOTES
         if (id == LOADER_NOTES)
             loader = createLoaderNotes();
+        else if (id == LOADER_COURSES)
+            loader = createLoaderCourses();
         return loader;
+    }
+
+    // Return a CursorLoader instance that knows how to load up our course data.
+    private CursorLoader createLoaderCourses() {
+        return new CursorLoader(this){
+            @Override
+            public Cursor loadInBackground() {
+                // Reference to SQLite DB
+                SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+
+                // Array of the tables' columns
+                String[] courseColumns = {
+                        CourseInfoEntry.COLUMN_COURSE_TITLE,
+                        CourseInfoEntry.COLUMN_COURSE_ID,
+                        CourseInfoEntry._ID
+                };
+
+                // Perform DB Query & return the query result
+                return db.query(CourseInfoEntry.TABLE_NAME, courseColumns,
+                        null, null, null, null, CourseInfoEntry.COLUMN_COURSE_TITLE);
+            }
+        };
     }
 
     // Return a CursorLoader instance that knows how to load up our note data.
@@ -607,6 +632,13 @@ public class NoteActivity extends AppCompatActivity
             // Display note returned to that Cursor
             loadFinishedNotes(data);
 
+        // Check whether loader value passed as parameter to onLoadFinished has the value LOADER_COURSES
+        else if (loader.getId() == LOADER_COURSES)
+
+            // Associate Cursor passed to onLoadFinished() with CursorAdapter
+            adapterCourses.changeCursor(data);
+
+
     }
 
     private void loadFinishedNotes(Cursor data) {
@@ -643,7 +675,15 @@ public class NoteActivity extends AppCompatActivity
 
             // Defensive Coding: Check that NoteCursor is not null
             if (noteCursor != null)
+
+                // Close the Cursor
                 noteCursor.close();
+        }
+        // Check that loader corresponds to LOADER_NOTES
+        else if (loader.getId() == LOADER_COURSES) {
+
+            // Close the Cursor
+            adapterCourses.changeCursor(null);
         }
     }
 }
