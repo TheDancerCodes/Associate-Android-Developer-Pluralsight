@@ -71,6 +71,8 @@ public class NoteActivity extends AppCompatActivity
     private int noteTextPos;
     private int noteTitlePos;
     private SimpleCursorAdapter adapterCourses;
+    private boolean coursesQueryFinished;
+    private boolean notesQueryFinished;
 
     @Override
     protected void onDestroy() {
@@ -527,6 +529,10 @@ public class NoteActivity extends AppCompatActivity
 
     // Return a CursorLoader instance that knows how to load up our course data.
     private CursorLoader createLoaderCourses() {
+
+        // This field is false before we start our query for courses
+        coursesQueryFinished = false;
+
         return new CursorLoader(this){
             @Override
             public Cursor loadInBackground() {
@@ -549,6 +555,10 @@ public class NoteActivity extends AppCompatActivity
 
     // Return a CursorLoader instance that knows how to load up our note data.
     private CursorLoader createLoaderNotes() {
+
+        // This field is false before we start our query for notes
+        notesQueryFinished = false;
+
         return new CursorLoader(this) {
 
             @Override
@@ -638,7 +648,11 @@ public class NoteActivity extends AppCompatActivity
             // Associate Cursor passed to onLoadFinished() with CursorAdapter
             adapterCourses.changeCursor(data);
 
+            // The field is true when we finish our query of courses
+            coursesQueryFinished = true;
 
+        // Display the note when both notes & courses queries are finished
+            displayNoteWhenQueriesFinished();
     }
 
     private void loadFinishedNotes(Cursor data) {
@@ -654,8 +668,20 @@ public class NoteActivity extends AppCompatActivity
         // Position Cursor to first row in the result
         noteCursor.moveToNext();
 
-        // Display the Note
-        displayNote();
+        // The field is true when we finish our query of notes
+        notesQueryFinished = true;
+
+        // Display the note when both notes & courses queries are finished
+        displayNoteWhenQueriesFinished();
+    }
+
+    private void displayNoteWhenQueriesFinished() {
+
+        // Conditional
+        if (notesQueryFinished && coursesQueryFinished)
+
+            // Display the Note
+            displayNote();
     }
 
     /**
