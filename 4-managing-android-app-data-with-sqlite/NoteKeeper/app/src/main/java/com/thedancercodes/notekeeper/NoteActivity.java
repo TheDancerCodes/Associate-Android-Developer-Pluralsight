@@ -518,10 +518,7 @@ public class NoteActivity extends AppCompatActivity
 
         // Check whether ID value passed as a parameter to onCreateLoader has the value LOADER_NOTES
         if (id == LOADER_NOTES)
-
             loader = createLoaderNotes();
-
-
         return loader;
     }
 
@@ -604,6 +601,29 @@ public class NoteActivity extends AppCompatActivity
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
 
+        // Check whether loader value passed as parameter to onLoadFinished has the value LOADER_NOTES
+        if (loader.getId() == LOADER_NOTES)
+
+            // Display note returned to that Cursor
+            loadFinishedNotes(data);
+
+    }
+
+    private void loadFinishedNotes(Cursor data) {
+
+        // Take Cursor & assign it to member field noteCursor
+        noteCursor = data;
+
+        // To access the column values in the Cursor, we need the position of each of the columns.
+        courseIdPos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        noteTitlePos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+        noteTextPos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
+
+        // Position Cursor to first row in the result
+        noteCursor.moveToNext();
+
+        // Display the Note
+        displayNote();
     }
 
     /**
@@ -618,5 +638,12 @@ public class NoteActivity extends AppCompatActivity
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
+        // Check that loader corresponds to LOADER_NOTES
+        if (loader.getId() == LOADER_NOTES) {
+
+            // Defensive Coding: Check that NoteCursor is not null
+            if (noteCursor != null)
+                noteCursor.close();
+        }
     }
 }
