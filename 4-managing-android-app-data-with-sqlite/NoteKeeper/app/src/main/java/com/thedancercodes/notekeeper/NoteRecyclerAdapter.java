@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
             return;
 
         // Else; Get column indexes from mCursor
-        coursePos = mCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        coursePos = mCursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_TITLE);
         noteTitlePos = mCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
         idPos = mCursor.getColumnIndex(NoteInfoEntry._ID);
     }

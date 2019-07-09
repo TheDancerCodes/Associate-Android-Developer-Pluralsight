@@ -321,13 +321,18 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public Cursor loadInBackground() {
                     SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+
+                    // List of return columns; includes values that come from note_info table
+                    // along with the course title from the course_info table that corresponds
+                    // to each note
                     final String[] noteColumns = {
                             NoteInfoEntry.getQName(NoteInfoEntry._ID), // Qualify because it appears in both tables
                             NoteInfoEntry.COLUMN_NOTE_TITLE,
-                            NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID), // Qualify because it appears in both tables
                             CourseInfoEntry.COLUMN_COURSE_TITLE
                     };
-                    final String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID +
+
+                    // Sort primarily by Course title and then within it the Note Title
+                    final String noteOrderBy = CourseInfoEntry.COLUMN_COURSE_TITLE +
                             "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
 
                     /*
