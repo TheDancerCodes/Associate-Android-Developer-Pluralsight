@@ -67,7 +67,7 @@ public class NoteActivity extends AppCompatActivity
     private String originalNoteText;
     private NoteKeeperOpenHelper dbOpenHelper;
     private Cursor noteCursor;
-    private int courseIdPos;
+    private int mCourseIdPos;
     private int noteTextPos;
     private int noteTitlePos;
     private SimpleCursorAdapter adapterCourses;
@@ -199,7 +199,7 @@ public class NoteActivity extends AppCompatActivity
                 selection, selectionArgs, null, null, null);
 
         // To access the column values in the Cursor, we need the position of each of columns.
-        courseIdPos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        mCourseIdPos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
         noteTitlePos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
         noteTextPos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
 
@@ -299,7 +299,7 @@ public class NoteActivity extends AppCompatActivity
     private void displayNote() {
 
         // Get column values from the Cursor
-        String courseId = noteCursor.getString(courseIdPos);
+        String courseId = noteCursor.getString(mCourseIdPos);
         String noteTitle = noteCursor.getString(noteTitlePos);
         String noteText = noteCursor.getString(noteTextPos);
 
@@ -661,12 +661,12 @@ public class NoteActivity extends AppCompatActivity
         noteCursor = data;
 
         // To access the column values in the Cursor, we need the position of each of the columns.
-        courseIdPos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        mCourseIdPos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
         noteTitlePos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
         noteTextPos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
 
         // Position Cursor to first row in the result
-        noteCursor.moveToNext();
+        noteCursor.moveToFirst();
 
         // The field is true when we finish our query of notes
         notesQueryFinished = true;
