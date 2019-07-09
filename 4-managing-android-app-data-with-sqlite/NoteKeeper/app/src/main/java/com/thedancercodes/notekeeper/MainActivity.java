@@ -322,9 +322,11 @@ public class MainActivity extends AppCompatActivity
                 public Cursor loadInBackground() {
                     SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
                     final String[] noteColumns = {
-                            NoteInfoEntry._ID,
+                            NoteInfoEntry.getQName(NoteInfoEntry._ID), // Qualify because it appears in both tables
                             NoteInfoEntry.COLUMN_NOTE_TITLE,
-                            NoteInfoEntry.COLUMN_COURSE_ID};
+                            NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID), // Qualify because it appears in both tables
+                            CourseInfoEntry.COLUMN_COURSE_TITLE
+                    };
                     final String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID +
                             "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
 
@@ -335,8 +337,8 @@ public class MainActivity extends AppCompatActivity
                     */
                     String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN " +
                             CourseInfoEntry.TABLE_NAME + " ON " +
-                            NoteInfoEntry.TABLE_NAME + "." + NoteInfoEntry.COLUMN_COURSE_ID + " = " +
-                            CourseInfoEntry.TABLE_NAME + "." + CourseInfoEntry.COLUMN_COURSE_ID;
+                            NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID) + " = " +
+                            CourseInfoEntry.getQName(CourseInfoEntry.COLUMN_COURSE_ID);
 
                     return db.query(tablesWithJoin, noteColumns,
                             null, null, null, null, noteOrderBy);
