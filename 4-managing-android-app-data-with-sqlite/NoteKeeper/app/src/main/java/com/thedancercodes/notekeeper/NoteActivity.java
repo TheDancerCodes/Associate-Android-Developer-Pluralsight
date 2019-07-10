@@ -288,12 +288,37 @@ public class NoteActivity extends AppCompatActivity
 
     private void saveNote() {
 
-        // Set each of the values of the note currently selected in the spinner.
-        mNote.setCourse((CourseInfo) spinnerCourses.getSelectedItem());
+        // Get user's current selection in the spinner & get value from the Cursor.
+        String courseId = selectedCourseId();
 
         // Get values of text fields
-        mNote.setTitle(textNoteTitle.getText().toString());
-        mNote.setText(textNoteText.getText().toString());
+        String noteTitle = textNoteTitle.getText().toString();
+        String noteText = textNoteText.getText().toString();
+
+        // Call method to save note to DB & pass in the courseId, noteTitle & noteText
+        // This updates the DB with any changes the user makes to a note.
+        saveNoteToDatabase(courseId, noteTitle, noteText);
+    }
+
+    // Determine which course ID corresponds to the currently selected course on the Activity
+    private String selectedCourseId() {
+
+        // Currently selected position on the spinner.
+        int selectedPosition = spinnerCourses.getSelectedItemPosition();
+
+        // Get the Cursor associated with Adapter to populate the Spinner.
+        Cursor cursor = adapterCourses.getCursor();
+
+        // Move Cursor to get the correct cursor position.
+        cursor.moveToPosition(selectedPosition);
+
+        // Index of the column that contains the course ID.
+        int courseIdPos = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_ID);
+
+        // Get value of the course_id that corresponds to users current selection in the spinner
+        String courseId = cursor.getString(courseIdPos);
+
+        return courseId;
     }
 
     // Handles details of updating the note within the note_info table
