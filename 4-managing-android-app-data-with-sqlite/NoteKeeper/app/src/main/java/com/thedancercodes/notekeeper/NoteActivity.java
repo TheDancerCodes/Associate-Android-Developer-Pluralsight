@@ -1,6 +1,7 @@
 package com.thedancercodes.notekeeper;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -293,6 +294,29 @@ public class NoteActivity extends AppCompatActivity
         // Get values of text fields
         mNote.setTitle(textNoteTitle.getText().toString());
         mNote.setText(textNoteText.getText().toString());
+    }
+
+    // Handles details of updating the note within the note_info table
+    private void saveNoteToDatabase(String courseId, String noteTitle, String noteText) {
+
+        /* Selection Criteria */
+        // Selection Clause
+        String selection = NoteInfoEntry._ID + " = ? ";
+
+        // Selection Argument
+        String[] selectionArgs = {Integer.toString(noteId)};
+
+        // Column Values: Instance of ContentValues class
+        ContentValues values = new ContentValues();
+        values.put(NoteInfoEntry.COLUMN_COURSE_ID, courseId);
+        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, noteTitle);
+        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, noteText);
+
+        // Connection to the DB
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+
+        // Update DB
+        db.update(NoteInfoEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
     // Displays values for the currently selected note.
