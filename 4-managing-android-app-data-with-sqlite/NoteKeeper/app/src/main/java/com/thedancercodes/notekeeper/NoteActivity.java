@@ -429,15 +429,22 @@ public class NoteActivity extends AppCompatActivity
 
     private void createNewNote() {
 
-        // Reference to the DataManager
-        DataManager dm = DataManager.getInstance();
+        // New instance of ContentValues
+        ContentValues values = new ContentValues();
 
-        // Give the position of newly created note
-        noteId = dm.createNewNote();
+        // Specify values for each individual column we want to put into that row.
+        // Put placeholders in each column, as an empty string
+        values.put(NoteInfoEntry.COLUMN_COURSE_ID, "");
+        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, "");
+        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, "");
 
-        // Get note at that position and assign it to the field mNote.
-        // mNote = dm.getNotes().get(noteId);
+        // Connection to DB
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
 
+        /* Insert new row into note_info table */
+        // The insert method returns back the row ID of the new row being created.
+        // Assign the return value of the insert method to our field mNoteId
+        noteId = (int) db.insert(NoteInfoEntry.TABLE_NAME, null, values);
     }
 
     @Override
