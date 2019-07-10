@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -271,17 +272,29 @@ public class NoteActivity extends AppCompatActivity
     private void deleteNoteFromDatabase() {
 
         // Selection Clause that uses _ID column
-        String selection = NoteInfoEntry._ID + " = ? ";
+        final String selection = NoteInfoEntry._ID + " = ? ";
 
         // Selection Values
-        String[] selectionArgs = {Integer.toString(noteId)};
+        final String[] selectionArgs = {Integer.toString(noteId)};
 
-        // Connection to DB
-        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        // Initialize Async Task
+        AsyncTask task = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
 
-        // Call Delete Method: Delete the row from the note_info table that has the ID value
-        // contained in our noteId field
-        db.delete(NoteInfoEntry.TABLE_NAME, selection, selectionArgs);
+                // Connection to DB
+                SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+
+                // Call Delete Method: Delete the row from the note_info table that has the ID value
+                // contained in our noteId field
+                db.delete(NoteInfoEntry.TABLE_NAME, selection, selectionArgs);
+
+                return null;
+            }
+        };
+
+        // Execute AsyncTask
+        task.execute();
     }
 
     @Override
