@@ -250,8 +250,8 @@ public class NoteActivity extends AppCompatActivity
             Log.i(TAG, "Cancelling note at position: " + noteId);
 
             if (isNewNote) {
-                // Remove note from backing store if user is cancelling out.
-                DataManager.getInstance().removeNote(noteId);
+                // Remove note from DB if user is cancelling out.
+                deleteNoteFromDatabase();
             }
             // If a user cancels, explicitly store original values back
             else {
@@ -265,6 +265,23 @@ public class NoteActivity extends AppCompatActivity
         // Debug Message
         Log.d(TAG, "onPause");
 
+    }
+
+    // Remove note with a specific ID
+    private void deleteNoteFromDatabase() {
+
+        // Selection Clause that uses _ID column
+        String selection = NoteInfoEntry._ID + " = ? ";
+
+        // Selection Values
+        String[] selectionArgs = {Integer.toString(noteId)};
+
+        // Connection to DB
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+
+        // Call Delete Method: Delete the row from the note_info table that has the ID value
+        // contained in our noteId field
+        db.delete(NoteInfoEntry.TABLE_NAME, selection, selectionArgs);
     }
 
     @Override
