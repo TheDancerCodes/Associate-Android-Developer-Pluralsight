@@ -3,9 +3,15 @@ package com.thedancercodes.notekeeper;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
+import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
+
 public class NoteKeeperProvider extends ContentProvider {
+
+    private NoteKeeperOpenHelper dbOpenHelper;
+
     public NoteKeeperProvider() {
     }
 
@@ -28,17 +34,33 @@ public class NoteKeeperProvider extends ContentProvider {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    // Create ContentProvider
     @Override
     public boolean onCreate() {
-        // TODO: Implement this to initialize your content provider on startup.
-        return false;
+
+        // Instance of NoteKeeperHelper
+        dbOpenHelper = new NoteKeeperOpenHelper(getContext());
+
+        // Indicate that ContentProvider is successfully created
+        return true;
     }
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        // TODO: Implement this to handle query requests from clients.
-        throw new UnsupportedOperationException("Not yet implemented");
+
+        // Initialize Cursor
+        Cursor cursor = null;
+
+        // SQLiteDatabase reference
+        SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+
+        // Call DB query method & assign its result back to the cursor variable.
+        cursor = db.query(CourseInfoEntry.TABLE_NAME, projection, selection, selectionArgs,
+                null, null, sortOrder);
+
+        // Return back Cursor variable
+        return cursor;
     }
 
     @Override
