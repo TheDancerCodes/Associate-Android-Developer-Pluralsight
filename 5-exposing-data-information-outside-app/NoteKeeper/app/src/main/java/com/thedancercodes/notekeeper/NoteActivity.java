@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -619,24 +620,21 @@ public class NoteActivity extends AppCompatActivity
         // This field is false before we start our query for courses
         coursesQueryFinished = false;
 
-        return new CursorLoader(this){
-            @Override
-            public Cursor loadInBackground() {
-                // Reference to SQLite DB
-                SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
+        /* Query to Content Provider */
 
-                // Array of the tables' columns
-                String[] courseColumns = {
-                        CourseInfoEntry.COLUMN_COURSE_TITLE,
-                        CourseInfoEntry.COLUMN_COURSE_ID,
-                        CourseInfoEntry._ID
-                };
+        // Define Content Provider URI variable
+        Uri uri = Uri.parse("content://com.thedancercodes.notekeeper.provider");
 
-                // Perform DB Query & return the query result
-                return db.query(CourseInfoEntry.TABLE_NAME, courseColumns,
-                        null, null, null, null, CourseInfoEntry.COLUMN_COURSE_TITLE);
-            }
+        // Identify columns we want back from the Content Provider.
+        String[] courseColumns = {
+                CourseInfoEntry.COLUMN_COURSE_TITLE,
+                CourseInfoEntry.COLUMN_COURSE_ID,
+                CourseInfoEntry._ID
         };
+
+        // Create new instance of the CursorLoader
+        return new CursorLoader(this, uri, courseColumns,
+                null, null, CourseInfoEntry.COLUMN_COURSE_TITLE);
     }
 
     // Return a CursorLoader instance that knows how to load up our note data.
