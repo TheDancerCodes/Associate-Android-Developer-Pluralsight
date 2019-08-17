@@ -1,8 +1,10 @@
 package com.thedancercodes.notekeeper.otherapp;
 
 import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,7 +19,7 @@ import android.widget.SimpleCursorAdapter;
 public class MainActivity extends AppCompatActivity
     implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    // Constant that identifies we issuing the query for courses from our NoteKeeper app
+    // Constant that identifies issuing the query for courses from our NoteKeeper app
     private static final int LOADER_NOTEKEEPER_COURSES = 0;
     private SimpleCursorAdapter mCoursesAdapter;
 
@@ -37,11 +39,23 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        // Instance of the SimpleCursorAdapter
         mCoursesAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2, null,
+
+                // Info necessary to populate the ListView
                 new String[]{"course_title", "course_id"},
                 new int[] {android.R.id.text1, android.R.id.text2}, 0);
+
+        // Get reference to the ListView & associate an adapter to it.
         ListView listCourses = (ListView) findViewById(R.id.list_courses);
         listCourses.setAdapter(mCoursesAdapter);
+
+        /* Initialize the process of issuing the query
+         *
+         * When we initialize the Loader that corresponds to the LOADER_NOTEKEEPER_COURSES constant,
+         * we want the callbacks to come back to our current activity.
+         * */
+        getLoaderManager().initLoader(LOADER_NOTEKEEPER_COURSES, null, this);
 
 
     }
@@ -70,16 +84,33 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return null;
+
+
+
+        // Since we are getting data from a Content Provider, we need the URI of the
+        // NoteKeeper app Content Provider.
+        Uri uri = Uri.parse("content://com.thedancercodes.notekeeper.provider");
+
+        // List of columns
+        String[] columns = {"_id", "course_title", "course_id"};
+
+        // Return back a new CursorLoader instance
+        return new CursorLoader(this, uri, columns, null, null, "course_title");
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
+        // Associate Cursor with the Adapter that populates our ListView.
+        mCoursesAdapter.changeCursor(data);
+
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
+        // Closes up the Cursor
+        mCoursesAdapter.changeCursor(null);
 
     }
 }
