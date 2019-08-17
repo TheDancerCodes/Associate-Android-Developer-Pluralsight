@@ -1,6 +1,7 @@
 package com.thedancercodes.notekeeper;
 
 import android.net.Uri;
+import android.provider.BaseColumns;
 
 public final class NoteKeeperProviderContract {
 
@@ -12,10 +13,30 @@ public final class NoteKeeperProviderContract {
     // Content Provider Base URI Constant
     public static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
 
+    // Interface for constant for the column that identifies a Course
+    protected interface CoursesIdColumns {
+        public static final String COLUMN_COURSE_ID = "course_id";
+    }
+
+    // Interface for constant for the column that describes a Course
+    protected interface CoursesColumns {
+
+        // String constants of columns available from the Courses table
+        public static final String COLUMN_COURSE_TITLE = "course_title";
+    }
+
+    // Interface for constant for the column that describes a Note
+    protected interface NotesColumns {
+
+        // String constants of columns available from the Notes table
+        public static final String COLUMN_NOTE_TITLE = "note_title";
+        public static final String COLUMN_NOTE_TEXT = "note_text";
+    }
+
     /* Nested classes for the each of the tables that we expose with this content provider. */
 
     // Courses Table Class
-    public static final class Courses {
+    public static final class Courses implements BaseColumns, CoursesColumns, CoursesIdColumns {
 
         public static final String PATH = "courses";
 
@@ -29,7 +50,7 @@ public final class NoteKeeperProviderContract {
     }
 
     // Notes Table Class
-    public static final class Notes {
+    public static final class Notes implements BaseColumns, NotesColumns, CoursesIdColumns {
         public static final String PATH = "notes";
 
         /**
