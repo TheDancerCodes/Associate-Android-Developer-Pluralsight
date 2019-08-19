@@ -2,15 +2,38 @@ package com.thedancercodes.notekeeper;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
+import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
+import com.thedancercodes.notekeeper.NoteKeeperProviderContract.Courses;
+import com.thedancercodes.notekeeper.NoteKeeperProviderContract.Notes;
 
 public class NoteKeeperProvider extends ContentProvider {
 
     private NoteKeeperOpenHelper dbOpenHelper;
+
+    // URIMatcher field
+    private static UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+    public static final int COURSES = 0;
+
+    public static final int NOTES = 1;
+
+    /*
+       * Static Initializer: allows to run some code when a type is initially loaded.
+
+       * We often use them to initialise a static field.
+    */
+    static {
+
+        // Add Courses & Notes URI's to our sUriMatcher
+        sUriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Courses.PATH, COURSES);
+        sUriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Notes.PATH, NOTES);
+    }
 
     public NoteKeeperProvider() {
     }
@@ -55,9 +78,27 @@ public class NoteKeeperProvider extends ContentProvider {
         // SQLiteDatabase reference
         SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
 
-        // Call DB query method & assign its result back to the cursor variable.
-        cursor = db.query(CourseInfoEntry.TABLE_NAME, projection, selection, selectionArgs,
-                null, null, sortOrder);
+        /* Determine whether that URI passed in is for the courses table or the notes table
+           using the match method of our UriMatcher field.
+
+           * Match method returns back an appropriate integer value for that URI.
+        */
+        int uriMatch = sUriMatcher.match(uri);
+
+        // Switch statement to check it
+        switch (uriMatch) {
+            case COURSES:
+                // Issue CourseInfo Table query & assign its result back to the cursor variable.
+                cursor = db.query(CourseInfoEntry.TABLE_NAME, projection, selection, selectionArgs,
+                        null, null, sortOrder);
+                break;
+
+            case NOTES:
+                // Issue NoteInfo Table query & assign its result back to the cursor variable.
+                cursor = db.query(NoteInfoEntry.TABLE_NAME, projection, selection, selectionArgs,
+                        null, null, sortOrder);
+                break;
+        }
 
         // Return back Cursor variable
         return cursor;
