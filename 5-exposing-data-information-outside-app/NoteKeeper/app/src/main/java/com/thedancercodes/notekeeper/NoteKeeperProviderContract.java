@@ -50,14 +50,25 @@ public final class NoteKeeperProviderContract {
     }
 
     // Notes Table Class
-    public static final class Notes implements BaseColumns, NotesColumns, CoursesIdColumns {
+    public static final class Notes implements BaseColumns, NotesColumns, CoursesIdColumns, CoursesColumns {
         public static final String PATH = "notes";
 
         /**
-         * CONTENT_URI - used to access our content providers Courses table.
+         * CONTENT_URI - used to access our content providers Notes table.
          *
-         * content://com.thedancercodes.notekeeper.provider/courses
+         * content://com.thedancercodes.notekeeper.provider/notes
          */
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
+
+        // New content provider table that provides the list of notes along with each notes
+        // corresponding course information by joining the note_info table to the course_info table.
+        public static final String PATH_EXPANDED = "notes_expanded";
+
+        /**
+         * CONTENT_URI - used to access our content providers Courses + Notes table.
+         *
+         * content://com.thedancercodes.notekeeper.provider/notes_expanded
+         */
+        public static final Uri CONTENT_EXPANDED_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH_EXPANDED);
     }
 }
