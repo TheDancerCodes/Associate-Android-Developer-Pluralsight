@@ -32,6 +32,8 @@ import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 import java.util.List;
 
+import static com.thedancercodes.notekeeper.NoteKeeperProviderContract.*;
+
 public class NoteActivity extends AppCompatActivity
     implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -615,6 +617,7 @@ public class NoteActivity extends AppCompatActivity
     }
 
     // Return a CursorLoader instance that knows how to load up our course data.
+    // This where our app request data from courses data from our content provider.
     private CursorLoader createLoaderCourses() {
 
         // This field is false before we start our query for courses
@@ -623,18 +626,18 @@ public class NoteActivity extends AppCompatActivity
         /* Query to Content Provider */
 
         // Define Content Provider URI variable
-        Uri uri = Uri.parse("content://com.thedancercodes.notekeeper.provider");
+        Uri uri = Courses.CONTENT_URI;
 
         // Identify columns we want back from the Content Provider.
         String[] courseColumns = {
-                CourseInfoEntry.COLUMN_COURSE_TITLE,
-                CourseInfoEntry.COLUMN_COURSE_ID,
-                CourseInfoEntry._ID
+                Courses.COLUMN_COURSE_TITLE,
+                Courses.COLUMN_COURSE_ID,
+                Courses._ID
         };
 
         // Create new instance of the CursorLoader
         return new CursorLoader(this, uri, courseColumns,
-                null, null, CourseInfoEntry.COLUMN_COURSE_TITLE);
+                null, null, Courses.COLUMN_COURSE_TITLE);
     }
 
     // Return a CursorLoader instance that knows how to load up our note data.
