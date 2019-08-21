@@ -23,6 +23,8 @@ public class NoteKeeperProvider extends ContentProvider {
 
     public static final int NOTES = 1;
 
+    public static final int NOTES_EXPANDED = 2;
+
     /*
        * Static Initializer: allows to run some code when a type is initially loaded.
 
@@ -33,6 +35,9 @@ public class NoteKeeperProvider extends ContentProvider {
         // Add Courses & Notes URI's to our sUriMatcher
         sUriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Courses.PATH, COURSES);
         sUriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Notes.PATH, NOTES);
+
+        // Add new Content Provider Table for Courses + Notes
+        sUriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Notes.PATH_EXPANDED, NOTES_EXPANDED);
     }
 
     public NoteKeeperProvider() {
@@ -98,10 +103,28 @@ public class NoteKeeperProvider extends ContentProvider {
                 cursor = db.query(NoteInfoEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
                 break;
+
+            case NOTES_EXPANDED:
+                cursor = notesExpandedQuery(db, projection, selection, selectionArgs, sortOrder);
         }
 
         // Return back Cursor variable
         return cursor;
+    }
+
+    private Cursor notesExpandedQuery(SQLiteDatabase db, String[] projection, String selection,
+                                      String[] selectionArgs, String sortOrder) {
+
+        // Join the note_info table to the course_info table based on the courseID values being
+        // equal in the two tables.
+        String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN" +
+                CourseInfoEntry.TABLE_NAME + " ON" +
+                NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID) + " = " +
+                CourseInfoEntry.getQName(CourseInfoEntry.COLUMN_COURSE_ID);
+
+        // Return back the Cursor that's returned back to the called query
+        return db.query(tablesWithJoin, projection, selection, selectionArgs,
+                null, null, sortOrder);
     }
 
     @Override
