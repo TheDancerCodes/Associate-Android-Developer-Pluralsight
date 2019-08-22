@@ -467,17 +467,15 @@ public class NoteActivity extends AppCompatActivity
 
         // Specify values for each individual column we want to put into that row.
         // Put placeholders in each column, as an empty string
-        values.put(NoteInfoEntry.COLUMN_COURSE_ID, "");
-        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, "");
-        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, "");
+        values.put(Notes.COLUMN_COURSE_ID, "");
+        values.put(Notes.COLUMN_NOTE_TITLE, "");
+        values.put(Notes.COLUMN_NOTE_TEXT, "");
 
-        // Connection to DB
-        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+        /* Insert a new Note using a ContentResolver & a ContentProvider. */
 
-        /* Insert new row into note_info table */
-        // The insert method returns back the row ID of the new row being created.
-        // Assign the return value of the insert method to our field mNoteId
-        noteId = (int) db.insert(NoteInfoEntry.TABLE_NAME, null, values);
+        // Reference to a ContentResolver that inserts into the Notes table.
+        // The insert method returns back a URI for our new row.
+        Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
     }
 
     @Override
