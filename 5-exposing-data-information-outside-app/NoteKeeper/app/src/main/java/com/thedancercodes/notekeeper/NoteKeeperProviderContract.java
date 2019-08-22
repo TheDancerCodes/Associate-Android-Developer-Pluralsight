@@ -6,6 +6,7 @@ import android.provider.BaseColumns;
 public final class NoteKeeperProviderContract {
 
     // Private constructor to ensure no-one can create an instance of this class
+    private NoteKeeperProviderContract(){}
 
     // Content Provider Authority Constant
     public static final String AUTHORITY = "com.thedancercodes.notekeeper.provider";

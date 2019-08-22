@@ -6,11 +6,14 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.provider.BaseColumns;
 
 import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.thedancercodes.notekeeper.NoteKeeperProviderContract.Courses;
+import static com.thedancercodes.notekeeper.NoteKeeperProviderContract.CoursesIdColumns;
 import com.thedancercodes.notekeeper.NoteKeeperProviderContract.Notes;
+
 
 public class NoteKeeperProvider extends ContentProvider {
 
@@ -115,15 +118,39 @@ public class NoteKeeperProvider extends ContentProvider {
     private Cursor notesExpandedQuery(SQLiteDatabase db, String[] projection, String selection,
                                       String[] selectionArgs, String sortOrder) {
 
+        /* Code to Table qualify any columns that are requested that are part of both the
+           note_info & course_info database tables. */
+
+        // local variable columns assigned a string array that is the same size as the projection
+        // length.
+        // projection is a list of desired columns
+        // projection is a list of desired columns
+        String[] columns = new String[projection.length];
+
+        // Loop that loops once for each member of the projection array
+        for (int idx=0; idx < projection.length; idx++) {
+
+            // Assign a value to the current element of the columns array.
+            // The specific value we assign depends on the corresponding element of the projection array.
+            // Check whether the current value if the projection array equals the value of the
+            // BaseColumns._ID or whether the columns is the course_id column,
+            // If it does, we need to table qualify the column name using NoteInfoEntry.getQName(),
+            // otherwise we can simply assign the value from the projection array.
+            columns[idx] = projection[idx].equals(BaseColumns._ID) ||
+                    projection[idx].equals(CoursesIdColumns.COLUMN_COURSE_ID) ?
+                    NoteInfoEntry.getQName(projection[idx]) : projection[idx];
+        }
+
+
         // Join the note_info table to the course_info table based on the courseID values being
         // equal in the two tables.
-        String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN" +
-                CourseInfoEntry.TABLE_NAME + " ON" +
+        String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN " +
+                CourseInfoEntry.TABLE_NAME + " ON " +
                 NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID) + " = " +
                 CourseInfoEntry.getQName(CourseInfoEntry.COLUMN_COURSE_ID);
 
         // Return back the Cursor that's returned back to the called query
-        return db.query(tablesWithJoin, projection, selection, selectionArgs,
+        return db.query(tablesWithJoin, columns, selection, selectionArgs,
                 null, null, sortOrder);
     }
 
