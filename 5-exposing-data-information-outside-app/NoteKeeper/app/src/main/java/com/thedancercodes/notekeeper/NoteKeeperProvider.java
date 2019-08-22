@@ -29,6 +29,8 @@ public class NoteKeeperProvider extends ContentProvider {
 
     public static final int NOTES_EXPANDED = 2;
 
+    public static final int NOTES_ROW = 3;
+
     /*
        * Static Initializer: allows to run some code when a type is initially loaded.
 
@@ -42,6 +44,11 @@ public class NoteKeeperProvider extends ContentProvider {
 
         // Add new Content Provider Table for Courses + Notes
         sUriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Notes.PATH_EXPANDED, NOTES_EXPANDED);
+
+        // Row URI support that references specific rows in our notes table
+        // Notes.PATH + "/#" -> This is how we indicate that we want to handle a Row URI that
+        // references a rowId within our notes table.
+        sUriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Notes.PATH + "/#", NOTES_ROW);
     }
 
     public NoteKeeperProvider() {
@@ -150,6 +157,24 @@ public class NoteKeeperProvider extends ContentProvider {
 
             case NOTES_EXPANDED:
                 cursor = notesExpandedQuery(db, projection, selection, selectionArgs, sortOrder);
+                break;
+
+            case NOTES_ROW:
+
+                // Query DB NoteInfo table for a specific row by specifying a selection criteria
+                // that includes the rowId value contained in our URI.
+                long rowId = ContentUris.parseId(uri);
+
+                // String value holding the selection clause
+                String rowSelection = NoteInfoEntry._ID + " = ?";
+
+                String[] rowSelectionArgs = new String[]{Long.toString(rowId)};
+
+                // Query: Assign cursor variable teh result of a call db.query() method
+                cursor = db.query(NoteInfoEntry.TABLE_NAME, projection, rowSelection,
+                        rowSelectionArgs, null, null, null);
+
+                break;
         }
 
         // Return back Cursor variable
