@@ -60,6 +60,7 @@ public class NoteKeeperProvider extends ContentProvider {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    // Content Provider insert() method
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         /* Implement this to handle requests to insert a new row. */

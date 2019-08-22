@@ -78,6 +78,7 @@ public class NoteActivity extends AppCompatActivity
     private SimpleCursorAdapter adapterCourses;
     private boolean coursesQueryFinished;
     private boolean notesQueryFinished;
+    private Uri mNoteUri;
 
     @Override
     protected void onDestroy() {
@@ -475,7 +476,7 @@ public class NoteActivity extends AppCompatActivity
 
         // Reference to a ContentResolver that inserts into the Notes table.
         // The insert method returns back a URI for our new row.
-        Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
+        mNoteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
     }
 
     @Override
