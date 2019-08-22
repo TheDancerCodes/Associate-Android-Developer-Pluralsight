@@ -1,6 +1,7 @@
 package com.thedancercodes.notekeeper;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -61,8 +62,47 @@ public class NoteKeeperProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        // TODO: Implement this to handle requests to insert a new row.
-        throw new UnsupportedOperationException("Not yet implemented");
+        /* Implement this to handle requests to insert a new row. */
+
+        // DB reference
+        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
+
+        // DB insert method returns back a rowId of the new row, so we initialize a rowId with -1.
+        long rowId = -1;
+
+        // The ContentProvider insert method returns back a URI that identifies the new inserted row
+        Uri rowUri = null;
+
+        // Constant for the table that corresponds to the URI & our local variable uriMatch
+        int uriMatch = sUriMatcher.match(uri);
+        switch (uriMatch) {
+
+            /* Case for each of the tables */
+
+            case NOTES:
+                // DB insert
+                rowId = db.insert(NoteInfoEntry.TABLE_NAME, null, values);
+
+                // URI for the new row: (TABLE_URI + rowId)
+                // content://com.thedancercodes.notekeeper.provider/notes/1
+                rowUri = ContentUris.withAppendedId(Notes.CONTENT_URI, rowId);
+                break;
+
+            case COURSES:
+                rowId = db.insert(CourseInfoEntry.TABLE_NAME, null, values);
+
+                // URI for the new row: (TABLE_URI + rowId)
+                // content://com.thedancercodes.notekeeper.provider/courses/1
+                rowUri = ContentUris.withAppendedId(Courses.CONTENT_URI, rowId);
+                break;
+
+            case NOTES_EXPANDED:
+                // Throw exception saying that this is a read-only table.
+                break;
+        }
+
+        return rowUri;
+
     }
 
     // Create ContentProvider
