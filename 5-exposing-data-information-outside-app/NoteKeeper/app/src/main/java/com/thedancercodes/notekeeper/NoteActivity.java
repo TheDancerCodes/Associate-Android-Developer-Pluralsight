@@ -522,7 +522,10 @@ public class NoteActivity extends AppCompatActivity
         // Current Note Text
         String noteText = textNoteText.getText().toString();
 
-        NoteReminderNotification.notify(this, noteTitle, noteText);
+        // Extract current noteId from URI
+        int noteId = (int) ContentUris.parseId(mNoteUri);
+
+        NoteReminderNotification.notify(this, noteTitle, noteText, noteId);
     }
 
 //    private void createNotificationChannel() {

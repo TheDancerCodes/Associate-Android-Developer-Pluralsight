@@ -117,6 +117,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
         public final TextView textTitle;
 
         // Get ViewHolder current id each time its associated with a different set of data
+        // This is the id of a note.
         public int mId;
 
         public ViewHolder(@NonNull View itemView) {
