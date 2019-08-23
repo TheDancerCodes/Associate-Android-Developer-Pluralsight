@@ -104,6 +104,7 @@ public class NoteReminderNotification {
         notify(context, builder.build());
     }
 
+    // Handles the details of displaying the actual notification
     @TargetApi(Build.VERSION_CODES.ECLAIR)
     private static void notify(final Context context, final Notification notification) {
         final NotificationManager nm = (NotificationManager) context

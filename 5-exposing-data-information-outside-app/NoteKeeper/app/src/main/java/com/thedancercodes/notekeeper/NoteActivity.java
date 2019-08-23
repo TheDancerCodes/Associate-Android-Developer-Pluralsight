@@ -515,7 +515,11 @@ public class NoteActivity extends AppCompatActivity
 
     // Code that displays a Notification
     private void showReminderNotification() {
-        NoteReminderNotification.notify(this, "This is a test! 🚀", 0);
+
+        // Get current note text
+        String noteText = textNoteText.getText().toString();
+
+        NoteReminderNotification.notify(this, noteText);
     }
 
 //    private void createNotificationChannel() {
