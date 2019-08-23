@@ -108,6 +108,16 @@ public class NoteReminderNotification {
                                 noteActivityIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT))
 
+                // Add an action to our notification to allow the user to view the notes list
+                .addAction(
+                        0,
+                        "View all notes",
+                        PendingIntent.getActivity(
+                                context,
+                                0,
+                                new Intent(context, MainActivity.class),
+                                PendingIntent.FLAG_UPDATE_CURRENT))
+
                 // Automatically dismiss the notification when it is touched.
                 .setAutoCancel(true);
 
