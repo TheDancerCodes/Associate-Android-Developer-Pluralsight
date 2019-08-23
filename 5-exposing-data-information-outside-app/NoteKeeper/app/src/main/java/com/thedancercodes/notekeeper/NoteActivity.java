@@ -12,6 +12,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.CursorAdapter;
+import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,21 +26,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
-import android.widget.EditText;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Spinner;
-
 import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
-import java.util.List;
-
-import static com.thedancercodes.notekeeper.NoteKeeperProviderContract.*;
+import static com.thedancercodes.notekeeper.NoteKeeperProviderContract.Courses;
+import static com.thedancercodes.notekeeper.NoteKeeperProviderContract.Notes;
 
 public class NoteActivity extends AppCompatActivity
     implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -508,9 +505,36 @@ public class NoteActivity extends AppCompatActivity
         else if (id == R.id.action_next) {
             moveNext();
         }
+        // Show Reminder Notification
+        else if (id == R.id.action_set_reminder) {
+            showReminderNotification();
+        }
 
         return super.onOptionsItemSelected(item);
     }
+
+    // Code that displays a Notification
+    private void showReminderNotification() {
+        NoteReminderNotification.notify(this, "This is a test! 🚀", 0);
+    }
+
+//    private void createNotificationChannel() {
+//        // Create the NotificationChannel, but only on API 26+ because
+//        // the NotificationChannel class is new and not in the support library
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            CharSequence name = getString(R.string.channel_name);
+//            String description = getString(R.string.channel_description);
+//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+//            channel.setDescription(description);
+//            // Register the channel with the system; you can't change the importance
+//            // or other notification behaviors after this
+//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//            notificationManager.createNotificationChannel(channel);
+//        }
+//    }
+
+
 
     /**
      * Prepare the Screen's standard options menu to be displayed.  This is

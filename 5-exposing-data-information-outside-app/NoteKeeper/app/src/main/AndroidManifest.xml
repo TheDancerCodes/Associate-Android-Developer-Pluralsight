@@ -9,12 +9,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <provider
-            android:name=".NoteKeeperProvider"
-            android:authorities="com.thedancercodes.notekeeper.provider"
-            android:enabled="true"
-            android:exported="true"></provider>
-
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -23,6 +17,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.thedancercodes.notekeeper.MainActivity" />
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
@@ -41,6 +36,13 @@
             android:name=".NoteActivity"
             android:label="@string/title_activity_note"
             android:theme="@style/AppTheme.NoActionBar" />
+        <provider
+            android:name=".NoteKeeperProvider"
+            android:authorities="com.thedancercodes.notekeeper.provider"
+            android:enabled="true"
+            android:exported="true" />
     </application>
+
+    <uses-permission android:name="android.permission.VIBRATE" />
 
 </manifest>

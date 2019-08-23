@@ -32,30 +32,42 @@
     <string name="pref_default_email_address">yourname@yourhost.com</string>
 
     <string name="pref_title_favorite_social">Favorite Social Network</string>
-    
+
+    <string name="pref_default_favorite_social">https://www.instagram.com</string>
+
+    <string name="signature_title">Your signature</string>
+
+    <string name="reply_title">Default reply action</string>
+
+
+    <!-- Messages Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+
+    <!-- Sync Preferences -->
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="note_reminder_notification_title_template">Note reminder: %1$s</string>
+    <string name="note_reminder_notification_placeholder_text_template">You said %1$s and lorem
+        ipsum dolor sit amet, consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit
+        vel semper venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis.
+        Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper
+        ornare lacus. Duis ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis
+        viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec
+        tortor.
+    </string>
+
     <string-array name="pref_entries_favorite_social">
         <item>Instagram</item>
         <item>Facebook</item>
         <item>Twitter</item>
     </string-array>
-    
+
+    <!-- TODO: remove this placeholder text -->
     <string-array name="pref_values_favorite_social">
         <item>https://www.instagram.com</item>
         <item>https://www.facebook.com</item>
         <item>https://twitter.com</item>
     </string-array>
-
-    <string name="pref_default_favorite_social">https://www.instagram.com</string>
-
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>
