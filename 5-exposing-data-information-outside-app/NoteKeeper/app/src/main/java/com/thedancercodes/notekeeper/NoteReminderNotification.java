@@ -43,22 +43,15 @@ public class NoteReminderNotification {
      * @see #cancel(Context)
      */
     public static void notify(final Context context,
-                              final String exampleString, final int number) {
+                              final String noteText) {
         final Resources res = context.getResources();
 
         // This image is used as the notification's large icon (thumbnail).
         // TODO: Remove this if your notification has no relevant thumbnail.
-        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.example_picture);
+        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.logo);
 
 
-        final String ticker = exampleString;
-        final String title = res.getString(
-                R.string.note_reminder_notification_title_template, exampleString);
-        final String text = res.getString(
-                R.string.note_reminder_notification_placeholder_text_template, exampleString);
-        final String CHANNEL_ID = "channelId";
-
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 
                 // Set appropriate defaults for the notification light, sound,
                 // and vibration.
@@ -67,8 +60,8 @@ public class NoteReminderNotification {
                 // Set required fields, including the small icon, the
                 // notification title, and text.
                 .setSmallIcon(R.drawable.ic_stat_note_reminder)
-                .setContentTitle(title)
-                .setContentText(text)
+                .setContentTitle("Review Note")
+                .setContentText(noteText)
 
                 // All fields below this line are optional.
 
@@ -81,11 +74,11 @@ public class NoteReminderNotification {
                 .setLargeIcon(picture)
 
                 // Set ticker text (preview) information for this notification.
-                .setTicker(ticker)
+                .setTicker("Review Note")
 
                 // Show a number. This is useful when stacking notifications of
                 // a single type.
-                .setNumber(number)
+                // .setNumber(number)
 
                 // If this notification relates to a past or upcoming event, you
                 // should set the relevant time information using the setWhen
