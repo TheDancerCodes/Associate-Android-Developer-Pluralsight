@@ -1,6 +1,7 @@
 package com.thedancercodes.notekeeper;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
@@ -18,6 +19,7 @@ import com.thedancercodes.notekeeper.NoteKeeperProviderContract.Notes;
 
 public class NoteKeeperProvider extends ContentProvider {
 
+    private static final String MIME_VENDOR_TYPE = "vnd." + NoteKeeperProviderContract.AUTHORITY + ".";
     private NoteKeeperOpenHelper dbOpenHelper;
 
     // URIMatcher field
@@ -62,9 +64,38 @@ public class NoteKeeperProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        // TODO: Implement this to handle requests for the MIME type of the data
-        // at the given URI.
-        throw new UnsupportedOperationException("Not yet implemented");
+        // Handle requests for the MIME type of the data of each of the URIs supported by the
+        // Content Provider.
+        String mimeType = null;
+
+        // Identify the URI received
+        int uriMatch = sUriMatcher.match(uri);
+        switch (uriMatch) {
+            case COURSES:
+                // vnd.android.cursor.dir/vnd.com.thedancercodes.notekeeper.provider.courses
+                mimeType = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" +
+                        MIME_VENDOR_TYPE + Courses.PATH;
+                break;
+
+            case NOTES:
+                mimeType = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" +
+                        MIME_VENDOR_TYPE + Notes.PATH;
+                break;
+
+            case NOTES_EXPANDED:
+                mimeType = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" +
+                        MIME_VENDOR_TYPE + Notes.PATH_EXPANDED;
+                break;
+
+            case NOTES_ROW:
+                // vnd.android.cursor.dir/vnd.com.thedancercodes.notekeeper.provider.courses
+                mimeType = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" +
+                        MIME_VENDOR_TYPE + Notes.PATH;
+                break;
+        }
+
+
+        return mimeType;
     }
 
     // Content Provider insert() method
