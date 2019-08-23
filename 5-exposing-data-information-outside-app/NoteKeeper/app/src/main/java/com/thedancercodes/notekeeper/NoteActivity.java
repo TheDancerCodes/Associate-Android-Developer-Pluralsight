@@ -1,6 +1,7 @@
 package com.thedancercodes.notekeeper;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -645,37 +646,20 @@ public class NoteActivity extends AppCompatActivity
         // This field is false before we start our query for notes
         notesQueryFinished = false;
 
-        return new CursorLoader(this) {
-
-            @Override
-            public Cursor loadInBackground() {
-
-                // Reference to SQLite DB
-                SQLiteDatabase db = dbOpenHelper.getReadableDatabase();
-
-                // Selection Criteria: Assume we want to always find the exact same note
-                // that start with the name "dynamic"
-                String courseId = "android_intents";
-                String titleStart = "dynamic";
-
-                // Selection Clause that uses _ID column
-                String selection = NoteInfoEntry._ID + " = ? ";
-
-                // Selection Values
-                String[] selectionArgs = {Integer.toString(noteId)};
-
-                // Array of the tables' columns
-                String [] noteColumns = {
-                        NoteInfoEntry.COLUMN_COURSE_ID,
-                        NoteInfoEntry.COLUMN_NOTE_TITLE,
-                        NoteInfoEntry.COLUMN_NOTE_TEXT
-                };
-
-                // Perform the DB Query & return the query result
-                return db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
-                        selection, selectionArgs, null, null, null);
-            }
+        // Array of the tables' columns
+        String [] noteColumns = {
+                Notes.COLUMN_COURSE_ID,
+                Notes.COLUMN_NOTE_TITLE,
+                Notes.COLUMN_NOTE_TEXT
         };
+
+
+        // URI that references the rowId of specified note in our notes table
+        // (TABLE_URI + rowId)
+        mNoteUri = ContentUris.withAppendedId(Notes.CONTENT_URI, noteId);
+
+        // return a new CursorLoader Instance
+        return new CursorLoader(this, mNoteUri, noteColumns, null, null, null);
     }
 
     /**
