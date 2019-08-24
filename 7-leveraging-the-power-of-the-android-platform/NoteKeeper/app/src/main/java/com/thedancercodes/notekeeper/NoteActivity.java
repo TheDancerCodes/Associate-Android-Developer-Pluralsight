@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.SimpleCursorAdapter;
@@ -26,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.thedancercodes.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
@@ -89,6 +91,7 @@ public class NoteActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "************** onCreate **************");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -266,7 +269,7 @@ public class NoteActivity extends AppCompatActivity
         }
 
         // Debug Message
-        Log.d(TAG, "onPause");
+        Log.d(TAG, "************** onPause **************");
 
     }
 
@@ -467,6 +470,8 @@ public class NoteActivity extends AppCompatActivity
             @Override
             protected Uri doInBackground(ContentValues... contentValues) {
 
+                Log.d(TAG, "doInBackground - thread: " + Thread.currentThread().getId());
+
                 // To access the single content values reference we pass to the execute method,
                 // we access the initial element of contentValues
                 ContentValues insertValues = contentValues[0];
@@ -481,8 +486,12 @@ public class NoteActivity extends AppCompatActivity
             @Override
             protected void onPostExecute(Uri uri) {
 
+                Log.d(TAG, "onPostExecute - thread: " + Thread.currentThread().getId());
+
                 // Assign the rowUri returned from doInBackground to mNoteUri field.
                 mNoteUri = uri;
+
+                displaySnackBar(mNoteUri.toString());
             }
         };
 
@@ -495,13 +504,13 @@ public class NoteActivity extends AppCompatActivity
         values.put(Notes.COLUMN_NOTE_TITLE, "");
         values.put(Notes.COLUMN_NOTE_TEXT, "");
 
-        /* Insert a new Note using a ContentResolver & a ContentProvider. */
-
-        // Reference to a ContentResolver that inserts into the Notes table.
-        // The insert method returns back a URI for our new row.
-        // mNoteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
-
+        Log.d(TAG, "Call to execute - thread: " + Thread.currentThread().getId());
         task.execute(values);
+    }
+
+    private void displaySnackBar(String message) {
+        View view = findViewById(R.id.spinner_courses);
+        Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
