@@ -18,7 +18,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.os.StrictMode;
+import android.view.Gravity;
 import android.view.View;
 
 import androidx.core.view.GravityCompat;
@@ -118,7 +121,7 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
     }
 
-    // Called each time we return to an Activity
+    // Called each time our Activity moves into the foreground (When we return to the Activity)
     @Override
     protected void onResume() {
         super.onResume();
@@ -131,6 +134,25 @@ public class MainActivity extends AppCompatActivity
            Update values in Nav Drawer every time onResume gets called.
          */
         updateNavHeader();
+
+        openDrawer();
+    }
+
+    private void openDrawer() {
+
+        // Creates a Handler & associates it with the Looper of the main application thread.
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        // Put some work in the Message Queue using an implementation of the Runnable interface.
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                drawer.openDrawer(GravityCompat.START);
+            }
+        }, 1000);
+
+
     }
 
     private void loadNotes() {
