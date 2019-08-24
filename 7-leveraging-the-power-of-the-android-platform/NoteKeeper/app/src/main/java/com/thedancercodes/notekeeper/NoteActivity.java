@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
@@ -467,6 +468,23 @@ public class NoteActivity extends AppCompatActivity
         //* Perform the insert of our new note row using a background thread.
         //* Actual insert on a background thread, then assign the resulting URI to our mNoteUri field on the main thread.
         AsyncTask<ContentValues, Void, Uri> task = new AsyncTask<ContentValues, Void, Uri>() {
+
+            // ProgressBar Field
+            private ProgressBar progressBar;
+
+            /**
+             * Runs on the UI thread before {@link #doInBackground}.
+             *
+             * @see #onPostExecute
+             * @see #doInBackground
+             */
+            @Override
+            protected void onPreExecute() {
+                progressBar = findViewById(R.id.progress_bar);
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setProgress(1);
+            }
+
             @Override
             protected Uri doInBackground(ContentValues... contentValues) {
 
@@ -479,6 +497,12 @@ public class NoteActivity extends AppCompatActivity
                 // Reference to a ContentResolver that inserts into the Notes table.
                 // The insert method returns back a URI for our new row.
                 Uri rowUri = getContentResolver().insert(Notes.CONTENT_URI, insertValues);
+
+                simulateLongRunningWork(); // simulate slow database work
+                progressBar.setProgress(2);
+
+                simulateLongRunningWork(); // simulate slow database work
+                progressBar.setProgress(3);
 
                 return rowUri;
             }
@@ -506,6 +530,12 @@ public class NoteActivity extends AppCompatActivity
 
         Log.d(TAG, "Call to execute - thread: " + Thread.currentThread().getId());
         task.execute(values);
+    }
+
+    private void simulateLongRunningWork() {
+        try {
+            Thread.sleep(2000);
+        } catch(Exception ex) {}
     }
 
     private void displaySnackBar(String message) {
