@@ -308,8 +308,13 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    // Triggers Notes Backup
     private void backupNotes() {
-        NoteBackup.doBackup(MainActivity.this, NoteBackup.ALL_COURSES);
+
+        // Intent that launches the Service implemented by the NoteBackupService class.
+        Intent intent = new Intent(this, NoteBackupService.class);
+        intent.putExtra(NoteBackupService.EXTRA_COURSE_ID, NoteBackup.ALL_COURSES);
+        startService(intent);
     }
 
     @Override
