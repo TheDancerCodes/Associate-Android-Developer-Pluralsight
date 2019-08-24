@@ -467,7 +467,7 @@ public class NoteActivity extends AppCompatActivity
 
         //* Perform the insert of our new note row using a background thread.
         //* Actual insert on a background thread, then assign the resulting URI to our mNoteUri field on the main thread.
-        AsyncTask<ContentValues, Void, Uri> task = new AsyncTask<ContentValues, Void, Uri>() {
+        AsyncTask<ContentValues, Integer, Uri> task = new AsyncTask<ContentValues, Integer, Uri>() {
 
             // ProgressBar Field
             private ProgressBar progressBar;
@@ -499,12 +499,28 @@ public class NoteActivity extends AppCompatActivity
                 Uri rowUri = getContentResolver().insert(Notes.CONTENT_URI, insertValues);
 
                 simulateLongRunningWork(); // simulate slow database work
-                progressBar.setProgress(2);
+                publishProgress(2);
 
                 simulateLongRunningWork(); // simulate slow database work
-                progressBar.setProgress(3);
+                publishProgress(3);
 
                 return rowUri;
+            }
+
+            /**
+             * Runs on the UI thread after {@link #publishProgress} is invoked.
+             * The specified values are the values passed to {@link #publishProgress}.
+             *
+             * @param values The values indicating progress.
+             * @see #publishProgress
+             * @see #doInBackground
+             */
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+
+                // Take the value onProgressUpdate receives & pass it to our ProgressBar’s setProgress method.
+                int progressValue = values[0];
+                progressBar.setProgress(progressValue);
             }
 
             @Override
@@ -516,6 +532,8 @@ public class NoteActivity extends AppCompatActivity
                 mNoteUri = uri;
 
                 displaySnackBar(mNoteUri.toString());
+
+                progressBar.setVisibility(View.GONE);
             }
         };
 
