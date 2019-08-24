@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.StrictMode;
 import android.view.View;
 
 import androidx.core.view.GravityCompat;
@@ -62,6 +63,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        enableStrictMode();
+
         // Create instance of NoteKeeperOpenHelper & assign it to member field
         dbOpenHelper = new NoteKeeperOpenHelper(this);
 
@@ -86,6 +89,24 @@ public class MainActivity extends AppCompatActivity
         initializeDisplayContent();
 
         updateNavHeader();
+    }
+
+    private void enableStrictMode() {
+
+        // Enable StrictMode Policy for DEBUG builds.
+        if (BuildConfig.DEBUG) {
+
+            // Create the Policy
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build();
+
+            // Set the Policy
+            StrictMode.setThreadPolicy(policy);
+
+
+        }
     }
 
 
