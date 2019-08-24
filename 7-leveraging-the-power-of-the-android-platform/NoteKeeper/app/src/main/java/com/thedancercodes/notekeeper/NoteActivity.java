@@ -461,6 +461,31 @@ public class NoteActivity extends AppCompatActivity
 
     private void createNewNote() {
 
+        //* Perform the insert of our new note row using a background thread.
+        //* Actual insert on a background thread, then assign the resulting URI to our mNoteUri field on the main thread.
+        AsyncTask<ContentValues, Void, Uri> task = new AsyncTask<ContentValues, Void, Uri>() {
+            @Override
+            protected Uri doInBackground(ContentValues... contentValues) {
+
+                // To access the single content values reference we pass to the execute method,
+                // we access the initial element of contentValues
+                ContentValues insertValues = contentValues[0];
+
+                // Reference to a ContentResolver that inserts into the Notes table.
+                // The insert method returns back a URI for our new row.
+                Uri rowUri = getContentResolver().insert(Notes.CONTENT_URI, insertValues);
+
+                return rowUri;
+            }
+
+            @Override
+            protected void onPostExecute(Uri uri) {
+
+                // Assign the rowUri returned from doInBackground to mNoteUri field.
+                mNoteUri = uri;
+            }
+        };
+
         // New instance of ContentValues
         ContentValues values = new ContentValues();
 
@@ -474,7 +499,9 @@ public class NoteActivity extends AppCompatActivity
 
         // Reference to a ContentResolver that inserts into the Notes table.
         // The insert method returns back a URI for our new row.
-        mNoteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
+        // mNoteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
+
+        task.execute(values);
     }
 
     @Override
