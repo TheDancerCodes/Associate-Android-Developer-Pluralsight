@@ -37,13 +37,20 @@ public class NoteUploaderJobService extends JobService {
 
                 noteUploader.doUpload(dataUri);
 
+                jobFinished(jobParams, false);
+
                 return null;
             }
         };
 
         noteUploader = new NoteUploader( this);
 
-        return false;
+        // Get the background work running
+        task.execute(params);
+
+        // This lets our JobScheduler know that the process needs to be allowed to keep running
+        // until our background work finishes.
+        return true;
     }
 
     /**
