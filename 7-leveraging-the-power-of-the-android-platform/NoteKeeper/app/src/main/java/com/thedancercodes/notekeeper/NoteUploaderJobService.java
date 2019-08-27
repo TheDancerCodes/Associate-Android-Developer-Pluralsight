@@ -37,7 +37,9 @@ public class NoteUploaderJobService extends JobService {
 
                 noteUploader.doUpload(dataUri);
 
-                jobFinished(jobParams, false);
+                // Conditional for when noteUploader isn't cancelled
+                if (!noteUploader.isCanceled())
+                    jobFinished(jobParams, false);
 
                 return null;
             }
@@ -59,7 +61,12 @@ public class NoteUploaderJobService extends JobService {
      */
     @Override
     public boolean onStopJob(JobParameters params) {
-        return false;
+
+        // Stop note uploading work
+        noteUploader.cancel();
+
+        // This lets our JobScheduler know that the work needs to be rescheduled.
+        return true;
     }
 
 }
