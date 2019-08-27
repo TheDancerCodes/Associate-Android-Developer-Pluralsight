@@ -399,6 +399,9 @@ public class NoteActivity extends AppCompatActivity
         // Take the Note member variable, mNote, and set each of the values.
         textNoteTitle.setText(noteTitle);
         textNoteText.setText(noteText);
+
+        // Trigger the sending of a Broadcast
+        CourseEventBroadcastHelper.sendEventBroadcast(this, courseId, "Editing Note");
     }
 
     private int getIndexOfCourseId(String courseId) {
