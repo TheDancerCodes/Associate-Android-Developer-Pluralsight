@@ -9,6 +9,9 @@ import android.os.IBinder;
 import android.os.PersistableBundle;
 
 public class NoteUploaderJobService extends JobService {
+
+    public static final String EXTRA_DATA_URI = "com.thedancercodes.notekeeper.extras.DATA_URI";
+
     public NoteUploaderJobService() {
     }
 

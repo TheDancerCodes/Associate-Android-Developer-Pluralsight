@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PersistableBundle;
 import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.View;
@@ -314,8 +315,11 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    // Code to schedule the job
+    /* Provide info for the job & schedule the job. */
     private void scheduleNoteUpload() {
+
+        PersistableBundle extras = new PersistableBundle();
+        extras.putString(NoteUploaderJobService.EXTRA_DATA_URI, Notes.CONTENT_URI.toString());
 
         // Description of the component that will handle the job
         ComponentName componentName = new ComponentName(this, NoteUploaderJobService.class);
@@ -323,6 +327,7 @@ public class MainActivity extends AppCompatActivity
         // JobInfo class instance
         JobInfo jobInfo = new JobInfo.Builder(NOTE_UPLOADER_JOB_ID, componentName)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setExtras(extras)
                 .build();
 
         // Reference to JobScheduler
