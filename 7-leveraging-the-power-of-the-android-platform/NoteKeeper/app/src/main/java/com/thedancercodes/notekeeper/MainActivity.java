@@ -1,6 +1,9 @@
 package com.thedancercodes.notekeeper;
 
 import android.app.LoaderManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity
         LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final int LOADER_NOTES = 0;
+    private static final int NOTE_UPLOADER_JOB_ID = 1;
     // Fields
     private NoteRecyclerAdapter noteRecyclerAdapter;
     private RecyclerView recyclerItems;
@@ -303,9 +307,27 @@ public class MainActivity extends AppCompatActivity
             return true;
         } else if (id == R.id.action_backup_notes) {
             backupNotes();
+        } else if (id == R.id.action_upload_notes) {
+            scheduleNoteUpload();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // Code to schedule the job
+    private void scheduleNoteUpload() {
+
+        // Description of the component that will handle the job
+        ComponentName componentName = new ComponentName(this, NoteUploaderJobService.class);
+
+        // JobInfo class instance
+        JobInfo jobInfo = new JobInfo.Builder(NOTE_UPLOADER_JOB_ID, componentName)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .build();
+
+        // Reference to JobScheduler
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        jobScheduler.schedule(jobInfo);
     }
 
     // Triggers Notes Backup
