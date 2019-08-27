@@ -5,12 +5,16 @@ import android.app.job.JobInfo;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.PersistableBundle;
 
 public class NoteUploaderJobService extends JobService {
 
     public static final String EXTRA_DATA_URI = "com.thedancercodes.notekeeper.extras.DATA_URI";
+    private NoteUploader noteUploader;
+
 
     public NoteUploaderJobService() {
     }
@@ -20,6 +24,25 @@ public class NoteUploaderJobService extends JobService {
      */
     @Override
     public boolean onStartJob(JobParameters params) {
+
+        AsyncTask<JobParameters, Void, Void> task = new AsyncTask<JobParameters, Void, Void>() {
+            @Override
+            protected Void doInBackground(JobParameters... backgroundParams) {
+
+                JobParameters jobParams = backgroundParams[0];
+
+                String stringDataUri = jobParams.getExtras().getString(EXTRA_DATA_URI);
+
+                Uri dataUri = Uri.parse(stringDataUri);
+
+                noteUploader.doUpload(dataUri);
+
+                return null;
+            }
+        };
+
+        noteUploader = new NoteUploader( this);
+
         return false;
     }
 
