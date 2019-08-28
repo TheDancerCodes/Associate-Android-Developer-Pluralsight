@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -616,7 +617,7 @@ public class NoteActivity extends AppCompatActivity
 
         /* Use the Alarm Manager to schedule a call to our broadcast receiver */
 
-        // Create the Intent
+        // Create the Explicit Intent
         Intent intent = new Intent(this, NoteReminderReceiver.class);
         intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_TITLE, noteTitle);
         intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_TEXT, noteText);
@@ -627,6 +628,21 @@ public class NoteActivity extends AppCompatActivity
 
         // Reference to Alarm Manager
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        /* Calculate time we want to set the Alarm to. Setting a relative time. */
+
+        // Get the time in milliseconds from when the device was last rebooted.
+        long currentTimeInMilliseconds = SystemClock.elapsedRealtime();
+
+        // One hour in milliseconds
+        long ONE_HOUR = 60 * 60 * 1000;
+
+        // 10 seconds in milliseconds
+        long TEN_SECONDS = 10 * 1000;
+
+        long alarmTime = currentTimeInMilliseconds + TEN_SECONDS;
+
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME, alarmTime,pendingIntent);
     }
 
 //    private void createNotificationChannel() {
