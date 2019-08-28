@@ -1,5 +1,6 @@
 package com.thedancercodes.courseevents;
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,10 +41,19 @@ public class CourseEventsMainActivity extends AppCompatActivity
 
         // Associate Activity as the callback when a broadcast is received.
         mCourseEventsReceiver.setCourseEventsDisplayCallbacks(this);
+
+        // Specify the broadcast intents we are interested in
+        IntentFilter intentFilter = new IntentFilter(CourseEventsReceiver.ACTION_COURSE_EVENT);
+
+        // Register the Receiver
+        registerReceiver(mCourseEventsReceiver, intentFilter);
     }
 
     @Override
     protected void onDestroy() {
+
+        // Unregister the Receiver
+        unregisterReceiver(mCourseEventsReceiver);
 
         super.onDestroy();
     }
