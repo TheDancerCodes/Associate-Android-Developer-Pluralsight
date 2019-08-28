@@ -2,15 +2,9 @@ package com.thedancercodes.courseevents;
 
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -20,11 +14,11 @@ import java.util.ArrayList;
  * This Activity is designed to display information from the Broadcast we receive.
  */
 public class CourseEventsMainActivity extends AppCompatActivity
-        implements EventDisplayCallbacks
-{
+        implements CourseEventsDisplayCallbacks {
 
     ArrayList<String> mCourseEvents;
     ArrayAdapter<String> mCourseEventsAdapter;
+    private CourseEventsReceiver mCourseEventsReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +29,17 @@ public class CourseEventsMainActivity extends AppCompatActivity
 
         setupListView();
 
+        // Code to create the Receiver.
+        setupCourseEventReceiver();
+    }
 
+    private void setupCourseEventReceiver() {
+
+        // Create Broadcast Receiver
+        mCourseEventsReceiver = new CourseEventsReceiver();
+
+        // Associate Activity as the callback when a broadcast is received.
+        mCourseEventsReceiver.setCourseEventsDisplayCallbacks(this);
     }
 
     @Override
@@ -53,6 +57,8 @@ public class CourseEventsMainActivity extends AppCompatActivity
         listView.setAdapter(mCourseEventsAdapter);
     }
 
+    // Calling this method adds an item to the ListView that displays a courseId and message that
+    // was received from the Broadcast.
     @Override
     public void onEventReceived(String eventMessage) {
         if(eventMessage != null) {

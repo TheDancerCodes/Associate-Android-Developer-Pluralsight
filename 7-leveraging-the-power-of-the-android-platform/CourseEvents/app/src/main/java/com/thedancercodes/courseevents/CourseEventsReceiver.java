@@ -12,6 +12,15 @@ public class CourseEventsReceiver extends BroadcastReceiver {
     public static final String EXTRA_COURSE_ID = "com.thedancercodes.notekeeper.extra.COURSE_ID";
     public static final String EXTRA_COURSE_MESSAGE = "com.thedancercodes.notekeeper.extra.COURSE_MESSAGE";
 
+
+    // Reference to CourseEventsDisplayCallbacks interface
+    private CourseEventsDisplayCallbacks mCourseEventsDisplayCallbacks;
+
+    // Setter
+    public void setCourseEventsDisplayCallbacks(CourseEventsDisplayCallbacks courseEventsDisplayCallbacks) {
+        this.mCourseEventsDisplayCallbacks = courseEventsDisplayCallbacks;
+    }
+
     // This method is called when the BroadcastReceiver is receiving an Intent broadcast.
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -21,6 +30,10 @@ public class CourseEventsReceiver extends BroadcastReceiver {
 
             String courseId = intent.getStringExtra(EXTRA_COURSE_ID);
             String courseMessage = intent.getStringExtra(EXTRA_COURSE_MESSAGE);
+
+            // Check that field is not null.
+            if (mCourseEventsDisplayCallbacks != null)
+                mCourseEventsDisplayCallbacks.onEventReceived(courseId, courseMessage);
         }
     }
 }
