@@ -60,10 +60,11 @@ public class CourseEventsMainActivity extends AppCompatActivity
     // Calling this method adds an item to the ListView that displays a courseId and message that
     // was received from the Broadcast.
     @Override
-    public void onEventReceived(String eventMessage) {
-        if(eventMessage != null) {
-            mCourseEvents.add(eventMessage);
-            mCourseEventsAdapter.notifyDataSetChanged();
-        }
+    public void onEventReceived(String courseId, String courseMessage) {
+
+        String displayText = courseId + ": " + courseMessage;
+
+        mCourseEvents.add(displayText);
+        mCourseEventsAdapter.notifyDataSetChanged();
     }
 }
