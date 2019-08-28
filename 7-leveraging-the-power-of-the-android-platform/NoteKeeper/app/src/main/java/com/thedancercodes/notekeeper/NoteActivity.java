@@ -1,6 +1,8 @@
 package com.thedancercodes.notekeeper;
 
+import android.app.AlarmManager;
 import android.app.LoaderManager;
+import android.app.PendingIntent;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -612,7 +614,19 @@ public class NoteActivity extends AppCompatActivity
         // Extract current noteId from URI
         int noteId = (int) ContentUris.parseId(mNoteUri);
 
-        NoteReminderNotification.notify(this, noteTitle, noteText, noteId);
+        /* Use the Alarm Manager to schedule a call to our broadcast receiver */
+
+        // Create the Intent
+        Intent intent = new Intent(this, NoteReminderReceiver.class);
+        intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_TITLE, noteTitle);
+        intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_TEXT, noteText);
+        intent.putExtra(NoteReminderReceiver.EXTRA_NOTE_ID, noteId);
+
+        // Create the Pending Intent
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Reference to Alarm Manager
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
     }
 
 //    private void createNotificationChannel() {
