@@ -54,6 +54,8 @@ public class NoteActivity extends AppCompatActivity
      */
     public static final String NOTE_ID = "com.thedancercodes.notekeeper.NOTE_ID";
 
+    public static final String NOTE_URI = "com.thedancercodes.notekeeper.NOTE_URI";
+
     /**
      * Declare constants for the Activity instance state items we want to preserve.
      */
@@ -142,6 +144,10 @@ public class NoteActivity extends AppCompatActivity
             saveOriginalNoteValues();
         } else {
             restoreOriginalNoteValues(savedInstanceState);
+
+            // Retrieve back string value of the URI stored in the bundle
+            String stringNoteUri = savedInstanceState.getString(NOTE_URI);
+            mNoteUri = Uri.parse(stringNoteUri);
         }
 
         // Reference to the Edit Texts in the Activity
@@ -314,6 +320,9 @@ public class NoteActivity extends AppCompatActivity
         outState.putString(ORIGINAL_NOTE_COURSE_ID, originalNoteCourseId);
         outState.putString(ORIGINAL_NOTE_TITLE, originalNoteTitle);
         outState.putString(ORIGINAL_NOTE_TEXT, originalNoteText);
+
+        // Save value of mNoteUri
+        outState.putString(NOTE_URI, mNoteUri.toString());
     }
 
     private void storePreviousNoteValues() {
@@ -363,24 +372,13 @@ public class NoteActivity extends AppCompatActivity
     // Handles details of updating the note within the note_info table
     private void saveNoteToDatabase(String courseId, String noteTitle, String noteText) {
 
-        /* Selection Criteria */
-        // Selection Clause
-        String selection = NoteInfoEntry._ID + " = ? ";
-
-        // Selection Argument
-        String[] selectionArgs = {Integer.toString(noteId)};
-
         // Column Values: Instance of ContentValues class
         ContentValues values = new ContentValues();
-        values.put(NoteInfoEntry.COLUMN_COURSE_ID, courseId);
-        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, noteTitle);
-        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, noteText);
+        values.put(Notes.COLUMN_COURSE_ID, courseId);
+        values.put(Notes.COLUMN_NOTE_TITLE, noteTitle);
+        values.put(Notes.COLUMN_NOTE_TEXT, noteText);
 
-        // Connection to the DB
-        SQLiteDatabase db = dbOpenHelper.getWritableDatabase();
-
-        // Update DB
-        db.update(NoteInfoEntry.TABLE_NAME, values, selection, selectionArgs);
+        getContentResolver().update(mNoteUri, values, null, null);
     }
 
     // Displays values for the currently selected note.
