@@ -19,10 +19,15 @@ public class ModuleStatusView extends View {
     private int mExampleColor = Color.RED; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
     private Drawable mExampleDrawable;
-    private float outlineWidth;
+    private float mOutlineWidth;
     private float mShapeSize;
     private float mSpacing;
     private Rect[] mModuleRectangles;
+    private int mOutlineColor;
+    private Paint mPaintOutline;
+    private int mFillColor;
+    private Paint mPaintFill;
+    private float mRadius;
 
 
     public boolean[] getmModuleStatus() {
@@ -62,7 +67,7 @@ public class ModuleStatusView extends View {
         /* Set up sizing values */
 
         // Variable specifying the width of the outline we want to draw around each of our circles.
-        outlineWidth = 6f;
+        mOutlineWidth = 6f;
 
         // Size of the shapes we will draw
         mShapeSize = 144f;
@@ -70,9 +75,28 @@ public class ModuleStatusView extends View {
         // Spacing between each of our shapes
         mSpacing = 30f;
 
+        // Circle's radius
+        mRadius = (mShapeSize - mOutlineWidth) / 2;
+
         // Create a list of rectangles that we'll use to position each of the circles when it comes
         // time to draw them
         setupModuleRectangles();
+
+        // Variable to hold outline color
+        mOutlineColor = Color.BLACK;
+
+        // Paint instance we will use to draw the outlines.
+        mPaintOutline = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintOutline.setStyle(Paint.Style.STROKE);
+        mPaintOutline.setStrokeWidth(mOutlineWidth);
+        mPaintOutline.setColor(mOutlineColor);
+
+        // Paint instance we will use to fill in our circles.
+        mFillColor = getContext().getResources().getColor(R.color.pluralSightOrange);
+
+        mPaintFill = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintFill.setStyle(Paint.Style.FILL);
+        mPaintFill.setColor(mFillColor);
 
     }
 
@@ -101,28 +125,26 @@ public class ModuleStatusView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // TODO: consider storing these as member variables to reduce
-        // allocations per draw cycle.
-        int paddingLeft = getPaddingLeft();
-        int paddingTop = getPaddingTop();
-        int paddingRight = getPaddingRight();
-        int paddingBottom = getPaddingBottom();
+        /* Positioning each of our circles in the right place */
 
-        int contentWidth = getWidth() - paddingLeft - paddingRight;
-        int contentHeight = getHeight() - paddingTop - paddingBottom;
+        // for loop that counts for the indexes we need to access our mModuleRectangles array
+        for (int moduleIndex=0; moduleIndex < mModuleRectangles.length; moduleIndex++) {
 
-        // Draw the text.
-        canvas.drawText(mExampleString,
-                paddingLeft + (contentWidth - mTextWidth) / 2,
-                paddingTop + (contentHeight + mTextHeight) / 2,
-                mTextPaint);
+            // x & y coordinates of our circles center point.
+            float x = mModuleRectangles[moduleIndex].centerX();
+            float y = mModuleRectangles[moduleIndex].centerY();
 
-        // Draw the example drawable on top of the text.
-        if (mExampleDrawable != null) {
-            mExampleDrawable.setBounds(paddingLeft, paddingTop,
-                    paddingLeft + contentWidth, paddingTop + contentHeight);
-            mExampleDrawable.draw(canvas);
+            // Check whether the corresponding element of our mModuleStatus array is currently true.
+            // We only fill in the circle for those modules that are marked as completed.
+            if (mModuleStatus[moduleIndex])
+                // Draw the filled in circle
+                canvas.drawCircle(x, y, mRadius, mPaintFill);
+
+            // Draw the outline circle
+            canvas.drawCircle(x, y, mRadius, mPaintOutline);
+
         }
+
     }
 
     /**
@@ -142,7 +164,6 @@ public class ModuleStatusView extends View {
      */
     public void setExampleString(String exampleString) {
         mExampleString = exampleString;
-        invalidateTextPaintAndMeasurements();
     }
 
     /**
@@ -162,7 +183,6 @@ public class ModuleStatusView extends View {
      */
     public void setExampleColor(int exampleColor) {
         mExampleColor = exampleColor;
-        invalidateTextPaintAndMeasurements();
     }
 
     /**
@@ -182,7 +202,6 @@ public class ModuleStatusView extends View {
      */
     public void setExampleDimension(float exampleDimension) {
         mExampleDimension = exampleDimension;
-        invalidateTextPaintAndMeasurements();
     }
 
     /**
