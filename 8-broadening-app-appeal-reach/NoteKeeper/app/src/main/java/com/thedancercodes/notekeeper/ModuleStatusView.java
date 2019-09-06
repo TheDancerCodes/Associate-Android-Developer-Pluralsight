@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -18,10 +19,11 @@ public class ModuleStatusView extends View {
     private int mExampleColor = Color.RED; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
     private Drawable mExampleDrawable;
+    private float outlineWidth;
+    private float mShapeSize;
+    private float mSpacing;
+    private Rect[] mModuleRectangles;
 
-    private TextPaint mTextPaint;
-    private float mTextWidth;
-    private float mTextHeight;
 
     public boolean[] getmModuleStatus() {
         return mModuleStatus;
@@ -34,6 +36,7 @@ public class ModuleStatusView extends View {
     // Boolean Array
     private boolean[] mModuleStatus;
 
+    /* 3 Different Constructors */
     public ModuleStatusView(Context context) {
         super(context);
         init(null, 0);
@@ -54,41 +57,44 @@ public class ModuleStatusView extends View {
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.ModuleStatusView, defStyle, 0);
 
-        mExampleString = a.getString(
-                R.styleable.ModuleStatusView_exampleString);
-        mExampleColor = a.getColor(
-                R.styleable.ModuleStatusView_exampleColor,
-                mExampleColor);
-        // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
-        // values that should fall on pixel boundaries.
-        mExampleDimension = a.getDimension(
-                R.styleable.ModuleStatusView_exampleDimension,
-                mExampleDimension);
-
-        if (a.hasValue(R.styleable.ModuleStatusView_exampleDrawable)) {
-            mExampleDrawable = a.getDrawable(
-                    R.styleable.ModuleStatusView_exampleDrawable);
-            mExampleDrawable.setCallback(this);
-        }
-
         a.recycle();
 
-        // Set up a default TextPaint object
-        mTextPaint = new TextPaint();
-        mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setTextAlign(Paint.Align.LEFT);
+        /* Set up sizing values */
 
-        // Update TextPaint and text measurements from attributes
-        invalidateTextPaintAndMeasurements();
+        // Variable specifying the width of the outline we want to draw around each of our circles.
+        outlineWidth = 6f;
+
+        // Size of the shapes we will draw
+        mShapeSize = 144f;
+
+        // Spacing between each of our shapes
+        mSpacing = 30f;
+
+        // Create a list of rectangles that we'll use to position each of the circles when it comes
+        // time to draw them
+        setupModuleRectangles();
+
     }
 
-    private void invalidateTextPaintAndMeasurements() {
-        mTextPaint.setTextSize(mExampleDimension);
-        mTextPaint.setColor(mExampleColor);
-        mTextWidth = mTextPaint.measureText(mExampleString);
+    private void setupModuleRectangles() {
 
-        Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
-        mTextHeight = fontMetrics.bottom;
+        // Store the rectangles
+        mModuleRectangles = new Rect[mModuleStatus.length];
+
+        // Loop to populate the array for our rectangles
+        for (int moduleIndex=0; moduleIndex < mModuleRectangles.length; moduleIndex++) {
+
+            // Rectangle left edge position for the module.
+            int x = (int) (moduleIndex * (mShapeSize + mSpacing));
+
+            // Rectangle top edge position for the module.
+            int y = 0;
+
+            /* Creating the Rectangle */
+
+            // Assign our current array element a new instance of the class Rect
+            mModuleRectangles[moduleIndex] = new Rect(x, y, x + (int) mShapeSize, y + (int) mShapeSize);
+        }
     }
 
     @Override
