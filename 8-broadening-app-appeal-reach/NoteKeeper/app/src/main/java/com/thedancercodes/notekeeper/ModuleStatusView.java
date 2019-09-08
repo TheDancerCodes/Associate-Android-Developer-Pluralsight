@@ -129,10 +129,10 @@ public class ModuleStatusView extends View {
         for (int moduleIndex=0; moduleIndex < mModuleRectangles.length; moduleIndex++) {
 
             // Rectangle left edge position for the module.
-            int x = (int) (moduleIndex * (mShapeSize + mSpacing));
+            int x = getPaddingLeft () + (int) (moduleIndex * (mShapeSize + mSpacing));
 
             // Rectangle top edge position for the module.
-            int y = 0;
+            int y = getPaddingTop();
 
             /* Creating the Rectangle */
 
