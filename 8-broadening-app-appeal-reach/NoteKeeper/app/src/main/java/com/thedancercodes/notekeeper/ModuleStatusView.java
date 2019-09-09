@@ -141,6 +141,36 @@ public class ModuleStatusView extends View {
         }
     }
 
+    /**
+     * Measure the view and its content to determine the measured width and the
+     * measured height. This method is invoked by {@link #measure(int, int)} and
+     * should be overridden by subclasses to provide accurate and efficient
+     * measurement of their contents.
+     */
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+        /* Calculating the desired width & height for our custom view */
+        int desiredWidth = 0;
+        int desiredHeight = 0;
+
+        // Width required to draw each of the module circles & the spaces between each of the circles.
+        desiredWidth = (int) ((mModuleStatus.length * (mShapeSize + mSpacing)) - mSpacing);
+
+        // Add padding to the desiredWidth
+        desiredWidth += getPaddingLeft() + getPaddingRight();
+
+        desiredHeight = (int) mShapeSize;
+        desiredHeight += getPaddingTop() + getPaddingBottom();
+
+        // Resolve our desired values against the constrained values that are passed into onMeasure()
+        int width = resolveSizeAndState(desiredWidth, widthMeasureSpec, 0);
+        int height = resolveSizeAndState(desiredHeight, heightMeasureSpec, 0);
+
+        // Inform the system what the values are
+        setMeasuredDimension(width, height);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
