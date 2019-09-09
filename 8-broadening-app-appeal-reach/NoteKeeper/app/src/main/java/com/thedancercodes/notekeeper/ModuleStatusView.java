@@ -29,6 +29,7 @@ public class ModuleStatusView extends View {
     private int mFillColor;
     private Paint mPaintFill;
     private float mRadius;
+    private int mMaxHorizontalModules;
 
 
     public boolean[] getmModuleStatus() {
@@ -154,13 +155,27 @@ public class ModuleStatusView extends View {
         int desiredWidth = 0;
         int desiredHeight = 0;
 
+        // Check value passed into widthMeasureSpec parameter
+        int specWidth = MeasureSpec.getSize(widthMeasureSpec);
+
+        int availableWidth = specWidth - getPaddingLeft() - getPaddingRight();
+
+        // Determine how many module circles will fit into the width
+        int horizontalModulesThatCanFit = (int) (availableWidth / (mShapeSize + mSpacing));
+
+        mMaxHorizontalModules = Math.min(horizontalModulesThatCanFit, mModuleStatus.length);
+
+
         // Width required to draw each of the module circles & the spaces between each of the circles.
-        desiredWidth = (int) ((mModuleStatus.length * (mShapeSize + mSpacing)) - mSpacing);
+        desiredWidth = (int) ((mMaxHorizontalModules * (mShapeSize + mSpacing)) - mSpacing);
 
         // Add padding to the desiredWidth
         desiredWidth += getPaddingLeft() + getPaddingRight();
 
-        desiredHeight = (int) mShapeSize;
+        // Determine number of rows required to draw all our modules.
+        int rows = ((mModuleStatus.length - 1) / mMaxHorizontalModules) + 1;
+
+        desiredHeight = (int) ((rows * (mShapeSize + mSpacing)) - mSpacing);
         desiredHeight += getPaddingTop() + getPaddingBottom();
 
         // Resolve our desired values against the constrained values that are passed into onMeasure()
