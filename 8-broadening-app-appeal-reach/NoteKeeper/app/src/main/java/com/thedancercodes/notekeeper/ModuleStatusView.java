@@ -121,6 +121,7 @@ public class ModuleStatusView extends View {
         setmModuleStatus(exampleModuleValues);
     }
 
+    // Calculates the positioning of where the module circles will be drawn.
     private void setupModuleRectangles() {
 
         // Store the rectangles
@@ -129,11 +130,14 @@ public class ModuleStatusView extends View {
         // Loop to populate the array for our rectangles
         for (int moduleIndex=0; moduleIndex < mModuleRectangles.length; moduleIndex++) {
 
+            int column = moduleIndex % mMaxHorizontalModules;
+            int row = moduleIndex / mMaxHorizontalModules;
+
             // Rectangle left edge position for the module.
-            int x = getPaddingLeft () + (int) (moduleIndex * (mShapeSize + mSpacing));
+            int x = getPaddingLeft () + (int) (column * (mShapeSize + mSpacing));
 
             // Rectangle top edge position for the module.
-            int y = getPaddingTop();
+            int y = getPaddingTop() + (int) (row * (mShapeSize + mSpacing));
 
             /* Creating the Rectangle */
 
