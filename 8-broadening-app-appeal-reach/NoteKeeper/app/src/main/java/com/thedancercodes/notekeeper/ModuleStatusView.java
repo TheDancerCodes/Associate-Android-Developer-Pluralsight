@@ -59,6 +59,7 @@ public class ModuleStatusView extends View {
         init(attrs, defStyle);
     }
 
+    // Called when an instance of our custom view class is initially created.
     private void init(AttributeSet attrs, int defStyle) {
 
         // isInEditMode - check to see if our view is currently being used inside the designer.
@@ -84,10 +85,6 @@ public class ModuleStatusView extends View {
 
         // Circle's radius
         mRadius = (mShapeSize - mOutlineWidth) / 2;
-
-        // Create a list of rectangles that we'll use to position each of the circles when it comes
-        // time to draw them
-        setupModuleRectangles();
 
         // Variable to hold outline color
         mOutlineColor = Color.BLACK;
@@ -122,7 +119,11 @@ public class ModuleStatusView extends View {
     }
 
     // Calculates the positioning of where the module circles will be drawn.
-    private void setupModuleRectangles() {
+    private void setupModuleRectangles(int width) {
+
+        int availableWidth = width - getPaddingLeft() - getPaddingRight();
+        int horizontalModulesThatCanFit = (int) (availableWidth/ (mShapeSize + mSpacing));
+        int maxHorizontalModules = Math.min(horizontalModulesThatCanFit, mModuleStatus.length);
 
         // Store the rectangles
         mModuleRectangles = new Rect[mModuleStatus.length];
@@ -130,8 +131,8 @@ public class ModuleStatusView extends View {
         // Loop to populate the array for our rectangles
         for (int moduleIndex=0; moduleIndex < mModuleRectangles.length; moduleIndex++) {
 
-            int column = moduleIndex % mMaxHorizontalModules;
-            int row = moduleIndex / mMaxHorizontalModules;
+            int column = moduleIndex % maxHorizontalModules;
+            int row = moduleIndex / maxHorizontalModules;
 
             // Rectangle left edge position for the module.
             int x = getPaddingLeft () + (int) (column * (mShapeSize + mSpacing));
@@ -188,6 +189,26 @@ public class ModuleStatusView extends View {
 
         // Inform the system what the values are
         setMeasuredDimension(width, height);
+    }
+
+    /**
+     * This is called during layout when the size of this view has changed. If
+     * you were just added to the view hierarchy, you're called with the old
+     * values of 0.
+     *
+     * @param w    Current width of this view.
+     * @param h    Current height of this view.
+     * @param oldw Old width of this view.
+     * @param oldh Old height of this view.
+     *
+     * We need to know our view size in order to calculate our drawing positions.
+     */
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+
+        // Create a list of rectangles that we'll use to position each of the circles when it comes
+        // time to draw them
+        setupModuleRectangles(w);
     }
 
     @Override
