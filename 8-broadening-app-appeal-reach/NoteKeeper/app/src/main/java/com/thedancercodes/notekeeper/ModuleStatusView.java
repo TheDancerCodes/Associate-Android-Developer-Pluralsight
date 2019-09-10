@@ -121,8 +121,12 @@ public class ModuleStatusView extends View {
     // Calculates the positioning of where the module circles will be drawn.
     private void setupModuleRectangles(int width) {
 
+        // Determine availableWidth
         int availableWidth = width - getPaddingLeft() - getPaddingRight();
+
+        // Determine how many module can fit horizontally
         int horizontalModulesThatCanFit = (int) (availableWidth/ (mShapeSize + mSpacing));
+
         int maxHorizontalModules = Math.min(horizontalModulesThatCanFit, mModuleStatus.length);
 
         // Store the rectangles
@@ -131,6 +135,7 @@ public class ModuleStatusView extends View {
         // Loop to populate the array for our rectangles
         for (int moduleIndex=0; moduleIndex < mModuleRectangles.length; moduleIndex++) {
 
+            // Determine which column & row to position each module.
             int column = moduleIndex % maxHorizontalModules;
             int row = moduleIndex / maxHorizontalModules;
 
@@ -159,6 +164,8 @@ public class ModuleStatusView extends View {
         /* Calculating the desired width & height for our custom view */
         int desiredWidth = 0;
         int desiredHeight = 0;
+
+        /* Calculations to determine mMaxHorizontalModules */
 
         // Check value passed into widthMeasureSpec parameter
         int specWidth = MeasureSpec.getSize(widthMeasureSpec);
