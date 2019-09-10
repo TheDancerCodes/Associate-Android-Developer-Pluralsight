@@ -85,6 +85,7 @@ public class NoteActivity extends AppCompatActivity
     private boolean coursesQueryFinished;
     private boolean notesQueryFinished;
     private Uri mNoteUri;
+    private ModuleStatusView mViewModuleStatus;
 
     @Override
     protected void onDestroy() {
@@ -161,8 +162,31 @@ public class NoteActivity extends AppCompatActivity
             // Use LoadManager to start process of loading note data from DB
             getLoaderManager().initLoader(LOADER_NOTES, null, this);
 
+        // Reference to our Custom View
+        mViewModuleStatus = findViewById(R.id.module_status);
+
+        // Set our custom view status values
+        loadModuleStatusValues();
+
         // Debug Message
         Log.d(TAG, "onCreate");
+    }
+
+    private void loadModuleStatusValues() {
+
+        // In real life, we'd look up the selected course's module statuses from the content provider.
+        // For simplicity in this demo, we'll just manually set up an array with status values.
+        int totalNumberOfModules = 11;
+        int completedNumberOfModules = 7;
+        boolean[] moduleStatus = new boolean[totalNumberOfModules];
+
+        // Loop that uses our completedNumberOfModules variable to set the first 7 array elements
+        // to true.
+        for(int moduleIndex = 0; moduleIndex < completedNumberOfModules; moduleIndex++)
+            moduleStatus[moduleIndex] = true;
+
+        // Set the Module Status
+        mViewModuleStatus.setmModuleStatus(moduleStatus);
     }
 
     // Call to load courses from the DB.
