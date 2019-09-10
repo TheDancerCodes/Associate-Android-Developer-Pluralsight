@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 /**
@@ -16,6 +17,7 @@ import android.view.View;
  */
 public class ModuleStatusView extends View {
     private static final int EDIT_MODE_MODULE_COUNT = 7;
+    private static final int INVALID_INDEX = -1;
     private String mExampleString; // TODO: use a default from R.string...
     private int mExampleColor = Color.RED; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
@@ -242,6 +244,59 @@ public class ModuleStatusView extends View {
 
         }
 
+    }
+
+    /**
+     * Implement this method to handle touch screen motion events.
+     * <p>
+     * If this method is used to detect click actions, it is recommended that
+     * the actions be performed by implementing and calling
+     * {@link #performClick()}. This will ensure consistent system behavior,
+     * including:
+     * <ul>
+     * <li>obeying click sound preferences
+     * <li>dispatching OnClickListener calls
+     * <li>handling {@link AccessibilityNodeInfo#ACTION_CLICK ACTION_CLICK} when
+     * accessibility features are enabled
+     * </ul>
+     *
+     * @param event The motion event.
+     * @return True if the event was handled, false otherwise.
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                return true;
+
+            case MotionEvent.ACTION_UP:
+
+                // Determine which module was touched
+                int moduleIndex = findItemAtPoint(event.getX(), event.getY());
+
+                return true;
+        }
+
+        return super.onTouchEvent(event);
+    }
+
+    private int findItemAtPoint(float x, float y) {
+
+        // Find index of the rectangle that the user touched.
+        int moduleIndex = INVALID_INDEX;
+
+        // Loop to figure out which module was touched.
+        for (int i = 0; i < mModuleRectangles.length; i++) {
+            if (mModuleRectangles[i].contains((int) x, (int) y)) {
+
+                // Assign array index to our moduleIndex variable
+                moduleIndex = i;
+                break;
+            }
+        }
+
+        return moduleIndex;
     }
 
     /**
