@@ -10,5 +10,8 @@
             <enum name="square" value="1"/>
         </attr>
 
+    <!-- Dimension Configuration Attributes -->
+        <attr name="outlineWidth" format="dimension" />
+
     </declare-styleable>
 </resources>

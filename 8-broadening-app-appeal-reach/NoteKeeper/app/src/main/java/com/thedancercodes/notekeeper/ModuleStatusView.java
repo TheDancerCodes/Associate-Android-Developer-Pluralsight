@@ -80,12 +80,12 @@ public class ModuleStatusView extends View {
         // Variable to hold/ retrieve our module shape attribute
         mShape = a.getInt(R.styleable.ModuleStatusView_shape, SHAPE_CIRCLE);
 
+        // Variable specifying the width of the outline we want to draw around each of our circles.
+        mOutlineWidth = a.getDimension(R.styleable.ModuleStatusView_outlineWidth, 6f);
+
         a.recycle();
 
         /* Set up sizing values */
-
-        // Variable specifying the width of the outline we want to draw around each of our circles.
-        mOutlineWidth = 6f;
 
         // Size of the shapes we will draw
         mShapeSize = 144f;
