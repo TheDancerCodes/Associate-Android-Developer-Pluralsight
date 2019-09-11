@@ -96,6 +96,8 @@ public class ModuleStatusView extends View {
         // Variable specifying the width of the outline we want to draw around each of our circles.
         mOutlineWidth = a.getDimension(R.styleable.ModuleStatusView_outlineWidth, defaultOutlineWidthPixels);
 
+        // Tell the system when we are done with the TypedArray as it can be reused by the system.
+        // Call recycle() method on the TypedArray once we have gotten all our attribute values.
         a.recycle();
 
         /* Set up sizing values */
