@@ -275,10 +275,27 @@ public class ModuleStatusView extends View {
                 // Determine which module was touched
                 int moduleIndex = findItemAtPoint(event.getX(), event.getY());
 
+                // Code to update the Module Status
+                onModuleSelected(moduleIndex);
+
                 return true;
         }
 
         return super.onTouchEvent(event);
+    }
+
+    private void onModuleSelected(int moduleIndex) {
+
+        // For when a user touches our custom view outside all our module rectangles.
+        if (moduleIndex == INVALID_INDEX)
+            return;
+
+        // Set mModuleStatus value that corresponds to the moduleIndex & set it to the opposite
+        // value it currently has.
+        mModuleStatus[moduleIndex] = ! mModuleStatus[moduleIndex];
+
+        // Inform system that the view needs to be redrawn.
+        invalidate();
     }
 
     private int findItemAtPoint(float x, float y) {
