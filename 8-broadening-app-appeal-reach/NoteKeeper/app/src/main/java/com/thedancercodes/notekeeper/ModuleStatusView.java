@@ -72,6 +72,9 @@ public class ModuleStatusView extends View {
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.ModuleStatusView, defStyle, 0);
 
+        // Variable to hold outline color
+         mOutlineColor = a.getColor(R.styleable.ModuleStatusView_outlineColor, Color.BLACK);
+
         a.recycle();
 
         /* Set up sizing values */
@@ -87,9 +90,6 @@ public class ModuleStatusView extends View {
 
         // Circle's radius
         mRadius = (mShapeSize - mOutlineWidth) / 2;
-
-        // Variable to hold outline color
-        mOutlineColor = Color.BLACK;
 
         // Paint instance we will use to draw the outlines.
         mPaintOutline = new Paint(Paint.ANTI_ALIAS_FLAG);
