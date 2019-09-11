@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -19,6 +20,7 @@ public class ModuleStatusView extends View {
     private static final int EDIT_MODE_MODULE_COUNT = 7;
     private static final int INVALID_INDEX = -1;
     private static final int SHAPE_CIRCLE = 0;
+    private static final float DEFAULT_OUTLINE_WIDTH_DP = 2f;
     private String mExampleString; // TODO: use a default from R.string...
     private int mExampleColor = Color.RED; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
@@ -70,6 +72,17 @@ public class ModuleStatusView extends View {
         if (isInEditMode())
             setUpEditModeValues();
 
+        /* Use a constant number of device independent pixels that we convert to the appropriate
+        * number of physical pixels for the current screen density. */
+
+        // Get device's Display Metrics
+        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+
+        float displayDensity = dm.density;
+
+        float defaultOutlineWidthPixels = displayDensity * DEFAULT_OUTLINE_WIDTH_DP;
+
+
         // Load attributes
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.ModuleStatusView, defStyle, 0);
@@ -81,7 +94,7 @@ public class ModuleStatusView extends View {
         mShape = a.getInt(R.styleable.ModuleStatusView_shape, SHAPE_CIRCLE);
 
         // Variable specifying the width of the outline we want to draw around each of our circles.
-        mOutlineWidth = a.getDimension(R.styleable.ModuleStatusView_outlineWidth, 6f);
+        mOutlineWidth = a.getDimension(R.styleable.ModuleStatusView_outlineWidth, defaultOutlineWidthPixels);
 
         a.recycle();
 
