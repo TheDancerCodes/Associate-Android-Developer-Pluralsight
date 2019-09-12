@@ -7,11 +7,21 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.customview.widget.ExploreByTouchHelper;
+
+import java.util.List;
 
 /**
  * TODO: document your custom view class.
@@ -36,6 +46,7 @@ public class ModuleStatusView extends View {
     private float mRadius;
     private int mMaxHorizontalModules;
     private int mShape;
+    private ModuleStatusAccessibilityHelper mAccessibilityHelper;
 
 
     public boolean[] getmModuleStatus() {
@@ -71,6 +82,18 @@ public class ModuleStatusView extends View {
         // isInEditMode - check to see if our view is currently being used inside the designer.
         if (isInEditMode())
             setUpEditModeValues();
+
+        /* Adding accessibility support to our custom view class. */
+        setFocusable(true);
+
+        // Create an instance of ModuleStatusAccessibilityHelper & pass in instance to our custom view.
+        mAccessibilityHelper = new ModuleStatusAccessibilityHelper(this);
+
+        // Inform accessibility system that this helper class provides the accessibility information
+        // for our custom view.
+        ViewCompat.setAccessibilityDelegate(this, mAccessibilityHelper);
+
+
 
         /* Use a constant number of device independent pixels that we convert to the appropriate
         * number of physical pixels for the current screen density. */
@@ -124,6 +147,70 @@ public class ModuleStatusView extends View {
         mPaintFill.setStyle(Paint.Style.FILL);
         mPaintFill.setColor(mFillColor);
 
+    }
+
+    /* Forward callbacks to our helper class by overriding appropriate methods. */
+
+
+    /**
+     * Called by the view system when the focus state of this view changes.
+     * When the focus change event is caused by directional navigation, direction
+     * and previouslyFocusedRect provide insight into where the focus is coming from.
+     * When overriding, be sure to call up through to the super class so that
+     * the standard focus handling will occur.
+     *
+     * @param gainFocus             True if the View has focus; false otherwise.
+     * @param direction             The direction focus has moved when requestFocus()
+     *                              is called to give this view focus. Values are
+     *                              {@link #FOCUS_UP}, {@link #FOCUS_DOWN}, {@link #FOCUS_LEFT},
+     *                              {@link #FOCUS_RIGHT}, {@link #FOCUS_FORWARD}, or {@link #FOCUS_BACKWARD}.
+     *                              It may not always apply, in which case use the default.
+     * @param previouslyFocusedRect The rectangle, in this view's coordinate
+     *                              system, of the previously focused view.  If applicable, this will be
+     *                              passed in as finer grained information about where the focus is coming
+     */
+    @Override
+    protected void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+
+        // Call corresponding method on our helper class.
+        mAccessibilityHelper.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+    }
+
+    /**
+     * Dispatch a key event to the next view on the focus path. This path runs
+     * from the top of the view tree down to the currently focused view. If this
+     * view has focus, it will dispatch to itself. Otherwise it will dispatch
+     * the next node down the focus path. This method also fires any key
+     * listeners.
+     *
+     * @param event The key event to be dispatched.
+     * @return True if the event was handled, false otherwise.
+     */
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+
+        // First call helper class implementation dispatchKeyEvent to return true if it returned
+        // the event otherwise it will return false.
+        return mAccessibilityHelper.dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
+    }
+
+    /**
+     * Dispatch a hover event.
+     * <p>
+     * Do not call this method directly.
+     * Call {@link #dispatchGenericMotionEvent(MotionEvent)} instead.
+     * </p>
+     *
+     * @param event The motion event to be dispatched.
+     * @return True if the event was handled by the view, false otherwise.
+     */
+    @Override
+    protected boolean dispatchHoverEvent(MotionEvent event) {
+
+        // Give the helper class the first chance at the event, if it doesn't handle the event,
+        // then we pass the event to our super class.
+        return mAccessibilityHelper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event);
     }
 
     // Any extra set up work necessary for when our view is being used inside the designer:
@@ -352,79 +439,140 @@ public class ModuleStatusView extends View {
         return moduleIndex;
     }
 
-    /**
-     * Gets the example string attribute value.
-     *
-     * @return The example string attribute value.
-     */
-    public String getExampleString() {
-        return mExampleString;
-    }
+    // Private Nested Class
+    private class ModuleStatusAccessibilityHelper extends ExploreByTouchHelper {
 
-    /**
-     * Sets the view's example string attribute value. In the example view, this string
-     * is the text to draw.
-     *
-     * @param exampleString The example string attribute value to use.
-     */
-    public void setExampleString(String exampleString) {
-        mExampleString = exampleString;
-    }
+        /**
+         * Constructs a new helper that can expose a virtual view hierarchy for the
+         * specified host view.
+         *
+         * @param host view whose virtual view hierarchy is exposed by this helper
+         */
+        public ModuleStatusAccessibilityHelper(@NonNull View host) {
+            super(host);
+        }
 
-    /**
-     * Gets the example color attribute value.
-     *
-     * @return The example color attribute value.
-     */
-    public int getExampleColor() {
-        return mExampleColor;
-    }
+        /**
+         * Provides a mapping between view-relative coordinates and logical
+         * items.
+         *
+         * @param x The view-relative x coordinate
+         * @param y The view-relative y coordinate
+         * @return virtual view identifier for the logical item under
+         * coordinates (x,y) or {@link #HOST_ID} if there is no item at
+         * the given coordinates
+         */
+        @Override
+        protected int getVirtualViewAt(float x, float y) {
+            return 0;
+        }
 
-    /**
-     * Sets the view's example color attribute value. In the example view, this color
-     * is the font color.
-     *
-     * @param exampleColor The example color attribute value to use.
-     */
-    public void setExampleColor(int exampleColor) {
-        mExampleColor = exampleColor;
-    }
+        /**
+         * Populates a list with the view's visible items. The ordering of items
+         * within {@code virtualViewIds} specifies order of accessibility focus
+         * traversal.
+         *
+         * @param virtualViewIds The list to populate with visible items
+         */
+        @Override
+        protected void getVisibleVirtualViews(List<Integer> virtualViewIds) {
 
-    /**
-     * Gets the example dimension attribute value.
-     *
-     * @return The example dimension attribute value.
-     */
-    public float getExampleDimension() {
-        return mExampleDimension;
-    }
+        }
 
-    /**
-     * Sets the view's example dimension attribute value. In the example view, this dimension
-     * is the font size.
-     *
-     * @param exampleDimension The example dimension attribute value to use.
-     */
-    public void setExampleDimension(float exampleDimension) {
-        mExampleDimension = exampleDimension;
-    }
+        /**
+         * Populates an {@link AccessibilityNodeInfoCompat} with information
+         * about the specified item.
+         * <p>
+         * Implementations <strong>must</strong> populate the following required
+         * fields:
+         * <ul>
+         * <li>event text, see
+         * {@link AccessibilityNodeInfoCompat#setText(CharSequence)} or
+         * {@link AccessibilityNodeInfoCompat#setContentDescription(CharSequence)}
+         * <li>bounds in parent coordinates, see
+         * {@link AccessibilityNodeInfoCompat#setBoundsInParent(Rect)}
+         * </ul>
+         * <p>
+         * The helper class automatically populates the following fields with
+         * default values, but implementations may optionally override them:
+         * <ul>
+         * <li>enabled state, set to {@code true}, see
+         * {@link AccessibilityNodeInfoCompat#setEnabled(boolean)}
+         * <li>keyboard focusability, set to {@code true}, see
+         * {@link AccessibilityNodeInfoCompat#setFocusable(boolean)}
+         * <li>item class name, set to {@code android.view.View}, see
+         * {@link AccessibilityNodeInfoCompat#setClassName(CharSequence)}
+         * </ul>
+         * <p>
+         * The following required fields are automatically populated by the
+         * helper class and may not be overridden:
+         * <ul>
+         * <li>package name, identical to the package name set by
+         * {@link #onPopulateEventForVirtualView(int, AccessibilityEvent)}, see
+         * {@link AccessibilityNodeInfoCompat#setPackageName}
+         * <li>node source, identical to the event source set in
+         * {@link #onPopulateEventForVirtualView(int, AccessibilityEvent)}, see
+         * {@link AccessibilityNodeInfoCompat#setSource(View, int)}
+         * <li>parent view, set to the host view, see
+         * {@link AccessibilityNodeInfoCompat#setParent(View)}
+         * <li>visibility, computed based on parent-relative bounds, see
+         * {@link AccessibilityNodeInfoCompat#setVisibleToUser(boolean)}
+         * <li>accessibility focus, computed based on internal helper state, see
+         * {@link AccessibilityNodeInfoCompat#setAccessibilityFocused(boolean)}
+         * <li>keyboard focus, computed based on internal helper state, see
+         * {@link AccessibilityNodeInfoCompat#setFocused(boolean)}
+         * <li>bounds in screen coordinates, computed based on host view bounds,
+         * see {@link AccessibilityNodeInfoCompat#setBoundsInScreen(Rect)}
+         * </ul>
+         * <p>
+         * Additionally, the helper class automatically handles keyboard focus and
+         * accessibility focus management by adding the appropriate
+         * {@link AccessibilityNodeInfoCompat#ACTION_FOCUS},
+         * {@link AccessibilityNodeInfoCompat#ACTION_CLEAR_FOCUS},
+         * {@link AccessibilityNodeInfoCompat#ACTION_ACCESSIBILITY_FOCUS}, or
+         * {@link AccessibilityNodeInfoCompat#ACTION_CLEAR_ACCESSIBILITY_FOCUS}
+         * actions. Implementations must <strong>never</strong> manually add these
+         * actions.
+         * <p>
+         * The helper class also automatically modifies parent- and
+         * screen-relative bounds to reflect the portion of the item visible
+         * within its parent.
+         *
+         * @param virtualViewId The virtual view identifier of the item for
+         *                      which to populate the node
+         * @param node          The node to populate
+         */
+        @Override
+        protected void onPopulateNodeForVirtualView(int virtualViewId, @NonNull AccessibilityNodeInfoCompat node) {
 
-    /**
-     * Gets the example drawable attribute value.
-     *
-     * @return The example drawable attribute value.
-     */
-    public Drawable getExampleDrawable() {
-        return mExampleDrawable;
-    }
+        }
 
-    /**
-     * Sets the view's example drawable attribute value. In the example view, this drawable is
-     * drawn above the text.
-     *
-     * @param exampleDrawable The example drawable attribute value to use.
-     */
-    public void setExampleDrawable(Drawable exampleDrawable) {
-        mExampleDrawable = exampleDrawable;
+        /**
+         * Performs the specified accessibility action on the item associated
+         * with the virtual view identifier. See
+         * {@link AccessibilityNodeInfoCompat#performAction(int, Bundle)} for
+         * more information.
+         * <p>
+         * Implementations <strong>must</strong> handle any actions added manually
+         * in
+         * {@link #onPopulateNodeForVirtualView(int, AccessibilityNodeInfoCompat)}.
+         * <p>
+         * The helper class automatically handles focus management resulting
+         * from {@link AccessibilityNodeInfoCompat#ACTION_ACCESSIBILITY_FOCUS}
+         * and
+         * {@link AccessibilityNodeInfoCompat#ACTION_CLEAR_ACCESSIBILITY_FOCUS}
+         * actions.
+         *
+         * @param virtualViewId The virtual view identifier of the item on which
+         *                      to perform the action
+         * @param action        The accessibility action to perform
+         * @param arguments     (Optional) A bundle with additional arguments, or
+         *                      null
+         * @return true if the action was performed
+         */
+        @Override
+        protected boolean onPerformActionForVirtualView(int virtualViewId, int action, @Nullable Bundle arguments) {
+            return false;
+        }
     }
 }
