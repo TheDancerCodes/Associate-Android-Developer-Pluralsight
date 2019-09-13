@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "618178464278",
+    "firebase_url": "https://tarachaconsulting.firebaseio.com",
+    "project_id": "tarachaconsulting",
+    "storage_bucket": "tarachaconsulting.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618178464278:android:ae447bf34d2ce9b5af0337",
+        "android_client_info": {
+          "package_name": "com.thedancercodes.tarachaconsulting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618178464278-8ktng1g8cqk95tlatvobds2vb5nqnpne.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDICOP5WCre0Kb8pYNR4tcl1TIJxQhnSFY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618178464278-8ktng1g8cqk95tlatvobds2vb5nqnpne.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
