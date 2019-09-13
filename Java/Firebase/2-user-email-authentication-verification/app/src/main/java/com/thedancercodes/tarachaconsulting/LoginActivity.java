@@ -1,5 +1,6 @@
 package com.thedancercodes.tarachaconsulting;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,13 +14,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import static android.text.TextUtils.isEmpty;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
-    //Firebase
+    // Object responsible for retrieving the Authentication State.
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
+
 
 
     // widgets
@@ -35,6 +46,9 @@ public class LoginActivity extends AppCompatActivity {
         mPassword = (EditText) findViewById(R.id.password);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
+        // App will be actively listening for the authentication state
+        setUpFirebaseAuth();
+
         Button signIn = (Button) findViewById(R.id.email_sign_in_button);
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +58,26 @@ public class LoginActivity extends AppCompatActivity {
                 if(!isEmpty(mEmail.getText().toString())
                         && !isEmpty(mPassword.getText().toString())){
                     Log.d(TAG, "onClick: attempting to authenticate.");
+
+                    // Show Dialog and initiate the authentication request
+                    showDialog();
+
+                    FirebaseAuth.getInstance().signInWithEmailAndPassword(
+                            mEmail.getText().toString(), mPassword.getText().toString())
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    // Use OnCompleteListener to listen for task completion.
+                                    hideDialog();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(LoginActivity.this,
+                                    "Authentication Failed", Toast.LENGTH_SHORT).show();
+                            hideDialog();
+                        }
+                    });
 
 
                 }else{
@@ -108,4 +142,43 @@ public class LoginActivity extends AppCompatActivity {
     /*
         ----------------------------- Firebase setup ---------------------------------
      */
+
+    // Instantiate an object responsible for retrieving the Authentication State
+    private void setUpFirebaseAuth() {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                // New FirebaseUser object
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                // If user is not null, we have an authenticated user.
+                if (user != null) {
+                    Log.d(TAG, "onAuthStateChanged: signed_in: " + user.getUid());
+                } else {
+                    Log.d(TAG, "onAuthStateChanged: signed_out");
+                }
+
+            }
+        };
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Add AuthStateListener
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // Check the AuthStateListener is not null, then remove it.
+        // If it is null and you try to remove it, app will crash.
+        if (mAuthListener != null){
+            FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
+        }
+    }
 }
