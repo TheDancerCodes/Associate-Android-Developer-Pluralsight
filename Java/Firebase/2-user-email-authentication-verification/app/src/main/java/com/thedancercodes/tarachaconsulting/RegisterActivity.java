@@ -10,8 +10,14 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -44,11 +50,14 @@ public class RegisterActivity extends AppCompatActivity {
                         && !isEmpty(mPassword.getText().toString())
                         && !isEmpty(mConfirmPassword.getText().toString())){
 
-                    //check if user has a company email address
+                    //check if user has a company email address. (Valid Domain)
                     if(isValidDomain(mEmail.getText().toString())){
 
                         //check if passwords match
                         if(doStringsMatch(mPassword.getText().toString(), mConfirmPassword.getText().toString())){
+
+                            // Register New User
+                            registerNewEmail(mEmail.getText().toString(), mPassword.getText().toString());
 
                         }else{
                             Toast.makeText(RegisterActivity.this, "Passwords do not Match", Toast.LENGTH_SHORT).show();
@@ -65,6 +74,37 @@ public class RegisterActivity extends AppCompatActivity {
 
         hideSoftKeyboard();
 
+    }
+
+    /**
+     * Method that registers a new email
+     */
+    private void registerNewEmail(String email, String password) {
+        showDialog();
+
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(
+                        new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                Log.d(TAG, "onComplete: onComplete " + task.isSuccessful());
+
+                                if (task.isSuccessful()) {
+
+                                    // New user's userID
+                                    Log.d(TAG, "onComplete: AuthState: "
+                                            + FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+                                    // Sign out & redirect the user to the Login Screen
+                                    FirebaseAuth.getInstance().signOut();
+                                } else {
+                                    Toast.makeText(RegisterActivity.this,
+                                            "Unable to Register", Toast.LENGTH_SHORT).show();
+                                }
+                                hideDialog();
+                            }
+                        }
+                );
     }
 
 
