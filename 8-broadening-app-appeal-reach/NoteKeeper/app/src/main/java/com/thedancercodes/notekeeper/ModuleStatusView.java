@@ -569,6 +569,14 @@ public class ModuleStatusView extends View {
             node.setBoundsInParent(mModuleRectangles[virtualViewId]);
             node.setContentDescription("Module" + virtualViewId);
 
+            /* Tell the accessibility system that each of the virtual views supports the two-state
+            * concept of being checked or un-checked. */
+            node.setCheckable(true);
+
+            // Indicate whether virtualView is currently checked.
+            // Pass in the current element from the mModuleStatus array.
+            node.setChecked(mModuleStatus[virtualViewId]);
+
         }
 
         /**
