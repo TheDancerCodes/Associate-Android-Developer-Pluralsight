@@ -464,7 +464,13 @@ public class ModuleStatusView extends View {
          */
         @Override
         protected int getVirtualViewAt(float x, float y) {
-            return 0;
+
+            /* Indicating which Virtual View was selected by returning
+            the ID value of the touched view. */
+            int moduleIndex = findItemAtPoint(x, y);
+
+
+            return moduleIndex == INVALID_INDEX ? ExploreByTouchHelper.INVALID_ID : moduleIndex;
         }
 
         /**
@@ -476,6 +482,19 @@ public class ModuleStatusView extends View {
          */
         @Override
         protected void getVisibleVirtualViews(List<Integer> virtualViewIds) {
+
+            /* Provide ID values for the virtual views that correspond to each of the module shapes
+            * within our custom view. */
+
+            if (mModuleRectangles == null)
+                return;
+
+            // Loop that counts through the indexes of our ModuleRectangles array
+            for (int moduleIndex = 0; moduleIndex < mModuleRectangles.length; moduleIndex++) {
+
+                // Add each of the indexes to the integer list
+                virtualViewIds.add(moduleIndex);
+            }
 
         }
 
@@ -544,6 +563,11 @@ public class ModuleStatusView extends View {
          */
         @Override
         protected void onPopulateNodeForVirtualView(int virtualViewId, @NonNull AccessibilityNodeInfoCompat node) {
+
+            /* Describe the Virtual Views */
+            node.setFocusable(true);
+            node.setBoundsInParent(mModuleRectangles[virtualViewId]);
+            node.setContentDescription("Module" + virtualViewId);
 
         }
 
