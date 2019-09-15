@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -73,8 +74,34 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         hideSoftKeyboard();
-
     }
+
+    /**
+     * Sends a verification email once a new user is registered.
+     */
+    private void sendVerificationEmail() {
+
+        // User object
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Check to ensure User object is not null
+        if (user != null) {
+            user.sendEmailVerification()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(RegisterActivity.this,
+                                        "Sent Verification Email", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(RegisterActivity.this,
+                                        "Couldn't send Verification Email", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+    }
+
 
     /**
      * Method that registers a new email
@@ -95,9 +122,16 @@ public class RegisterActivity extends AppCompatActivity {
                                     Log.d(TAG, "onComplete: AuthState: "
                                             + FirebaseAuth.getInstance().getCurrentUser().getUid());
 
+                                    sendVerificationEmail();
+
                                     // Sign out & redirect the user to the Login Screen
                                     FirebaseAuth.getInstance().signOut();
-                                } else {
+
+                                    // Redirect the user to the login screen.
+                                    redirectLoginScreen();
+
+                                }
+                                if (!task.isSuccessful()){
                                     Toast.makeText(RegisterActivity.this,
                                             "Unable to Register", Toast.LENGTH_SHORT).show();
                                 }
