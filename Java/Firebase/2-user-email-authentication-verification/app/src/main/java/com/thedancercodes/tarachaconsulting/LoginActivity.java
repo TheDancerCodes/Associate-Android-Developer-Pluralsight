@@ -145,6 +145,9 @@ public class LoginActivity extends AppCompatActivity {
 
     // Instantiate an object responsible for retrieving the Authentication State
     private void setUpFirebaseAuth() {
+
+        Log.d(TAG, "setupFirebaseAuth: started.");
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -154,8 +157,22 @@ public class LoginActivity extends AppCompatActivity {
 
                 // If user is not null, we have an authenticated user.
                 if (user != null) {
-                    Log.d(TAG, "onAuthStateChanged: signed_in: " + user.getUid());
+
+                    // Check that a user email is verified.
+                    if (user.isEmailVerified()) {
+                        Log.d(TAG, "onAuthStateChanged: signed_in: " + user.getUid());
+                        Toast.makeText(LoginActivity.this,
+                                "Authenticated with: " + user.getEmail(),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this,
+                                "Check your Email Inbox for a Verification Link",
+                                Toast.LENGTH_SHORT).show();
+                        FirebaseAuth.getInstance().signOut();
+                    }
+
                 } else {
+                    // User is signed out
                     Log.d(TAG, "onAuthStateChanged: signed_out");
                 }
 

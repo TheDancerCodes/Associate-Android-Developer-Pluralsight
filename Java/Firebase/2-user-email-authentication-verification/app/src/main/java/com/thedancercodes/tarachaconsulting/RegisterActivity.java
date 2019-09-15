@@ -24,7 +24,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "Register Activity";
 
-    private static final String DOMAIN_NAME = "taracha.com";
+    private static final String DOMAIN_NAME = "gmail.com";
 
     //widgets
     private EditText mEmail, mPassword, mConfirmPassword;
