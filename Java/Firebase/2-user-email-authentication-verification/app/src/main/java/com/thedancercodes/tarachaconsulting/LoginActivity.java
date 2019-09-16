@@ -165,6 +165,16 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this,
                                 "Authenticated with: " + user.getEmail(),
                                 Toast.LENGTH_SHORT).show();
+
+                        // Use an Intent & navigate to SignedInActivity
+                        // if both the checks are confirmed.
+                        Intent intent = new Intent(LoginActivity.this, SignedInActivity.class);
+                        startActivity(intent);
+
+                        // Prevents user from navigating back to Login screen after authentication.
+                        finish();
+
+
                     } else {
                         Toast.makeText(LoginActivity.this,
                                 "Check your Email Inbox for a Verification Link",
