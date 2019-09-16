@@ -1,6 +1,7 @@
 package com.thedancercodes.tarachaconsulting;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -10,8 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class SignedInActivity extends AppCompatActivity {
 
@@ -32,6 +36,63 @@ public class SignedInActivity extends AppCompatActivity {
 
         setupFirebaseAuth();
 
+         getUserDetails();
+
+        // setUserDetails();
+
+    }
+
+    /**
+     * Set the user account details.
+     */
+    private void setUserDetails() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName("Roger Taracha")
+                    .setPhotoUri(Uri.parse("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwisnPGJodXkAhVBIqwKHc4zBgMQjRx6BAgBEAQ&url=https%3A%2F%2Fen.clipdealer.com%2Fvector%2Fmedia%2FA%3A123291457&psig=AOvVaw0VEFnfo7W53yhJ0WAR42kv&ust=1568720407430648"))
+                    .build();
+
+            user.updateProfile(profileUpdates)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "onComplete: User profile updated.");
+
+                                getUserDetails();
+                            }
+                        }
+                    });
+        }
+    }
+
+    /**
+     * Get the user account details.
+     */
+    private void getUserDetails() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Verify that user is authenticated.
+        if (user != null) {
+
+            // Get the objects
+            String uid = user.getUid();
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            Uri photoUrl = user.getPhotoUrl();
+
+            // Log string that contains all properties
+            String properties = "uid: " + uid + "\n" +
+                    "name: " + name + "\n" +
+                    "email: " + email + "\n" +
+                    "photoUrl: " + photoUrl;
+
+            Log.d(TAG, "getUserDetails: properties: \n" + properties);
+            
+        }
     }
 
 
