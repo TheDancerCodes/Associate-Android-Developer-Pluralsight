@@ -139,6 +139,10 @@ public class SignedInActivity extends AppCompatActivity {
             case R.id.optionSignOut:
                 signOut();
                 return true;
+            case R.id.optionAccountSettings:
+                Intent intent = new Intent(SignedInActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

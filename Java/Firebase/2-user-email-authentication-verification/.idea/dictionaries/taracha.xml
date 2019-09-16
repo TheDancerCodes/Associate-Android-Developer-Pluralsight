@@ -2,6 +2,7 @@
   <dictionary name="taracha">
     <words>
       <w>firebase</w>
+      <w>reauthenticate</w>
     </words>
   </dictionary>
 </component>
