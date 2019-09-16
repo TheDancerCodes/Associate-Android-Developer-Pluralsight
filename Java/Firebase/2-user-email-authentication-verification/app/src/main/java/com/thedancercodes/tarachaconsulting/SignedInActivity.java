@@ -47,11 +47,15 @@ public class SignedInActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        // If user is not authenticated, navigate back to the login screen.
         if(user == null){
             Log.d(TAG, "checkAuthenticationState: user is null, navigating back to login screen.");
 
             Intent intent = new Intent(SignedInActivity.this, LoginActivity.class);
+
+            // Using these flags with clear the Activity Stack
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
             startActivity(intent);
             finish();
         }else{
