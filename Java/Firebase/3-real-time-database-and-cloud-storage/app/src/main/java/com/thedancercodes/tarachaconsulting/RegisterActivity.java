@@ -77,33 +77,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Sends a verification email once a new user is registered.
-     */
-    private void sendVerificationEmail() {
-
-        // User object
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        // Check to ensure User object is not null
-        if (user != null) {
-            user.sendEmailVerification()
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(RegisterActivity.this,
-                                        "Sent Verification Email", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(RegisterActivity.this,
-                                        "Couldn't send Verification Email", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        }
-    }
-
-
-    /**
      * Method that registers a new email
      */
     private void registerNewEmail(String email, String password) {
@@ -139,6 +112,32 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                         }
                 );
+    }
+
+    /**
+     * Sends a verification email once a new user is registered.
+     */
+    private void sendVerificationEmail() {
+
+        // User object
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // Check to ensure User object is not null
+        if (user != null) {
+            user.sendEmailVerification()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(RegisterActivity.this,
+                                        "Sent Verification Email", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(RegisterActivity.this,
+                                        "Couldn't send Verification Email", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
     }
 
 

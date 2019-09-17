@@ -32,11 +32,10 @@ public class SettingsActivity extends AppCompatActivity {
     private static final String DOMAIN_NAME = "gmail.com";
 
     //firebase
-    private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     //widgets
-    private EditText mEmail, mCurrentPassword;
+    private EditText mEmail, mCurrentPassword, mName, mPhone;
     private Button mSave;
     private ProgressBar mProgressBar;
     private TextView mResetPasswordLink;
@@ -51,6 +50,8 @@ public class SettingsActivity extends AppCompatActivity {
         mSave= (Button) findViewById(R.id.btn_save);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mResetPasswordLink = (TextView) findViewById(R.id.change_password);
+        mName = (EditText) findViewById(R.id.input_name);
+        mPhone = (EditText) findViewById(R.id.input_phone);
 
         setupFirebaseAuth();
 
@@ -61,17 +62,12 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: attempting to save settings.");
 
-                //make sure email and current password fields are filled
-                if(!isEmpty(mEmail.getText().toString())
-                        && !isEmpty(mCurrentPassword.getText().toString())){
+                // See if they changed the email
+                if(!mEmail.getText().toString().equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())){
 
-                    /*
-                    ------ Change Email Task -----
-                     */
-                    //if the current email doesn't equal what's in the EditText field then attempt
-                    //to edit
-                    if(!mAuth.getCurrentUser().getEmail()
-                            .equals(mEmail.getText().toString())){
+                    // Make sure email and current password fields are filled
+                    if(!isEmpty(mEmail.getText().toString())
+                            && !isEmpty(mCurrentPassword.getText().toString())){
 
                         //verify that user is changing to a company email address
                         if(isValidDomain(mEmail.getText().toString())){
@@ -81,12 +77,8 @@ public class SettingsActivity extends AppCompatActivity {
                         }
 
                     }else{
-                        Toast.makeText(SettingsActivity.this, "no changes were made", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SettingsActivity.this, "Email and Current Password Fields Must be Filled to Save", Toast.LENGTH_SHORT).show();
                     }
-
-
-                }else{
-                    Toast.makeText(SettingsActivity.this, "Email and Current Password Fields Must be Filled to Save", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -109,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void sendResetPasswordLink(){
-        mAuth.sendPasswordResetEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail())
+        FirebaseAuth.getInstance().sendPasswordResetEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -333,8 +325,6 @@ public class SettingsActivity extends AppCompatActivity {
     private void setupFirebaseAuth(){
         Log.d(TAG, "setupFirebaseAuth: started.");
 
-        mAuth = FirebaseAuth.getInstance();
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -361,14 +351,14 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        FirebaseAuth.getInstance().addAuthStateListener(mAuthListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
+            FirebaseAuth.getInstance().removeAuthStateListener(mAuthListener);
         }
     }
 }

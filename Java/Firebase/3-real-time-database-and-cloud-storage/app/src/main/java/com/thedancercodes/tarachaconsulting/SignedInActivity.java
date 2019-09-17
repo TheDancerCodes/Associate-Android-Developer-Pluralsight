@@ -36,7 +36,7 @@ public class SignedInActivity extends AppCompatActivity {
 
         setupFirebaseAuth();
 
-         getUserDetails();
+         // getUserDetails();
 
         // setUserDetails();
 
