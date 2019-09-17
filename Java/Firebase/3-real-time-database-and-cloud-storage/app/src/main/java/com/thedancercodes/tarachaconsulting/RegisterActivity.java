@@ -15,10 +15,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.thedancercodes.tarachaconsulting.models.User;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -79,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
     /**
      * Method that registers a new email
      */
-    private void registerNewEmail(String email, String password) {
+    private void registerNewEmail(final String email, String password) {
         showDialog();
 
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
@@ -95,14 +98,42 @@ public class RegisterActivity extends AppCompatActivity {
                                     Log.d(TAG, "onComplete: AuthState: "
                                             + FirebaseAuth.getInstance().getCurrentUser().getUid());
 
+                                    // Send email verification.
                                     sendVerificationEmail();
 
-                                    // Sign out & redirect the user to the Login Screen
-                                    FirebaseAuth.getInstance().signOut();
+                                    // Create a new instance of the User class & set properties.
+                                    User user = new User();
+                                    user.setName(email.substring(0, email.indexOf("@")));
+                                    user.setPhone("1");
+                                    user.setProfile_image("");
+                                    user.setSecurity_level("1");
+                                    user.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                                    // Redirect the user to the login screen.
-                                    redirectLoginScreen();
+                                    // Insert Data into the Firebase DB
+                                    FirebaseDatabase.getInstance().getReference()
+                                            .child(getString(R.string.dbnode_users))
+                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                            .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
 
+                                            // Sign Out user & redirect to login screen
+                                            FirebaseAuth.getInstance().signOut();
+                                            redirectLoginScreen();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+
+                                            // Sign Out user & redirect to login screen
+                                            FirebaseAuth.getInstance().signOut();
+                                            redirectLoginScreen();
+
+                                            Toast.makeText(RegisterActivity.this,
+                                                    "Something went wrong", Toast.LENGTH_SHORT)
+                                                    .show();
+                                        }
+                                    });
                                 }
                                 if (!task.isSuccessful()){
                                     Toast.makeText(RegisterActivity.this,
