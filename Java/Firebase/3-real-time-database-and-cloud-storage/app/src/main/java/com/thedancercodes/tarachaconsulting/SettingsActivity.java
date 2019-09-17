@@ -24,6 +24,8 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -79,6 +81,29 @@ public class SettingsActivity extends AppCompatActivity {
                     }else{
                         Toast.makeText(SettingsActivity.this, "Email and Current Password Fields Must be Filled to Save", Toast.LENGTH_SHORT).show();
                     }
+                }
+
+                // Inserting Data into DB
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+                    /*
+                    ------ Change Name -----
+                    */
+                if (!mName.getText().toString().equals("")) {
+                    reference.child(getString(R.string.dbnode_users))
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child(getString(R.string.field_name))
+                            .setValue(mName.getText().toString());
+                }
+
+                    /*
+                    ------ Change Phone Number  -----
+                    */
+                if (!mPhone.getText().toString().equals("")) {
+                    reference.child(getString(R.string.dbnode_users))
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child(getString(R.string.field_phone))
+                            .setValue(mPhone.getText().toString());
                 }
             }
         });
