@@ -67,6 +67,33 @@ public class SettingsActivity extends AppCompatActivity {
         init();
 
         hideSoftKeyboard();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+        Query query = reference.child(getString(R.string.dbnode_users))
+                .orderByKey()
+                .limitToFirst(5);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d(TAG, "onDataChange: datasnapshot: " + dataSnapshot);
+
+                for (DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    Log.d(TAG, "onDataChange: snapshot: " + snapshot);
+
+                    Log.d(TAG, "onDataChange: user_id " + snapshot.getValue());
+
+                    User user = snapshot.getValue(User.class);
+                    Log.d(TAG, "onDataChange: user: " + user.toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void getUserAccountsData() {
