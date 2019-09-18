@@ -24,8 +24,13 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.thedancercodes.tarachaconsulting.models.User;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -58,6 +63,84 @@ public class SettingsActivity extends AppCompatActivity {
         setupFirebaseAuth();
 
         setCurrentEmail();
+
+        init();
+
+        hideSoftKeyboard();
+    }
+
+    private void getUserAccountsData() {
+        Log.d(TAG, "getUserAccountsData: Getting the users account information");
+
+        // Database Reference object
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+        /*
+            ----------------------------- Query Method 1 ---------------------------------
+         */
+        Query query1 = reference.child(getString(R.string.dbnode_users))
+                .orderByKey()
+                .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                // Return all the children of the DataSnapshot
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    User user = singleSnapshot.getValue(User.class);
+
+                    Log.d(TAG, "onDataChange: (QUERY METHOD 1) found user: " + user.toString());
+
+                    // Set properties to EditText Widgets
+                    mName.setText(user.getName());
+                    mPhone.setText(user.getPhone());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        /*
+            ----------------------------- Query Method 2 ---------------------------------
+         */
+        Query query2 = reference.child(getString(R.string.dbnode_users))
+                .orderByChild(getString(R.string.field_user_id))
+                .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        query2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                // Return all the children of the DataSnapshot
+                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+                    User user = singleSnapshot.getValue(User.class);
+
+                    Log.d(TAG, "onDataChange: (QUERY METHOD 2) found user: " + user.toString());
+
+                    // Set properties to EditText Widgets
+                    mName.setText(user.getName());
+                    mPhone.setText(user.getPhone());
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+    }
+
+    private void init() {
+
+        getUserAccountsData();
 
         mSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,10 +202,6 @@ public class SettingsActivity extends AppCompatActivity {
                 sendResetPasswordLink();
             }
         });
-
-
-
-        hideSoftKeyboard();
     }
 
     private void sendResetPasswordLink(){
