@@ -45,6 +45,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thedancercodes.tarachaconsulting.models.User;
 import com.thedancercodes.tarachaconsulting.utility.FilePaths;
 
@@ -64,6 +65,8 @@ public class SettingsActivity extends AppCompatActivity implements
             mSelectedImageUri = imagePath;
             Log.d(TAG, "getImagePath: got the image uri: " + mSelectedImageUri);
 
+            ImageLoader.getInstance().displayImage(mSelectedImageUri.toString(), mProfileImage);
+
         }
     }
 
@@ -73,6 +76,8 @@ public class SettingsActivity extends AppCompatActivity implements
             mSelectedImageUri = null;
             mSelectedImageBitmap = bitmap;
             Log.d(TAG, "getImageBitmap: got the image bitmap: " + mSelectedImageBitmap);
+
+            mProfileImage.setImageBitmap(mSelectedImageBitmap);
         }
     }
 
@@ -444,6 +449,8 @@ public class SettingsActivity extends AppCompatActivity implements
                     // Set properties to EditText Widgets
                     mName.setText(user.getName());
                     mPhone.setText(user.getPhone());
+
+                    ImageLoader.getInstance().displayImage(user.getProfile_image(), mProfileImage);
                 }
 
             }
@@ -457,29 +464,29 @@ public class SettingsActivity extends AppCompatActivity implements
         /*
             ----------------------------- Query Method 2 ---------------------------------
          */
-        Query query2 = reference.child(getString(R.string.dbnode_users))
-                .orderByChild(getString(R.string.field_user_id))
-                .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-        query2.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                // Return all the children of the DataSnapshot.
-                // This loop will return a single result
-                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
-
-                    Log.d(TAG, "onDataChange: (QUERY METHOD 2) found user: " +
-                            singleSnapshot.getValue(User.class).toString());
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        Query query2 = reference.child(getString(R.string.dbnode_users))
+//                .orderByChild(getString(R.string.field_user_id))
+//                .equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+//
+//        query2.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                // Return all the children of the DataSnapshot.
+//                // This loop will return a single result
+//                for (DataSnapshot singleSnapshot : dataSnapshot.getChildren()) {
+//
+//                    Log.d(TAG, "onDataChange: (QUERY METHOD 2) found user: " +
+//                            singleSnapshot.getValue(User.class).toString());
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         mEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
     }
