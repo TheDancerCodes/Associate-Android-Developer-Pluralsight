@@ -292,6 +292,7 @@ public class SettingsActivity extends AppCompatActivity implements
         protected byte[] doInBackground(Uri... params ) {
             Log.d(TAG, "doInBackground: started.");
 
+            // If you are getting an image from the device memory, convert Uri to a Bitmap.
             if(mBitmap == null){
 
                 try {
@@ -302,6 +303,8 @@ public class SettingsActivity extends AppCompatActivity implements
                 }
             }
 
+            // Convert Bitmap to a byte array so that we can compress it.
+            // We will do the compression in iterations.
             byte[] bytes = null;
             for (int i = 1; i < 11; i++){
                 if(i == 10){
