@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
@@ -39,7 +40,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.thedancercodes.tarachaconsulting.models.User;
+import com.thedancercodes.tarachaconsulting.utility.FilePaths;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -339,7 +346,76 @@ public class SettingsActivity extends AppCompatActivity implements
     }
 
     private void executeUploadTask(){
+        showDialog();
+        FilePaths filePaths = new FilePaths();
 
+        //specify where the photo will be stored
+        final StorageReference storageReference = FirebaseStorage.getInstance().getReference()
+                .child(filePaths.FIREBASE_IMAGE_STORAGE + "/" + FirebaseAuth.getInstance().getCurrentUser().getUid()
+                        + "/profile_image"); //just replace the old image with the new one
+
+        // Check image size to ensure it falls within our required threshold.
+        if(mBytes.length/MB < MB_THRESHHOLD) {
+
+            // Create file metadata including the content type
+            StorageMetadata metadata = new StorageMetadata.Builder()
+                    .setContentType("image/jpg")
+                    .setContentLanguage("en") //see nodes below
+                    /*
+                    Make sure to use proper language code ("English" will cause a crash)
+                    I actually submitted this as a bug to the Firebase github page so it might be
+                    fixed by the time you watch this video. You can check it out at https://github.com/firebase/quickstart-unity/issues/116
+                     */
+                    .setCustomMetadata("Roger's special meta data", "JK nothing special here")
+                    .setCustomMetadata("location", "Kenya")
+                    .build();
+            //if the image size is valid then we can submit to database
+            UploadTask uploadTask = null;
+            uploadTask = storageReference.putBytes(mBytes, metadata);
+            //uploadTask = storageReference.putBytes(mBytes); //without metadata
+
+
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    //Now insert the download url into the firebase database
+                    // Uri firebaseURL = taskSnapshot.getDownloadUrl();
+                    String firebaseURL = taskSnapshot.getStorage().getDownloadUrl().toString();
+                    Toast.makeText(SettingsActivity.this, "Upload Success", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onSuccess: firebase download url : " + firebaseURL);
+                    FirebaseDatabase.getInstance().getReference()
+                            .child(getString(R.string.dbnode_users))
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child(getString(R.string.field_profile_image))
+                            .setValue(firebaseURL);
+                            // .setValue(firebaseURL.toString());
+
+                    hideDialog();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Toast.makeText(SettingsActivity.this, "could not upload photo", Toast.LENGTH_SHORT).show();
+
+                    hideDialog();
+
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    double currentProgress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                    if(currentProgress > (progress + 15)){
+                        progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        Log.d(TAG, "onProgress: Upload is " + progress + "% done");
+                        Toast.makeText(SettingsActivity.this, progress + "%", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+        }else{
+            Toast.makeText(this, "Image is too Large", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getUserAccountsData() {
