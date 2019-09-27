@@ -88,12 +88,18 @@ public class SignedInActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+
         switch (item.getItemId()){
             case R.id.optionSignOut:
                 signOut();
                 return true;
             case R.id.optionAccountSettings:
-                Intent intent = new Intent(SignedInActivity.this, SettingsActivity.class);
+                intent = new Intent(SignedInActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.optionChat:
+                intent = new Intent(SignedInActivity.this, ChatActivity.class);
                 startActivity(intent);
                 return true;
             default:

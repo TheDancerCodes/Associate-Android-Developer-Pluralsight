@@ -25,6 +25,8 @@
         <activity android:name=".RegisterActivity"/>
         <activity android:name=".SignedInActivity"/>
         <activity android:name=".SettingsActivity"/>
+        <activity android:name=".ChatActivity"/>
+        <activity android:name=".ChatroomActivity"/>
     </application>
 
 </manifest>
