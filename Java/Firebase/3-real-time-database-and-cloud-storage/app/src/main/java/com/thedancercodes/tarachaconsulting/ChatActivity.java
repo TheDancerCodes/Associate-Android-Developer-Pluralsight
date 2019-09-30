@@ -59,6 +59,8 @@ public class ChatActivity extends AppCompatActivity {
         mFob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // Dialog Fragment
                 NewChatroomDialog dialog = new NewChatroomDialog();
                 dialog.show(getSupportFragmentManager(), getString(R.string.dialog_new_chatroom));
             }

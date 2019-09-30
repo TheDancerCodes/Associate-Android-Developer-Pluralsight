@@ -56,6 +56,7 @@ public class NewChatroomDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
 
+                // Check that Chat Room name isn't null
                 if(!mChatroomName.getText().toString().equals("")){
                     Log.d(TAG, "onClick: creating new chat room");
 
@@ -63,7 +64,8 @@ public class NewChatroomDialog extends DialogFragment {
                     if(mUserSecurityLevel >= mSeekBar.getProgress()){
 
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-                        //get the new chatroom unique id
+
+                        //Create the new chatroom unique id
                         String chatroomId = reference
                                 .child(getString(R.string.dbnode_chatrooms))
                                 .push().getKey();
@@ -98,6 +100,8 @@ public class NewChatroomDialog extends DialogFragment {
                                 .child(getString(R.string.field_chatroom_messages))
                                 .child(messageId)
                                 .setValue(message);
+
+                        // Refresh the list of Chat rooms.
                         ((ChatActivity)getActivity()).init();
                         getDialog().dismiss();
                     }else{
@@ -130,6 +134,7 @@ public class NewChatroomDialog extends DialogFragment {
         return view;
     }
 
+    // Responsible for retrieving the users security level
     private void getUserSecurityLevel(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
@@ -140,10 +145,16 @@ public class NewChatroomDialog extends DialogFragment {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // alternatively could have used snippet below:
+                // As we will only get a single result returned.
+                //DataSnapshot singleSnapshot: dataSnapshot.getChildren().iterator().next();
+
+
                 for(DataSnapshot singleSnapshot:  dataSnapshot.getChildren()){
                     Log.d(TAG, "onDataChange: users security level: "
                             + singleSnapshot.getValue(User.class).getSecurity_level());
 
+                    // Set the security level
                     mUserSecurityLevel = Integer.parseInt(String.valueOf(
                             singleSnapshot.getValue(User.class).getSecurity_level()));
                 }
