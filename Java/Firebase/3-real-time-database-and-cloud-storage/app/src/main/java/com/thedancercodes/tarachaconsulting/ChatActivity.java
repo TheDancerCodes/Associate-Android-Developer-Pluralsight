@@ -123,6 +123,8 @@ public class ChatActivity extends AppCompatActivity {
                     chatroom.setChatroom_messages(messagesList);
                     mChatrooms.add(chatroom);
                 }
+
+                // Sends chatrooms to list adapter class.
                 setupChatroomList();
             }
 
