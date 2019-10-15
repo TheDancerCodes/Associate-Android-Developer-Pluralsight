@@ -1,9 +1,6 @@
 package com.thedancercodes.animationsdemo
 
-import android.animation.Animator
-import android.animation.AnimatorInflater
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
+import android.animation.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -110,6 +107,7 @@ class MainActivity : AppCompatActivity(), Animator.AnimatorListener {
 
     }
 
+    // AnimatorSet Button Click EventHandlers
     fun setFromXML(view: View) {
 
         val animator = AnimatorInflater.loadAnimator(this, R.animator.set)
@@ -121,5 +119,30 @@ class MainActivity : AppCompatActivity(), Animator.AnimatorListener {
 
     fun setFromCode(view: View) {
 
+        // Root Animator Set
+        val rootSet = AnimatorSet()
+
+        // Flip Animation
+        val flip = ObjectAnimator.ofFloat(targetImage, "rotationX", 0.0f, 360.0f)
+        flip.duration = 500
+
+        // Child Animator Set
+        val childSet = AnimatorSet()
+
+        // Scale Animations
+        val scaleX = ObjectAnimator.ofFloat(targetImage, "scaleX", 1.0f, 1.5f)
+        scaleX.duration = 500
+
+        val scaleY = ObjectAnimator.ofFloat(targetImage, "scaleY", 1.0f, 1.5f)
+        scaleY.duration = 500
+
+        // rootSet.playSequentially(flip, childSet)
+        // childSet.playTogether(scaleX, scaleY)
+
+        // Method Chaining
+        rootSet.play(flip).before(childSet)
+        childSet.play(scaleX).with(scaleY)
+
+        rootSet.start()
     }
 }
