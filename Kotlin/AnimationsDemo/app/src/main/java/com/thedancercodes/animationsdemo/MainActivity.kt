@@ -2,6 +2,7 @@ package com.thedancercodes.animationsdemo
 
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         // Get drawable from ImageView, cast it to AnimatedVectorDrawable & assign it to
         // variable avdCheckToClose
-        val avdCheckToClose = avdImage.drawable as AnimatedVectorDrawable
+        val avdCheckToClose = avdImage.drawable as AnimatedVectorDrawableCompat
 
         // Start Animation
         avdCheckToClose.start()
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         // Get drawable from ImageView, cast it to AnimatedVectorDrawable & assign it to
         // variable avdCheckToClose
-        val avdCheckToClose = avdImage.drawable as AnimatedVectorDrawable
+        val avdCheckToClose = avdImage.drawable as AnimatedVectorDrawableCompat
 
         // Start Animation
         avdCheckToClose.start()
