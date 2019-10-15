@@ -148,4 +148,20 @@ class MainActivity : AppCompatActivity(), Animator.AnimatorListener {
 
         rootSet.start()
     }
+
+    fun viewPropertyAnimator(view: View) {
+
+        val vpa = targetImage.animate()
+
+        vpa.apply {
+            duration = 1000
+            rotationX(360.0f)
+            scaleX(1.5f)
+            scaleY(1.5f)
+            translationX(200.0f)
+            alpha(0.5f)
+            interpolator = OvershootInterpolator()
+            start()
+        }
+    }
 }
