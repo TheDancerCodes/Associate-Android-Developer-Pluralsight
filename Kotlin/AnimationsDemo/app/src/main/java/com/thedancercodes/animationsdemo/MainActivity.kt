@@ -13,11 +13,31 @@ class MainActivity : AppCompatActivity() {
 
         /* Code to implement animation */
 
+        // Flag to help toggle the animation
+        var isChecked = true
+
         // setOnClickListener on ImageView
         avdImage.setOnClickListener {
-            checkToClose()
+            if (isChecked)
+                checkToClose()
+            else
+                closeToCheck()
+
+            isChecked = !isChecked
         }
 
+    }
+
+    private fun closeToCheck() {
+        // Set animated vector as image resource
+        avdImage.setImageResource(R.drawable.avd_close_to_check)
+
+        // Get drawable from ImageView, cast it to AnimatedVectorDrawable & assign it to
+        // variable avdCheckToClose
+        val avdCheckToClose = avdImage.drawable as AnimatedVectorDrawable
+
+        // Start Animation
+        avdCheckToClose.start()
     }
 
     private fun checkToClose() {
