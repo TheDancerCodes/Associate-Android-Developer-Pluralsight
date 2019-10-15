@@ -89,5 +89,14 @@
         android:id="@+id/button7" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
         app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/button"/>
+    <Button
+        android:text="Property Values Holder"
+        android:layout_width="196dp"
+        android:layout_height="wrap_content"
+        android:onClick="propertyValuesHolder"
+        android:id="@+id/button8" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintStart_toEndOf="@+id/button7" android:layout_marginStart="8dp"
+        app:layout_constraintHorizontal_bias="0.934"/>
 
 </android.support.constraint.ConstraintLayout>

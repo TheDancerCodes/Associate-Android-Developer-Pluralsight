@@ -164,4 +164,36 @@ class MainActivity : AppCompatActivity(), Animator.AnimatorListener {
             start()
         }
     }
+
+    // Perform animation using PropertyValuesHolder & ObjectAnimator
+    fun propertyValuesHolder(view: View) {
+
+        val rotX = PropertyValuesHolder.ofFloat("rotationX", 360f)
+        val scaX = PropertyValuesHolder.ofFloat("scaleX", 1.5f)
+        val scaY = PropertyValuesHolder.ofFloat("scaleY", 1.5f)
+
+        val objA = ObjectAnimator.ofPropertyValuesHolder(targetImage, rotX, scaX, scaY)
+        objA.apply {
+            duration = 1000
+            interpolator = OvershootInterpolator()
+            start()
+        }
+    }
+
+    /**
+     * ---------------------------------------------------------------------------------------------
+     * Difference between ViewPropertyAnimator and PropertyValuesHolder
+     * ---------------------------------------------------------------------------------------------
+     *
+     * For ViewPropertyAnimator:
+     *   -> you don't have much control over the animation because it isn't linked to ObjectAnimator.
+     *   -> You can't use any AnimatorListener or coordinate the animation events.
+     *   -> You can only perform simple animations.
+     *
+     * For PropertyValuesHolder:
+     *   -> Better control over animation events since we are using ObjectAnimator.
+     *   -> Use AnimatorListener & control any event of your animantion.
+     */
+
+
 }
