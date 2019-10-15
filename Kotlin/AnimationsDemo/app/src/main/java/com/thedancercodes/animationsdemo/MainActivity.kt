@@ -109,4 +109,17 @@ class MainActivity : AppCompatActivity(), Animator.AnimatorListener {
         Toast.makeText(this, "Animation Cancelled", Toast.LENGTH_SHORT).show()
 
     }
+
+    fun setFromXML(view: View) {
+
+        val animator = AnimatorInflater.loadAnimator(this, R.animator.set)
+        animator.apply {
+            setTarget(targetImage)
+            start()
+        }
+    }
+
+    fun setFromCode(view: View) {
+
+    }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- <set/> tag is an XML representation AnimatorSet -->
+<set
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:ordering="sequentially">
+
+    <!-- Flip Animation -->
+    <objectAnimator
+        android:propertyName="rotationX"
+        android:duration="500"
+        android:valueFrom="0"
+        android:valueTo="360"
+        android:valueType="floatType" />
+
+    <!-- Scale Animation -->
+    <set android:ordering="together">
+
+        <objectAnimator
+            android:duration="500"
+            android:propertyName="scaleX"
+            android:valueFrom="1"
+            android:valueTo="1.5"
+            android:valueType="floatType" />
+
+        <objectAnimator
+            android:duration="500"
+            android:propertyName="scaleY"
+            android:valueFrom="1"
+            android:valueTo="1.5"
+            android:valueType="floatType" />
+
+    </set>
+
+</set>
+
