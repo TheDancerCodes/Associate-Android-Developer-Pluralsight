@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  To apply 2 animators on the object at the same time, we group it within the set tag.
+
+  The set tag represents the animator set.
+-->
+<set
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <objectAnimator
+        android:propertyName="scaleX"
+        android:duration="1000"
+        android:valueFrom="1.0"
+        android:valueTo="3.0"
+        android:valueType="floatType"
+        android:repeatCount="1"
+        android:repeatMode="reverse"/>
+
+    <objectAnimator
+        android:propertyName="scaleY"
+        android:duration="1000"
+        android:valueFrom="1.0"
+        android:valueTo="3.0"
+        android:valueType="floatType"
+        android:repeatCount="1"
+        android:repeatMode="reverse"/>
+</set>
