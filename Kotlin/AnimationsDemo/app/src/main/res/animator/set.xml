@@ -17,18 +17,20 @@
     <set android:ordering="together">
 
         <objectAnimator
-            android:duration="500"
+            android:duration="1000"
             android:propertyName="scaleX"
             android:valueFrom="1"
-            android:valueTo="1.5"
-            android:valueType="floatType" />
+            android:valueTo="2.5"
+            android:valueType="floatType"
+            android:interpolator="@android:anim/overshoot_interpolator"/>
 
         <objectAnimator
-            android:duration="500"
+            android:duration="1000"
             android:propertyName="scaleY"
             android:valueFrom="1"
-            android:valueTo="1.5"
-            android:valueType="floatType" />
+            android:valueTo="2.5"
+            android:valueType="floatType"
+            android:interpolator="@android:anim/overshoot_interpolator"/>
 
     </set>
 
