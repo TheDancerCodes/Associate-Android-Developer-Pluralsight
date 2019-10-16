@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
 
         // Step 2: Create a Transition object to define what type of animation you want
-        transition = TransitionInflater.from(this).inflateTransition(R.transition.example_1)
+        transition = TransitionInflater.from(this).inflateTransition(R.transition.example_2)
 
         scene1.enter()
         currentScene = scene1
