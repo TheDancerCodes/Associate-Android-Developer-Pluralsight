@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         // Get drawable from ImageView, cast it to AnimatedVectorDrawable & assign it to
         // variable avdCheckToClose
-        val avdCheckToClose = avdImage.drawable as AnimatedVectorDrawableCompat
+        val avdCheckToClose = avdImage.drawable as AnimatedVectorDrawable
 
         // Start Animation
         avdCheckToClose.start()
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         // Get drawable from ImageView, cast it to AnimatedVectorDrawable & assign it to
         // variable avdCheckToClose
-        val avdCheckToClose = avdImage.drawable as AnimatedVectorDrawableCompat
+        val avdCheckToClose = avdImage.drawable as AnimatedVectorDrawable
 
         // Start Animation
         avdCheckToClose.start()
