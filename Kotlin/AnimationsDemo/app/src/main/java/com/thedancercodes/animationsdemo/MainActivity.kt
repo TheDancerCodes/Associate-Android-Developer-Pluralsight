@@ -1,57 +1,37 @@
 package com.thedancercodes.animationsdemo
 
-import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v7.app.AppCompatActivity
+import android.transition.*
+import android.view.View
+import android.view.animation.LinearInterpolator
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var scene1: Scene
+    private lateinit var scene2: Scene
+    private lateinit var currentScene: Scene
+    private lateinit var transition: Transition
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        /* Code to implement animation */
+        // Step 1: Create a Scene object for both the starting and ending layout
+        scene1 = Scene.getSceneForLayout(sceneRoot, R.layout.scene1, this)
 
-        // Flag to help toggle the animation
-        var isChecked = true
 
-        // setOnClickListener on ImageView
-        avdImage.setOnClickListener {
-            if (isChecked)
-                checkToClose()
-            else
-                closeToCheck()
+        // Step 2: Create a Transition object to define what type of animation you want
 
-            isChecked = !isChecked
-        }
 
+        scene1.enter()
+        currentScene = scene1
     }
 
-    private fun closeToCheck() {
-        // Set animated vector as image resource
-        avdImage.setImageResource(R.drawable.avd_close_to_check)
+    fun onClick(view: View) {
 
-        // Get drawable from ImageView, cast it to AnimatedVectorDrawable & assign it to
-        // variable avdCheckToClose
-        val avdCheckToClose = avdImage.drawable as AnimatedVectorDrawable
-
-        // Start Animation
-        avdCheckToClose.start()
-    }
-
-    private fun checkToClose() {
-
-        // Set animated vector as image resource
-        avdImage.setImageResource(R.drawable.avd_check_to_close)
-
-        // Get drawable from ImageView, cast it to AnimatedVectorDrawable & assign it to
-        // variable avdCheckToClose
-        val avdCheckToClose = avdImage.drawable as AnimatedVectorDrawable
-
-        // Start Animation
-        avdCheckToClose.start()
+        // Step 3: Call TransitionManager.go() to run animation
 
     }
 }
