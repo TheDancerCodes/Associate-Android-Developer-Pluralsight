@@ -2,10 +2,13 @@ package com.thedancercodes.animationsdemo
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.transition.Fade
 import android.transition.Slide
 import android.transition.TransitionManager
+import android.view.Gravity
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main_transitions_with_scenes.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,13 +20,22 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /* Button click event handler */
     fun fadeAnimation(view: View) {
 
+        // Define transition
+        val transition = Fade()
+
+        TransitionManager.beginDelayedTransition(sceneRootNoScene, transition)
+
+        // Toggle visibility of target view
+        txvDescription.visibility = if (visibility) View.INVISIBLE else View.VISIBLE
+        visibility = !visibility // Toggle boolean value
     }
 
     fun slideEffect(view: View) {
 
-        val transition = Slide()
+        val transition = Slide(Gravity.END)
         TransitionManager.beginDelayedTransition(sceneRootNoScene, transition)
 
         txvDescription.visibility = if (visibility) View.INVISIBLE else View.VISIBLE
