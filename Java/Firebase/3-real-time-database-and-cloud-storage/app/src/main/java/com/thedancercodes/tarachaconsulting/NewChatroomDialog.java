@@ -52,6 +52,7 @@ public class NewChatroomDialog extends DialogFragment {
         mSecurityLevel.setText(String.valueOf(mSeekProgress));
         getUserSecurityLevel();
 
+        // Creating a Chat Room
         mCreateChatroom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
