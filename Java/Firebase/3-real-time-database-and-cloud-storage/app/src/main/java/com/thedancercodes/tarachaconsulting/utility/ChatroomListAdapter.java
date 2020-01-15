@@ -53,6 +53,7 @@ public class ChatroomListAdapter extends ArrayAdapter<Chatroom> {
     @Override
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
+        // ViewHolder build pattern
         final ViewHolder holder;
 
         if(convertView == null){
@@ -79,6 +80,8 @@ public class ChatroomListAdapter extends ArrayAdapter<Chatroom> {
 
             //get the users details who created the chatroom
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+            // Reference rhe user's node & query using the user_id that's passed to the ListAdapter
             Query query = reference.child(mContext.getString(R.string.dbnode_users))
                     .orderByKey()
                     .equalTo(getItem(position).getCreator_id());
@@ -89,6 +92,9 @@ public class ChatroomListAdapter extends ArrayAdapter<Chatroom> {
                         Log.d(TAG, "onDataChange: Found chat room creator: "
                                 + singleSnapshot.getValue(User.class).toString());
                         String createdBy = "created by " + singleSnapshot.getValue(User.class).getName();
+
+                        // Once we get a result, we set the creatorName field to the chatroom
+                        // and attach the profile image.
                         holder.creatorName.setText(createdBy);
                         ImageLoader.getInstance().displayImage(
                                 singleSnapshot.getValue(User.class).getProfile_image() , holder.mProfileImage);

@@ -88,6 +88,7 @@ public class ChatActivity extends AppCompatActivity {
         mChatrooms = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
+        // Get all the Chat Rooms
         Query query = reference.child(getString(R.string.dbnode_chatrooms));
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -97,6 +98,8 @@ public class ChatActivity extends AppCompatActivity {
                             + singleSnapshot.getValue());
 
                     Chatroom chatroom = new Chatroom();
+
+                    // Typecast object to a HashMap
                     Map<String, Object> objectMap = (HashMap<String, Object>) singleSnapshot.getValue();
 
                     chatroom.setChatroom_id(objectMap.get(getString(R.string.field_chatroom_id)).toString());
@@ -105,6 +108,7 @@ public class ChatActivity extends AppCompatActivity {
                     chatroom.setSecurity_level(objectMap.get(getString(R.string.field_security_level)).toString());
 
 
+                    // Old approach that causes app to crash
 //                    chatroom.setChatroom_id(singleSnapshot.getValue(Chatroom.class).getChatroom_id());
 //                    chatroom.setSecurity_level(singleSnapshot.getValue(Chatroom.class).getSecurity_level());
 //                    chatroom.setCreator_id(singleSnapshot.getValue(Chatroom.class).getCreator_id());
@@ -112,6 +116,8 @@ public class ChatActivity extends AppCompatActivity {
 
                     //get the chatrooms messages
                     ArrayList<ChatMessage> messagesList = new ArrayList<ChatMessage>();
+
+                    // Iterate through the chatroom_messages node
                     for(DataSnapshot snapshot: singleSnapshot
                             .child(getString(R.string.field_chatroom_messages)).getChildren()){
                         ChatMessage message = new ChatMessage();
@@ -120,6 +126,8 @@ public class ChatActivity extends AppCompatActivity {
                         message.setMessage(snapshot.getValue(ChatMessage.class).getMessage());
                         messagesList.add(message);
                     }
+
+                    // Set the messages to the chatroom & add chatroom to the list of chatrooms.
                     chatroom.setChatroom_messages(messagesList);
                     mChatrooms.add(chatroom);
                 }
