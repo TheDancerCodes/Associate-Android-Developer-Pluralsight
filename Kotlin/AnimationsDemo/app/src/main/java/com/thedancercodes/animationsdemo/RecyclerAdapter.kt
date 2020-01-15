@@ -1,7 +1,7 @@
 package com.thedancercodes.animationsdemo
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 
 
-class RecyclerAdapter(context: Context, private var dataList: MutableList<Landscape>) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
+class RecyclerAdapter(context: Context, private var dataList: MutableList<Landscape>) : androidx.recyclerview.widget.RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -42,7 +42,7 @@ class RecyclerAdapter(context: Context, private var dataList: MutableList<Landsc
         notifyItemRangeChanged(position, dataList.size)
     }
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class MyViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView), View.OnClickListener {
         var title: TextView
         var imgThumb: ImageView
         var imgDelete: ImageView

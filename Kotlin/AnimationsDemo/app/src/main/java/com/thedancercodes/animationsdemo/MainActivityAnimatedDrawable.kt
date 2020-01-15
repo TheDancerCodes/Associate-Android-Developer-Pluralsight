@@ -2,7 +2,7 @@ package com.thedancercodes.animationsdemo
 
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main_animated_drawable.*
 

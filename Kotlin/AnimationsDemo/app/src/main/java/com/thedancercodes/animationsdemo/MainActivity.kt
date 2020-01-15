@@ -1,14 +1,18 @@
 package com.thedancercodes.animationsdemo
 
 import android.os.Bundle
-import android.support.constraint.ConstraintSet
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.view.animation.AnticipateInterpolator
 import android.view.animation.AnticipateOvershootInterpolator
+import androidx.recyclerview.widget.RecyclerView
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
+import jp.wasabeef.recyclerview.animators.OvershootInRightAnimator
+import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -24,13 +28,21 @@ class MainActivity : AppCompatActivity() {
     private fun setUpRecyclerView() {
 
         val adapter = RecyclerAdapter(this, Landscape.data)
-        recyclerView.adapter = adapter
+
+        // Custom adapter adds sale animation to items being loaded
+        recyclerView.adapter = ScaleInAnimationAdapter(adapter)
 
         val layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        layoutManager.orientation = RecyclerView.VERTICAL
         recyclerView.layoutManager = layoutManager
 
-        recyclerView.itemAnimator = DefaultItemAnimator()
+        recyclerView.itemAnimator = OvershootInRightAnimator()
+
+        // Specify duration of operations
+        recyclerView.itemAnimator?.apply {
+            addDuration = 500 // duration of add operation
+            removeDuration = 500 // duration of delete operation.
+        }
     }
 }
 
