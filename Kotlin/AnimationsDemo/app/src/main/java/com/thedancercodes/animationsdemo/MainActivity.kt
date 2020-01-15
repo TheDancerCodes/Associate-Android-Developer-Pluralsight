@@ -1,44 +1,58 @@
 package com.thedancercodes.animationsdemo
 
 import android.os.Bundle
+import android.support.constraint.ConstraintSet
 import android.support.v7.app.AppCompatActivity
-import android.transition.Fade
-import android.transition.Slide
+import android.transition.ChangeBounds
 import android.transition.TransitionManager
-import android.view.Gravity
-import android.view.View
+import android.view.animation.AnticipateInterpolator
+import android.view.animation.AnticipateOvershootInterpolator
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main_transitions_with_scenes.*
+
 
 class MainActivity : AppCompatActivity() {
 
-    private var visibility = false
+    private var isDetailLayout = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        /**
+         * NOTE: constraintLayout is the id of the ConstrainTLayout present in both
+         * activity_main and activity_main_detail.
+          */
+
+        constraintLayout.setOnClickListener {
+            if (isDetailLayout)
+            swapFrames(R.layout.activity_main) // switch to default layout
+            else
+            swapFrames(R.layout.activity_main_detail) // switch to detail layout
+        }
     }
 
-    /* Button click event handler */
-    fun fadeAnimation(view: View) {
+    // Function to swap layouts or transition between layouts.
+    private fun swapFrames(layoutId: Int){
 
-        // Define transition
-        val transition = Fade()
+        // Instantiate ConstraintSet object
+        val constraintSet = ConstraintSet()
 
-        TransitionManager.beginDelayedTransition(sceneRootNoScene, transition)
+        // Get all the constraints of the child views of the new layout; which will replace 
+        // the old one.
+        constraintSet.clone(this, layoutId)
 
-        // Toggle visibility of target view
-        txvDescription.visibility = if (visibility) View.INVISIBLE else View.VISIBLE
-        visibility = !visibility // Toggle boolean value
-    }
+        // Adding effect to transition
+        val transition = ChangeBounds()
+        transition.interpolator = AnticipateOvershootInterpolator(1.0f)
+        transition.duration = 1200
 
-    fun slideEffect(view: View) {
+        // Animate
+        TransitionManager.beginDelayedTransition(constraintLayout, transition)
 
-        val transition = Slide(Gravity.END)
-        TransitionManager.beginDelayedTransition(sceneRootNoScene, transition)
+        // Apply new constraints to our root layout
+        constraintSet.applyTo(constraintLayout)
 
-        txvDescription.visibility = if (visibility) View.INVISIBLE else View.VISIBLE
-        visibility = !visibility
+        // Toggle the Boolean value
+        isDetailLayout = !isDetailLayout
     }
 }
