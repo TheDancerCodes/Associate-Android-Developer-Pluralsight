@@ -7,9 +7,13 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
+import android.view.Menu
+import android.view.MenuItem
 import android.view.animation.AnticipateInterpolator
 import android.view.animation.AnticipateOvershootInterpolator
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
+import com.thedancercodes.animationsdemo.transformers.*
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import jp.wasabeef.recyclerview.animators.OvershootInRightAnimator
 import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator
@@ -18,32 +22,47 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setUpRecyclerView()
+        val imageArray = intArrayOf(
+            R.drawable.first, R.drawable.second,
+            R.drawable.third, R.drawable.fourth, R.drawable.fifth
+        )
+
+        // Instantiate ViewPagerAdapter
+        val adapter = ViewPagerAdapter(this@MainActivity, imageArray)
+        viewPager!!.adapter = adapter
     }
 
-    private fun setUpRecyclerView() {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
 
-        val adapter = RecyclerAdapter(this, Landscape.data)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        // Custom adapter adds sale animation to items being loaded
-        recyclerView.adapter = ScaleInAnimationAdapter(adapter)
+        val id = item.itemId
 
-        val layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = RecyclerView.VERTICAL
-        recyclerView.layoutManager = layoutManager
+        when (id) {
 
-        recyclerView.itemAnimator = OvershootInRightAnimator()
-
-        // Specify duration of operations
-        recyclerView.itemAnimator?.apply {
-            addDuration = 500 // duration of add operation
-            removeDuration = 500 // duration of delete operation.
+            R.id.zoom_out       -> setPageTransformer(ZoomOutTransformation())
+            R.id.depth_page     -> setPageTransformer(DepthPageTransformation())
+            R.id.vertical_flip  -> setPageTransformer(VerticalFlipTransformation())
+            R.id.fade_out       -> setPageTransformer(FadeOutTransformation())
+            R.id.cube_out       -> setPageTransformer(CubeOutDepthTransformation())
+            R.id.hinge          -> setPageTransformer(HingeTransformation())
         }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    // Add animation to ViewPager.
+    private fun setPageTransformer(transformer: ViewPager.PageTransformer ) {
+        viewPager!!.setPageTransformer(true, transformer)
     }
 }
+
 
 
