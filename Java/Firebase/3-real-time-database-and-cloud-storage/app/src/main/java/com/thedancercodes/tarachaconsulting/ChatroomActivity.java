@@ -82,6 +82,7 @@ public class ChatroomActivity extends AppCompatActivity {
             }
         });
 
+        // Inserting Chatroom messages.
         mCheckmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,6 +190,9 @@ public class ChatroomActivity extends AppCompatActivity {
 
     private void getUserDetails(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+        // Loop through all the messages & query the user's node looking for the user id that's
+        // attached to that message.
         for(int i = 0; i < mMessagesList.size(); i++) {
             Log.d(TAG, "onDataChange: searching for userId: " + mMessagesList.get(i).getUser_id());
             final int j = i;
@@ -318,6 +322,8 @@ public class ChatroomActivity extends AppCompatActivity {
                 .child(mChatroom.getChatroom_id())
                 .child(getString(R.string.field_chatroom_messages));
 
+        // addValueEventListener() listen constantly for any changes to the node that its
+        // referencing.
         mMessagesReference.addValueEventListener(mValueEventListener);
     }
 

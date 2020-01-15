@@ -30,6 +30,8 @@ public class DeleteChatroomDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: started");
+
+        // Reference to created chatroom
         mChatroomId = getArguments().getString(getString(R.string.field_chatroom_id));
         if(mChatroomId != null){
             Log.d(TAG, "onCreate: got the chatroom id: " + mChatroomId);
@@ -41,7 +43,7 @@ public class DeleteChatroomDialog extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_delete_chatroom, container, false);
 
-
+        // Perform Deletion.
         TextView delete = (TextView) view.findViewById(R.id.confirm_delete);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
