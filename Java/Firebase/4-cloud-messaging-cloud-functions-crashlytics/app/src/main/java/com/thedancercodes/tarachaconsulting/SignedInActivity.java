@@ -16,6 +16,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.thedancercodes.tarachaconsulting.utility.UniversalImageLoader;
 
@@ -40,6 +43,33 @@ public class SignedInActivity extends AppCompatActivity {
 
         initImageLoader();
 
+        initFCM();
+
+    }
+
+    // TODO: Fix deprecated getToken
+    private void initFCM() {
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "initFCM: token: " + token);
+
+        sendRegistrationToServer(token);
+    }
+
+    /**
+     * Manually insert the token in the DB when the user signs in.
+     * @param token - user token.
+     */
+    private void sendRegistrationToServer(String token) {
+        Log.d(TAG, "sendRegistrationToServer: sending token to server: " + token);
+
+        // Get DB reference
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
+        // Reference user's node to insert token
+        reference.child(getString(R.string.dbnode_users))
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(getString(R.string.field_messaging_token))
+                .setValue(token);
     }
 
     /**
