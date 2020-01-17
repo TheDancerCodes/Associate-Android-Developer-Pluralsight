@@ -14,6 +14,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- Declare the Service -->
+        <service android:name=".utility.MyFirebaseMessagingService">
+
+            <!-- Add an Intent Filter to the Service.
+                 Tells service the kind of Intent it needs to watch for.-->
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+
+        </service>
+
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
