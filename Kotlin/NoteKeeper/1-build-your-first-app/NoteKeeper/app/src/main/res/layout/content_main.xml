@@ -10,20 +10,21 @@
         tools:context=".MainActivity">
 
     <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/textNoteText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ems="10"
             android:gravity="start|top"
+            android:hint="Note Text"
             android:inputType="textMultiLine"
-            app:layout_constraintEnd_toEndOf="@+id/spinner"
+            app:layout_constraintEnd_toEndOf="@+id/spinnerCourses"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/spinner"
-            app:layout_constraintTop_toBottomOf="@+id/editText2" />
+            app:layout_constraintStart_toStartOf="@+id/spinnerCourses"
+            app:layout_constraintTop_toBottomOf="@+id/textNoteTitle" />
 
     <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/spinnerCourses"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -34,15 +35,16 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/textNoteTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:ems="10"
             android:gravity="start|top"
+            android:hint="Note Title"
             android:inputType="textMultiLine"
-            app:layout_constraintEnd_toEndOf="@+id/spinner"
-            app:layout_constraintStart_toStartOf="@+id/spinner"
-            app:layout_constraintTop_toBottomOf="@+id/spinner" />
+            app:layout_constraintEnd_toEndOf="@+id/spinnerCourses"
+            app:layout_constraintStart_toStartOf="@+id/spinnerCourses"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerCourses" />
 
 </android.support.constraint.ConstraintLayout>

@@ -1,10 +1,10 @@
 package com.thedancercodes.notekeeper
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ArrayAdapter
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -16,22 +16,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        // Code that handles a user tap on the FAB: Double the value contained in the Activity's TextView
-        fab.setOnClickListener { view ->
+        // Instance of DataManager
+        val dm = DataManager()
+        val adapterCourses = ArrayAdapter<CourseInfo>(this,
+            android.R.layout.simple_spinner_item,
+            dm.courses.values.toList())
 
-            // Declare a variable to hold the current value of teh TextView
-            val originalValue = textDisplayedValue.text.toString().toInt()
+        // Specify layout resource to format the selections that are
+        // displayed within our dropdown list
+        adapterCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-            // Assign this variable the result of doubling the originalValue
-            val newValue = originalValue * 2
-
-            // Display the newValue
-            textDisplayedValue.text = newValue.toString()
-
-            // Leverage String Template to include value of the originalValue & newValue in the string.
-            Snackbar.make(view, "Value $originalValue changed to $newValue", Snackbar.LENGTH_LONG)
-                .show()
-        }
+        // Associate ArrayAdapter with Spinner.
+        // Assign the adapter we created to spinnerCourses adapter property.
+        spinnerCourses.adapter = adapterCourses
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
