@@ -16,11 +16,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        // Instance of DataManager
-        val dm = DataManager()
+
         val adapterCourses = ArrayAdapter<CourseInfo>(this,
             android.R.layout.simple_spinner_item,
-            dm.courses.values.toList())
+
+            // Access DataManager instance
+            DataManager.courses.values.toList())
 
         // Specify layout resource to format the selections that are
         // displayed within our dropdown list

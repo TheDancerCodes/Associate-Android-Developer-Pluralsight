@@ -2,9 +2,12 @@ package com.thedancercodes.notekeeper
 
 /**
  * Class that serves as central point of management for instances of the CourseInfo & NoteInfo classes.
+ *
+ * Making this an object converts it to a singleton & we can interact with a single instance of
+ * DataManager throughout the whole application.
  */
 
-class DataManager {
+object DataManager {
 
     //
     /**
@@ -69,5 +72,10 @@ class DataManager {
         // Going back to using positional parameters
         course = CourseInfo("java_core", "Java Fundamentals: The Core Platform")
         courses.set(course.courseId, course)
+    }
+
+    // Function to initialize our Notes collection
+    private fun initializeNotes() {
+
     }
 }
