@@ -1,7 +1,12 @@
 package com.thedancercodes.notekeeper
 
+/**
+ * The NoteKeeperData file contains the classes we use for modelling the data in our application.
+ */
+
+
 // Class that represents a PluralSight Course
-class CourseInfo (val courseId: String, val title: String) {
+data class CourseInfo (val courseId: String, val title: String) {
 
     /**
      * Returns a string representation of the CourseInfo object.
@@ -16,4 +21,6 @@ class CourseInfo (val courseId: String, val title: String) {
 }
 
 // Class that represents a Note
-class Noteinfo (var course: CourseInfo, var title: String, var text: String)
+// By making the NoteInfo class a data class, it will generate our toString method
+// and also other methods we might need. (equals and copy)
+data class Noteinfo (var course: CourseInfo, var title: String, var text: String)
