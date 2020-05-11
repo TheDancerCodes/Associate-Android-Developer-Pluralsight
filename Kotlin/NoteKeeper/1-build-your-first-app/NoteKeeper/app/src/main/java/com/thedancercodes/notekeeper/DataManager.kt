@@ -35,7 +35,7 @@ object DataManager {
      *
      * ArrayList that holds NoteInfo references. We assign the ArrayList reference to our notes property.
      */
-    val notes = ArrayList<Noteinfo>()
+    val notes = ArrayList<NoteInfo>()
 
 
     /**
@@ -77,42 +77,42 @@ object DataManager {
 
     // Function to initialize our Notes collection
     private fun initializeNotes() {
-        var note = Noteinfo(
+        var note = NoteInfo(
             CourseInfo("android_intents", "Android Programming with Intents"),
             "Dynamic intent resolution", "Wow, intents allow components to be resolved at runtime")
         notes.add(note)
 
-        note = Noteinfo(
+        note = NoteInfo(
             CourseInfo("android_intents", "Android Programming with Intents"),
             "Delegating intents", "PendingIntents are powerful; they delegate much more than just a component invocation")
         notes.add(note)
 
-        note = Noteinfo(
+        note = NoteInfo(
             CourseInfo("android_async", "Android Async Programming and Services"),
             "Service default threads", "Did you know that by default an Android Service will tie up the UI thread?")
         notes.add(note)
 
-        note = Noteinfo(
+        note = NoteInfo(
             CourseInfo("android_async", "Android Async Programming and Services"),
             "Long running operations", "Foreground Services can be tied to a notification icon")
         notes.add(note)
 
-        note = Noteinfo(
+        note = NoteInfo(
             CourseInfo("java_lang", "Java Fundamentals: The Java Language"),
             "Parameters", "Leverage variable-length parameter lists")
         notes.add(note)
 
-        note = Noteinfo(
+        note = NoteInfo(
             CourseInfo("java_lang", "Java Fundamentals: The Java Language"),
             "Anonymous classes", "Anonymous classes simplify implementing one-use types")
         notes.add(note)
 
-        note = Noteinfo(
+        note = NoteInfo(
             CourseInfo("java_core", "Java Fundamentals: The Core Platform"),
             "Compiler options", "The -jar option isn't compatible with with the -cp option")
         notes.add(note)
 
-        note = Noteinfo(
+        note = NoteInfo(
             CourseInfo("java_core", "Java Fundamentals: The Core Platform"),
             "Serialization", "Remember to include SerialVersionUID to assure version compatibility")
         notes.add(note)

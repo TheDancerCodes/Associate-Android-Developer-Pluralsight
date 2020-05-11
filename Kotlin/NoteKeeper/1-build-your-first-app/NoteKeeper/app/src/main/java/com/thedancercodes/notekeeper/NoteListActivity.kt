@@ -47,7 +47,7 @@ class NoteListActivity : AppCompatActivity() {
         super.onResume()
 
         // Access adapter that populated our ListView
-        (listNotes.adapter as ArrayAdapter<Noteinfo>).notifyDataSetChanged()
+        (listNotes.adapter as ArrayAdapter<NoteInfo>).notifyDataSetChanged()
 
     }
 
