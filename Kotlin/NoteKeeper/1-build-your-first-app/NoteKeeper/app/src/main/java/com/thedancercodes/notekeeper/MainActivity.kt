@@ -83,5 +83,33 @@ class MainActivity : AppCompatActivity() {
         // Increase the value of notePosition & display the not
         ++notePosition
         displayNote()
+
+        /**
+         * NOTE:
+         * All of our code to affect the appearance of the menu is placed within onPrepareOptionsMenu(),
+         * and we call InvalidateOptionsMenu() anytime we want the code to run.
+         */
+        invalidateOptionsMenu()
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+
+       // Check for the last note in the list
+        if (notePosition >= DataManager.notes.lastIndex) {
+            val menuItem = menu?.findItem(R.id.action_next)
+
+            // Modify item state only if menuItem is not null
+            if (menuItem != null) {
+
+                // Change icon
+                menuItem.icon = getDrawable(R.drawable.ic_block_white_24dp)
+
+                // Disable icon
+                menuItem.isEnabled = false
+
+            }
+        }
+
+        return super.onPrepareOptionsMenu(menu)
     }
 }
