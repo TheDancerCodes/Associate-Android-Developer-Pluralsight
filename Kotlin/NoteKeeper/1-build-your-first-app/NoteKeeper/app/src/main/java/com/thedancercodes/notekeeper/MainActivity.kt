@@ -112,4 +112,22 @@ class MainActivity : AppCompatActivity() {
 
         return super.onPrepareOptionsMenu(menu)
     }
+
+    // Automatically save changes when you leave an activity.
+    override fun onPause() {
+        super.onPause()
+        saveNote()
+    }
+
+    // Save content from screen into the note in our DataManager.
+    private fun saveNote() {
+
+        // Get the note at the specific position
+        val note = DataManager.notes[notePosition]
+
+        // Set the values
+        note.title = textNoteTitle.text.toString()
+        note.text = textNoteText.text.toString()
+        note.course = spinnerCourses.selectedItem as CourseInfo
+    }
 }
