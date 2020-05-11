@@ -42,4 +42,14 @@ class NoteListActivity : AppCompatActivity() {
         }
     }
 
+    // Tell our ArrayAdapter that the data has changed when our NoteListActivity becomes our
+    // foreground activity.
+    override fun onResume() {
+        super.onResume()
+
+        // Access adapter that populated our ListView
+        (listNotes.adapter as ArrayAdapter<Noteinfo>).notifyDataSetChanged()
+
+    }
+
 }
