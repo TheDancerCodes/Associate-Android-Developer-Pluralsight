@@ -2,7 +2,6 @@ package com.thedancercodes.notekeeper
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 
@@ -34,7 +33,7 @@ class NoteListActivity : AppCompatActivity() {
             val activityIntent = Intent(this, MainActivity::class.java)
 
             // Use putExtra() to pass the note position data between activities.
-            activityIntent.putExtra(EXTRA_NOTE_POSITION, position)
+            activityIntent.putExtra(NOTE_POSITION, position)
 
             // Start Activity
             startActivity(activityIntent)

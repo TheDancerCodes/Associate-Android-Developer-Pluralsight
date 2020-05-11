@@ -34,9 +34,12 @@ class MainActivity : AppCompatActivity() {
         // Assign the adapter we created to spinnerCourses adapter property.
         spinnerCourses.adapter = adapterCourses
 
-        // Get note position from intent that started MainActivity &
-        // assign value to notePosition property
-        notePosition = intent.getIntExtra(EXTRA_NOTE_POSITION, POSITION_NOT_SET)
+        // If the savedInstanceState is non-null, get the saved notePosition from the instance state.
+        // If savedInstanceState is null, it will result in a null value & the elvis operator causes
+        // us to get the notePosition from the extra.
+        // Assign value to notePosition property.
+        notePosition = savedInstanceState?.getInt(NOTE_POSITION, POSITION_NOT_SET) ?:
+            intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET)
 
         // When we receive a value for notePosition, display the note at this position.
         if (notePosition != POSITION_NOT_SET) {
@@ -53,6 +56,13 @@ class MainActivity : AppCompatActivity() {
             // (position of our new note)
             notePosition = DataManager.notes.lastIndex
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+
+        // Save notePosition state into bundle
+        outState?.putInt(NOTE_POSITION, notePosition)
     }
 
     private fun displayNote() {
