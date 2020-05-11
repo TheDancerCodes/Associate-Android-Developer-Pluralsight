@@ -23,4 +23,4 @@ data class CourseInfo (val courseId: String, val title: String) {
 // Class that represents a Note
 // By making the NoteInfo class a data class, it will generate our toString method
 // and also other methods we might need. (equals and copy)
-data class Noteinfo (var course: CourseInfo, var title: String, var text: String)
+data class Noteinfo (var course: CourseInfo? = null, var title: String? = null, var text: String? = null)

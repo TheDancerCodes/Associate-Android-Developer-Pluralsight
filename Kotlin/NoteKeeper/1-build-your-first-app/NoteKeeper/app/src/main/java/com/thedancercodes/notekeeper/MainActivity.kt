@@ -42,6 +42,17 @@ class MainActivity : AppCompatActivity() {
         if (notePosition != POSITION_NOT_SET) {
             displayNote()
         }
+
+        // Create a new mote
+        else {
+            // Edit-in-place: Create an empty note & add it to DataManager
+            // NOTE: The last member of our notes collection is this newly created empty note.
+            DataManager.notes.add(Noteinfo())
+
+            // Set notePosition to last index in the DataManager notes collection
+            // (position of our new note)
+            notePosition = DataManager.notes.lastIndex
+        }
     }
 
     private fun displayNote() {
