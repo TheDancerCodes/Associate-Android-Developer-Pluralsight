@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
         // Set notePosition to last index in the DataManager notes collection
         // (position of our new note)
-//        notePosition = DataManager.notes.lastIndex
+        notePosition = DataManager.notes.lastIndex
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
