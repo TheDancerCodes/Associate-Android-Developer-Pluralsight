@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 if (notePosition < DataManager.notes.lastIndex) {
                     moveNext()
                 } else {
-                    Snackbar.make(textNoteTitle, "No more notes", Snackbar.LENGTH_LONG).show()
+                    showMessage("No more notes")
                 }
                 true
             }
@@ -93,7 +93,8 @@ class MainActivity : AppCompatActivity() {
     private fun displayNote() {
 
         if (notePosition > DataManager.notes.lastIndex) {
-            Snackbar.make(textNoteTitle, "Note not found", Snackbar.LENGTH_LONG).show()
+            val message = "Note not found"
+            showMessage(message)
             return
         }
 
@@ -107,6 +108,10 @@ class MainActivity : AppCompatActivity() {
         // Display appropriate course for the note in the spinner
         val coursePosition = DataManager.courses.values.indexOf(note.course)
         spinnerCourses.setSelection(coursePosition)
+    }
+
+    private fun showMessage(message: String) {
+        Snackbar.make(textNoteTitle, message, Snackbar.LENGTH_LONG).show()
     }
 
     private fun moveNext() {
