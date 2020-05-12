@@ -1,7 +1,6 @@
 package com.thedancercodes.notekeeper
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
@@ -66,6 +65,20 @@ class MainActivity : AppCompatActivity() {
         outState?.putInt(NOTE_POSITION, notePosition)
     }
 
+    private fun displayNote() {
+
+        // Get the note that corresponds to the notePosition.
+        val note = DataManager.notes[notePosition]
+
+        // Display values within the views on our activity
+        textNoteTitle.setText(note.title)
+        textNoteText.setText(note.text)
+
+        // Display appropriate course for the note in the spinner
+        val coursePosition = DataManager.courses.values.indexOf(note.course)
+        spinnerCourses.setSelection(coursePosition)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -79,34 +92,11 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_settings -> true
             R.id.action_next -> {
-                if (notePosition < DataManager.notes.lastIndex) {
-                    moveNext()
-                } else {
-                    Snackbar.make(textNoteTitle, "No more notes", Snackbar.LENGTH_LONG).show()
-                }
+                moveNext()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun displayNote() {
-
-        if (notePosition > DataManager.notes.lastIndex) {
-            Snackbar.make(textNoteTitle, "Note not found", Snackbar.LENGTH_LONG).show()
-            return
-        }
-
-        // Get the note that corresponds to the notePosition.
-        val note = DataManager.notes[notePosition]
-
-        // Display values within the views on our activity
-        textNoteTitle.setText(note.title)
-        textNoteText.setText(note.text)
-
-        // Display appropriate course for the note in the spinner
-        val coursePosition = DataManager.courses.values.indexOf(note.course)
-        spinnerCourses.setSelection(coursePosition)
     }
 
     private fun moveNext() {
@@ -134,6 +124,10 @@ class MainActivity : AppCompatActivity() {
 
                 // Change icon
                 menuItem.icon = getDrawable(R.drawable.ic_block_white_24dp)
+
+                // Disable icon
+                menuItem.isEnabled = false
+
             }
         }
 
