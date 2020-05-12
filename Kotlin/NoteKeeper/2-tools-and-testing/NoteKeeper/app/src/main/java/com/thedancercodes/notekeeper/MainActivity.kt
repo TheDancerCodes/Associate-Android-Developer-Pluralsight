@@ -49,14 +49,18 @@ class MainActivity : AppCompatActivity() {
 
         // Create a new mote
         else {
-            // Edit-in-place: Create an empty note & add it to DataManager
-            // NOTE: The last member of our notes collection is this newly created empty note.
-            DataManager.notes.add(NoteInfo())
-
-            // Set notePosition to last index in the DataManager notes collection
-            // (position of our new note)
-            notePosition = DataManager.notes.lastIndex
+            createNewNote()
         }
+    }
+
+    private fun createNewNote() {
+        // Edit-in-place: Create an empty note & add it to DataManager
+        // NOTE: The last member of our notes collection is this newly created empty note.
+        DataManager.notes.add(NoteInfo())
+
+        // Set notePosition to last index in the DataManager notes collection
+        // (position of our new note)
+//        notePosition = DataManager.notes.lastIndex
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
