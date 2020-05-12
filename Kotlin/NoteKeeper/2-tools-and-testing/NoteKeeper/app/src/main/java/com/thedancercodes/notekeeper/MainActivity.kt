@@ -3,6 +3,7 @@ package com.thedancercodes.notekeeper
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
@@ -10,7 +11,12 @@ import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
+/**
+ * This class displays information for an individual note.
+ */
 class MainActivity : AppCompatActivity() {
+
+    private val TAG = "MainActivity"
 
     // Private mutable note to get the note position.
     private var notePosition = POSITION_NOT_SET
@@ -51,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         else {
             createNewNote()
         }
+        Log.d(TAG, "onCreate")
     }
 
     private fun createNewNote() {
@@ -99,8 +106,14 @@ class MainActivity : AppCompatActivity() {
         if (notePosition > DataManager.notes.lastIndex) {
             val message = "Note not found"
             showMessage(message)
+
+            Log.e(TAG, "Invalid note position $notePosition, " +
+                    "max valid position ${DataManager.notes.lastIndex}")
+
             return
         }
+
+        Log.i(TAG, "Displaying note for position $notePosition" )
 
         // Get the note that corresponds to the notePosition.
         val note = DataManager.notes[notePosition]
@@ -153,6 +166,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         saveNote()
+        Log.d(TAG, "onPause")
     }
 
     // Save content from screen into the note in our DataManager.
