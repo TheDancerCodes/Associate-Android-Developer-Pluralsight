@@ -19,5 +19,11 @@ class DataManagerTest {
 
         // Get the note at that index
         val note = DataManager.notes[index]
+
+        // Check that the note we get back has the values in it that we expect
+        assertEquals(course, note.course)
+        assertEquals(noteTitle, note.title)
+        assertEquals(noteText, note.text)
+
     }
 }
