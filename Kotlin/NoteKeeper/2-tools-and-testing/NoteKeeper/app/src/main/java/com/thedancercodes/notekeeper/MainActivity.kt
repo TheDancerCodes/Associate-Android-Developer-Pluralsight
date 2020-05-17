@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.content_main.*
  */
 class MainActivity : AppCompatActivity() {
 
-    private val TAG = "MainActivity"
+    private val TAG = this::class.simpleName
 
     // Private mutable note to get the note position.
     private var notePosition = POSITION_NOT_SET
