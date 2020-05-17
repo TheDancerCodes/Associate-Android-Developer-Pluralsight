@@ -51,6 +51,12 @@ object DataManager {
         initializeNotes()
     }
 
+    // Function to make it easy to add a new note to the DataManager's note collection & get back
+    // the index of that note.
+    fun addNote(courseInfo: CourseInfo, noteTitle: String, noteText: String): Int {
+        return -1
+    }
+
     // Function that will create instances of our CourseInfo class and place them into the HashMap.
     // This function initializes our courses collection with four courses.
     private fun initializeCourses() {
