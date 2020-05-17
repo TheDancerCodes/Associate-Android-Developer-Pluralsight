@@ -75,7 +75,7 @@ object DataManager {
 
     // Function that will create instances of our CourseInfo class and place them into the HashMap.
     // This function initializes our courses collection with four courses.
-    private fun initializeCourses() {
+    fun initializeCourses() {
 
         // Create a Course instance
         var course = CourseInfo("android_intents", "Android Programming with Intents")
