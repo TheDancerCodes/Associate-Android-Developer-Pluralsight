@@ -63,6 +63,16 @@ object DataManager {
         return notes.lastIndex
     }
 
+    fun findNote(course: CourseInfo, noteTitle: String, noteText: String): NoteInfo? {
+        for (note in notes)
+            if (course == note.course &&
+                    noteTitle == note.title &&
+                    noteText == note.text)
+            return note
+
+        return null
+    }
+
     // Function that will create instances of our CourseInfo class and place them into the HashMap.
     // This function initializes our courses collection with four courses.
     private fun initializeCourses() {
