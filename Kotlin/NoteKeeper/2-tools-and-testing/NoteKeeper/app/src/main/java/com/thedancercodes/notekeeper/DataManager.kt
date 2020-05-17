@@ -53,8 +53,14 @@ object DataManager {
 
     // Function to make it easy to add a new note to the DataManager's note collection & get back
     // the index of that note.
-    fun addNote(courseInfo: CourseInfo, noteTitle: String, noteText: String): Int {
-        return 0
+    fun addNote(course: CourseInfo, noteTitle: String, noteText: String): Int {
+
+        val note = NoteInfo(course, noteTitle, noteText)
+
+        // Add note to DataManager's note collection
+        notes.add(note)
+
+        return notes.lastIndex
     }
 
     // Function that will create instances of our CourseInfo class and place them into the HashMap.
