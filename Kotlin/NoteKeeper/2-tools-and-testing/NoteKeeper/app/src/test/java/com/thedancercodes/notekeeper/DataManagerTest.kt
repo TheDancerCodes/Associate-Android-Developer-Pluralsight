@@ -8,5 +8,16 @@ class DataManagerTest {
 
     @Test
     fun addNote() {
+
+        // Variables to create a new note
+        val course = DataManager.courses.get("android_async")!!
+        val noteTitle = "This is test note"
+        val noteText = "This is the body of my text note"
+
+        // Index value returned when we create a new note
+        val index = DataManager.addNote(course, noteTitle, noteText)
+
+        // Get the note at that index
+        val note = DataManager.notes[index]
     }
 }
