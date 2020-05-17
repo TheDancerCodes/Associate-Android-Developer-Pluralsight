@@ -3,8 +3,15 @@ package com.thedancercodes.notekeeper
 import org.junit.Test
 
 import org.junit.Assert.*
+import org.junit.Before
 
 class DataManagerTest {
+
+    @Before
+    fun setUp() {
+        DataManager.notes.clear()
+        DataManager.initializeCourses()
+    }
 
     @Test
     fun addNote() {
