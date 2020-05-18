@@ -11,6 +11,8 @@ import android.support.test.espresso.action.ViewActions.*
 import android.support.test.rule.ActivityTestRule
 import org.junit.Rule
 import android.support.test.espresso.Espresso.pressBack
+import android.support.test.espresso.action.ViewActions.closeSoftKeyboard
+
 
 
 @RunWith(AndroidJUnit4::class)
@@ -31,16 +33,27 @@ class CreateNewNoteTest {
         onView(withId(R.id.fab)).perform(click())
 
         // Tap the spinner to present the selections
-        onView(withId(R.id.fab)).perform(click())
+        onView(withId(R.id.spinnerCourses)).perform(click())
 
         // Make a selection inside the course spinner
         onData(allOf(instanceOf(CourseInfo::class.java), equalTo(course))).perform(click())
 
-        // Add note title & text to MainActivity
+        // Add note title & text to MainActivity. Close soft keyboard.
         onView(withId(R.id.textNoteTitle)).perform(typeText(noteTitle))
-        onView(withId(R.id.textNoteText)).perform(typeText(noteText))
-
+        onView(withId(R.id.textNoteText)).perform(typeText(noteText), closeSoftKeyboard())
+        
         // Press the back button
         pressBack()
+
+        // Code to verify that new note creation works correctly.
+        // Check that the note is in the DataManager notes collection.
+        val newNote = DataManager.notes.last()
+
+        // Check that note we got back corresponds to the course, note title and text variables that
+        // we used to create the note.
+        assertEquals(course, newNote.course)
+        assertEquals(noteTitle, newNote.title)
+        assertEquals(noteText, newNote.text)
+
     }
 }
