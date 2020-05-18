@@ -22,5 +22,15 @@ class CreateNewNoteTest {
     @Test
     fun createNewNote() {
 
+        val noteTitle = "Test note title"
+        val noteText = "This is the body of our test note"
+
+        // Identify the FAB & click on it
+        onView(withId(R.id.fab)).perform(click())
+
+        // Add note title & text to MainActivity
+        onView(withId(R.id.textNoteTitle)).perform(typeText(noteTitle))
+        onView(withId(R.id.textNoteText)).perform(typeText(noteText))
+
     }
 }
