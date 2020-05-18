@@ -41,7 +41,7 @@ class CreateNewNoteTest {
         // Add note title & text to MainActivity. Close soft keyboard.
         onView(withId(R.id.textNoteTitle)).perform(typeText(noteTitle))
         onView(withId(R.id.textNoteText)).perform(typeText(noteText), closeSoftKeyboard())
-        
+
         // Press the back button
         pressBack()
 
