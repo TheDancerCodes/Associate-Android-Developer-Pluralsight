@@ -12,6 +12,7 @@ import android.support.test.rule.ActivityTestRule
 import org.junit.Rule
 import android.support.test.espresso.Espresso.pressBack
 import android.support.test.espresso.action.ViewActions.closeSoftKeyboard
+import android.support.test.espresso.assertion.ViewAssertions.matches
 
 @RunWith(AndroidJUnit4::class)
 class NextThroughNotesTest {
@@ -32,6 +33,17 @@ class NextThroughNotesTest {
 
             // Reference to the note at a particular index
             val note = DataManager.notes[index]
+
+            // Verify that the correct values are displayed in the views in MainActivity
+            onView(withId(R.id.spinnerCourses)).check(
+                matches(withSpinnerText(note.course?.title)))
+
+            onView(withId(R.id.textNoteTitle)).check(
+                matches(withText(note.title)))
+
+            onView(withId(R.id.textNoteText)).check(
+                matches(withText(note.text))
+            )
 
         }
 
