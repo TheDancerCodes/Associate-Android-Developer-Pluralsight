@@ -20,6 +20,7 @@ class NextThroughNotesTest {
     @Rule @JvmField
     val noteListActivity = ActivityTestRule(NoteListActivity::class.java)
 
+    @Test
     fun nextThroughNotes() {
 
         // Get the first note in the DataManager notes collection.
@@ -49,8 +50,7 @@ class NextThroughNotesTest {
                 onView(allOf(withId(R.id.action_next), isEnabled())).perform(click())
         }
 
-        // Check whether menu option is now disabled
-        onView(withId(R.id.action_next)).check(matches(not(isEnabled())))
-
+        // Check whether menu option is still enabled when you reach the end of the list
+        onView(withId(R.id.action_next)).check(matches(isEnabled()))
     }
 }
