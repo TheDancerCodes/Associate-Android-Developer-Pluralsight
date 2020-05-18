@@ -42,11 +42,15 @@ class NextThroughNotesTest {
                 matches(withText(note.title)))
 
             onView(withId(R.id.textNoteText)).check(
-                matches(withText(note.text))
-            )
+                matches(withText(note.text)))
 
+            // Select the next menu option as long we are not on the last note & the menu option is enabled
+            if (index != DataManager.notes.lastIndex)
+                onView(allOf(withId(R.id.action_next), isEnabled())).perform(click())
         }
 
+        // Check whether menu option is now disabled
+        onView(withId(R.id.action_next)).check(matches(not(isEnabled())))
 
     }
 }
